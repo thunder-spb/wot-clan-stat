@@ -4,7 +4,7 @@ This is initial version of WoTClanStat.
 
 ## Installation #
 
-1. Change settings.kak
+1. Rename _settings.kak.sample_ into _settings.kak_. Then change _settings.kak_
 	You need to set there:
 ```php
 $host = "localhost";		// your mySQL server host
