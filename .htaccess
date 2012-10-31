@@ -1,1 +1,6 @@
 DirectoryIndex wotstat.php
+
+<Files settings.kak>
+        order allow,deny
+        deny from all
+</Files>
