@@ -2,7 +2,7 @@
 
 This is initial version of WoTClanStat. Russian version only.
 
-First version was released by [z13ii](http://forum.worldoftanks.ru/index.php?/topic/84257-)
+First version was released by [z13ii](http://forum.worldoftanks.ru/index.php?/topic/84257-)  
 Updated by [merokoo](http://forum.worldoftanks.ru/index.php?/user/261770-merokoo/) and then [ciklop1979](http://forum.worldoftanks.ru/index.php?/user/1612931-ciklop1979/)
 
 ## Installation #
@@ -36,8 +36,7 @@ $hosttime = " +0 hour";		// timezone shift
 * * * * *   wget -O - -q http://YOUR.SITE.NAME/get_global_mm.php >/dev/null 2>&1
 */20 * * * *  wget -O - -q http://YOUR.SITE.NAME/get_wm_province.php >/dev/null 2>&1
 ```
-
-	Add these lines to your cron tab
+  Add these lines to your cron tab
 	
 ## Files description #
 1. Files used in frontend by javascript
