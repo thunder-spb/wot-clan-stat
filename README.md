@@ -2,7 +2,7 @@
 
 This is initial version of WoTClanStat.
 
-# Installation #
+## Installation #
 
 1. Change settings.kak
 	You need to set there:
@@ -36,7 +36,7 @@ $hosttime = " +0 hour";		// timezone shift
 
 	Add these lines to your cron tab
 	
-# Files description #
+## Files description #
 1. Files used in frontend by javascript
 	* ui_main_json.php - Clan Overview
 	* ui_boicy_json.php - Clan members
