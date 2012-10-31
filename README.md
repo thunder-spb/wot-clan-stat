@@ -1,6 +1,7 @@
 # World of Tanks Clan Statistics #
 
-This is initial version of WoTClanStat.
+This is initial version of WoTClanStat. Russian version only.
+Based on [ciklop1979](http://forum.worldoftanks.ru/index.php?/user/1612931-ciklop1979/) fork
 
 ## Installation #
 
