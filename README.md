@@ -1,4 +1,4 @@
-﻿# World of Tanks Clan Statistics #
+# World of Tanks Clan Statistics #
 
 This is initial version of WoTClanStat.
 
