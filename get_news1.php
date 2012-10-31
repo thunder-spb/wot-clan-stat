@@ -7,6 +7,7 @@ $limit = $_GET['rows']; // get how many rows we want to have into the grid
 //$sidx = $_GET['sidx']; // get index row - i.e. user click to sort 
 //$sord = $_GET['sord']; // get the direction if(!$sidx)
 $idc = $_GET['idc'];
+
 if(!$sidx) $sidx =1;
 //if(!$limit) $limit =20;
 //if(!$page) $page =1;
