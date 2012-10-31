@@ -2,7 +2,7 @@
 
 This is initial version of WoTClanStat. Russian version only.
 
-First version was released by [z13ii](http://forum.worldoftanks.ru/index.php?/topic/84257-) 
+First version was released by [z13ii](http://forum.worldoftanks.ru/index.php?/topic/84257-)
 Updated by [merokoo](http://forum.worldoftanks.ru/index.php?/user/261770-merokoo/) and then [ciklop1979](http://forum.worldoftanks.ru/index.php?/user/1612931-ciklop1979/)
 
 ## Installation #
