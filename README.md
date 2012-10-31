@@ -6,7 +6,7 @@ This is initial version of WoTClanStat
 
 1. Change settings.kak
 	You need to set there:
-```php	
+```shell	
 	$host = "localhost";		// your mySQL server host
 	$account = "username";		// your mySQL username
 	$password = "passwd";		// your mySQL password
