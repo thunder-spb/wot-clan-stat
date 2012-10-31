@@ -7,7 +7,6 @@ This is initial version of WoTClanStat.
 1. Change settings.kak
 	You need to set there:
 ```php
-
 $host = "localhost";		// your mySQL server host
 $account = "username";		// your mySQL username
 $password = "passwd";		// your mySQL password
@@ -21,7 +20,6 @@ $clan_array = array (
 	array("clan_id" => "102", "clan_tag" => "[SMPLC]",  "clan_name" => "Sample clan"),
 );
 $hosttime = " +0 hour";		// timezone shift
-	
 ```
 
 2. After that you need to create mySQL tables. Tables structures located under *mysql* folder.
@@ -31,11 +29,9 @@ $hosttime = " +0 hour";		// timezone shift
 3. Setting up cron. It's easy. We need to run 3 script to update our database.
 4
 ```shell
-
 55 * * * *  wget -O - -q http://YOUR.SITE.NAME/get_clanlist.php >/dev/null 2>&1
 * * * * *   wget -O - -q http://YOUR.SITE.NAME/get_global_mm.php >/dev/null 2>&1
 */20 * * * *  wget -O - -q http://YOUR.SITE.NAME/get_wm_province.php >/dev/null 2>&1
-	
 ```
 
 	Add these lines to your cron tab
