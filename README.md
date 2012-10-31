@@ -27,7 +27,7 @@ $hosttime = " +0 hour";		// timezone shift
 	_cat_achiev.sql_ - contains all achievements in game
 	
 3. Setting up cron. It's easy. We need to run 3 script to update our database.
-4
+
 ```shell
 55 * * * *  wget -O - -q http://YOUR.SITE.NAME/get_clanlist.php >/dev/null 2>&1
 * * * * *   wget -O - -q http://YOUR.SITE.NAME/get_global_mm.php >/dev/null 2>&1
