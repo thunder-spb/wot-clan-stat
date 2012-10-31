@@ -1,22 +1,15 @@
 <?php
-$host = "localhost";
-$account = "u2";
-$password = "";
-$dbname = "";
-$wot_host = "worldoftanks.ru";
+$host = "localhost";		// your mySQL server host
+$account = "username";		// your mySQL username
+$password = "passwd";		// your mySQL password
+$dbname = "database_name";	// database name where all tables stored or will be stored
+$wot_host = "worldoftanks.ru"; // leave it unchanged if you plan use it on Russian cluster
+// Next lines where you can set any number of your clans
+// clan_id -- your clanid, main property which would be used for gathering information about your clan
+// clan_tag -- your clan tag, will be shown as tab on the top of the page
+// clan_name -- your clan name
 $clan_array = array (
-	array("clan_id" => "102", "clan_tag" => "[TAWOT]",  "clan_name" => "   Танковая Академия"),
-	array("clan_id" => "22431", "clan_tag" => "[TAW0T]", "clan_name" => "   Танковая Академия "),
-	array("clan_id" => "26039", "clan_tag" => "[TAWQT]", "clan_name" => "   Танковая Академия "),
-	array("clan_id" => "819", "clan_tag" => "[TUWOT]", "clan_name" => "   Танковое училище"),
-	array("clan_id" => "27642", "clan_tag" => "[TUW0T]", "clan_name" => "  Танковое Училище"),
-	//array("clan_id" => "1659", "clan_tag" => "[TU-1]", "clan_name" => "   Танковое Училище Филиал № 1 (заморожен)  "),
-	array("clan_id" => "817", "clan_tag" => "[TSWOT]", "clan_name" => "   Танковая Школа"),
-	array("clan_id" => "2317", "clan_tag" => "[TS-1]", "clan_name" => "  Танковая Школа Филиал № 1"),
-    array("clan_id" => "34662", "clan_tag" => "[TU1]", "clan_name" => "  Танковое Училище Филиал № 1"),
-    array("clan_id" => "36009", "clan_tag" => "[TABOT]", "clan_name" => "   Танковая Академия "),
-    array("clan_id" => "1659", "clan_tag" => "[TU-1]", "clan_name" => "   Танковое Училище Филиал № 1 (заморожен)  "),    
+	array("clan_id" => "102", "clan_tag" => "[SMPLC]",  "clan_name" => "Sample clan"),
 );
-$hosttime = " +0 hour";
-
+$hosttime = " +0 hour";		// timezone shift
 ?>

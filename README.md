@@ -1,6 +1,6 @@
 ﻿# World of Tanks Clan Statistics #
 
-This is initial version of WoTClanStat
+This is initial version of WoTClanStat.
 
 # Installation #
 
