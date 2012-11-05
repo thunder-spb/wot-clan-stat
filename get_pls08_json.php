@@ -14,7 +14,7 @@ $sord = $_REQUEST['sord']; // get the direction
 if($_REQUEST['filterBy'] != 'null'){
 $idac = $_REQUEST['filterBy'];
 }
-if(!$limit) $limit =10;
+if(!$limit) $limit =50;
 if(!$sidx) $sidx =3;
 if(!$page) $page =1;
 $totalrows = isset($_REQUEST['totalrows']) ? $_REQUEST['totalrows']: false;
@@ -30,6 +30,7 @@ $sql="SELECT count(*) as cnt2 FROM `event_tank` where idp='$idac'";
 $result = mysql_query($sql); 
 $row = mysql_fetch_array($result,MYSQL_ASSOC); 
 $count2 = $row['cnt2']; 
+$count=$count+$count2;
 
 if(($count>0) and ($limit>0)) { 
 	$total_pages = ceil($count/$limit); 
@@ -53,7 +54,7 @@ $result = mysql_query( $sql,$connect ) or die("<br>Couldn t execute query.".mysq
 		$message=$row[message];
 		$data->rows[$i]['cell'] = array($message,$row[date],$row[time]);
 		$i++;
-	}
+}
 	
 $sql="SELECT * FROM `event_clan` where idp='$idac' order by date desc,time desc";
 $result = mysql_query( $sql,$connect ) or die("<br>Couldn t execute query.".mysql_error()); 
