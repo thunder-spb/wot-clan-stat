@@ -208,6 +208,7 @@ foreach ($clan_array as $clan_i) {
 								$mdl_id=$row['id_ac'];
 								// $mdlamount=$data['data']['achievements'][$mdl];//['$mdl'];
 								$type=$row['type'];
+								$type_ach=3;
 								$mdlamount=0;
 								if ($type==5) {
 									if ($mdl=="tankExpertsUsa"){if ($data['data']['achievements']['tankExperts']['usa']=='true'){$mdlamount=1;};}
@@ -227,6 +228,9 @@ foreach ($clan_array as $clan_i) {
 								} else {
 									$mdlamount=$data['data']['achievements'][$mdl];
 								}
+								if ($type==4){
+								$type_ach=0;
+								}
 								$SQL33="SELECT amount from player_ach where idp='$id' and ida='$mdl_id'";
 								$qt33 = mysql_query($SQL33, $connect);
 								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
@@ -241,11 +245,11 @@ foreach ($clan_array as $clan_i) {
 								}
 								$q11 = mysql_query($sql11, $connect);
 								if ($a_co<>$mdlamount){
-									if(($newtankist!=1)and($type<>4)and ($mdlamount<>NULL)){
+									if(($newtankist!=1) and ($mdlamount<>NULL)){
 										$message='<'.$mdl_ru.'> '.$mdlamount.' у '.$pname;
 										if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 										$sql5 = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
-										$sql5.= " VALUES (3,'$id', '$idc', '$message', NULL, '$date', '$time')";
+										$sql5.= " VALUES ('$type_ach','$id', '$idc', '$message', NULL, '$date', '$time')";
 										$q5 = mysql_query($sql5, $connect);
 										if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 									}

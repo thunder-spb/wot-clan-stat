@@ -21,7 +21,7 @@ if($_REQUEST['filterBy'] != 'null'){
 $result = mysql_query("SELECT count(*) as cnt from `player_ach` where idp='$idac' group by idp");
 $row = mysql_fetch_array($result,MYSQL_ASSOC); 
 $count = $row['cnt']; 
-$sql="SELECT c.idp,a.type,a.medal_ru,a.img,a.id_ac from `player_ach` c, `cat_achiev` a where idp='$idac' and c.ida=a.id_ac and type>0 group by c.ida order by type asc,amount asc";
+$sql="SELECT c.idp,a.type,a.medal_ru,a.img,a.id_ac from `player_ach` c, `cat_achiev` a where idp='$idac' and c.ida=a.id_ac and type>0 group by c.ida order by type asc,id_ac asc";
 $result = mysql_query( $sql,$connect ) or die("Couldn t execute query.".mysql_error()); 
 $message="<table border='0'><tr>";
 $newtype=0;
