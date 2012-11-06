@@ -52,7 +52,7 @@ for($i=0;$i<$count;$i++) {
 	}
 	else {
 		
-		$img='<img alt="'.$row[medal_ru].'" src="/images/'.$row[img].'.png" />';
+		$img='<img alt="'.$row[medal_ru].'" src="images/'.$row[img].'.png" />';
 		$value=$a_co;
 		if(($row[type]==3)and($a_co==1)) { $value="";}
 		if($row[type]==5) { $value="";}
