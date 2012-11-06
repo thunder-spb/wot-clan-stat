@@ -1,4 +1,4 @@
-<?php include('settings.kak'); ?>
+﻿<?php include('settings.kak'); ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
@@ -44,7 +44,7 @@ html, body {
 <script type="text/javascript" src="js/wot_tables.js"></script>
 </head>
 <body>
- <a href="http://forum.tawot.net/index.php/topic/4251-portal-statistiki-aljansa/page__view__findpost__p__26749__fromsearch__1">Тема с обсуждением данной страницы.</a>
+ <a href="https://github.com/thunder-spb/wot-clan-stat">Скачать статистику себе c github'a</a>
 <header>
 	<h1><?php  
 	if (array_key_exists("idc",$_GET)) {
