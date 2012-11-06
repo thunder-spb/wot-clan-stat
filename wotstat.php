@@ -42,7 +42,6 @@ html, body {
 </script>
 <script type="text/javascript" src="js/jquery.jqGrid.min.js"></script>
 <script type="text/javascript" src="js/wot_tables.js"></script>
-<script type="text/javascript" src="js/huy.js"></script>
 </head>
 <body>
  <a href="http://forum.tawot.net/index.php/topic/4251-portal-statistiki-aljansa/page__view__findpost__p__26749__fromsearch__1">Тема с обсуждением данной страницы.</a>
