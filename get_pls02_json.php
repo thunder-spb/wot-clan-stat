@@ -47,7 +47,7 @@ for($i=0;$i<$count;$i++) {
 		$st=st+1;
 	}
 	if($row[type]==1) {
-		$img="<img src='/images/".$row[img].$a_co.".png'/>"; 
+		$img="<img src='images/".$row[img].$a_co.".png'/>"; 
 		$value=$a_co." степень";
 	}
 	else {
