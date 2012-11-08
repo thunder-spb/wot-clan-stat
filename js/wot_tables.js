@@ -885,7 +885,7 @@ $(function() {
 		height: "100%",
 		rowNum: 100,
 		hiddengrid:true,
-		caption: '<img src="images/icons/ht.png" style="width: 16px; height:15px;"/> Тяжёлые танки',
+		caption: '<img src="images/icons/ht.png" style="width: 16px; height:15px;" align="absmiddle"/> Тяжёлые танки',
 		rownumbers: false,
 		rownumWidth: 40,
 		grouping: false,
