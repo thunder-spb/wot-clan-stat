@@ -1137,7 +1137,7 @@ $(function() {
 		height: "100%",
 		rowNum: 100,
 		hiddengrid:true,
-		caption: '<img src="images/icons/level-ico.png"/> ПТ-САУ',
+		caption: '<span class="b-encyclopedia-type b-encyclopedia-type_at-spg"/> ПТ-САУ',
 		rownumbers: false,
 		rownumWidth: 40,
 		grouping: false,
