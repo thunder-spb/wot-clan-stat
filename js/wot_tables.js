@@ -107,13 +107,6 @@ $(function() {
 		width: 410,
 		height: "100%",
 		caption: 'Личный состав',
-		//ownumWidth: 100,
-		//onSortCol: function(name,index,sortorder)
-		//{	$("#news1").jqGrid('setGridParam',{url:"get_news1.php?idc="+idc+"&sidx="+(index+1)+"&sord="+sortorder}).trigger("reloadGrid");
-		//	var col=$('#news1').jqGrid('getGridParam','colNames');
-		//	var coln=(col[index]);
-		//	// $("#news1").jqGrid('setCaption',"Общий обзор клана, сортировка по полю '"+coln+"'");
-		//}		
 	});
 
 	var tnews2 = $("#news2").jqGrid({
@@ -267,37 +260,6 @@ $(function() {
 	
 	
 	//---Бойцы
-	var tplayers = $("#players_dmb_table").jqGrid({
-		sortable: false,
-		altRows: true,
-		rowNum:100,
-		url:'ui_boicy_dmb_json.php&idc='+idc,
-		datatype: 'json',
-		mtype: "POST",
-		postData: {'filterBy':null},
-		colNames:['i','ID','Ник','Покинул клан','Пункт Устава'],
-		colModel :[
-			{name:'id_', index:'id_', width:-1, align:"center"},
-			{name:'idp', index:'idp', width:50, align:"center"},
-			{name:'name', index:'name', width:50, align:"left"},
-			{name:'dateoff', index:'dateoff', width:50, align:"center"},
-			{name:'YctaB', index:'YctaB', width:50, align:"left"}
-			
-			],
-		pager: '#playersdmbpager',
-		rowTotal: 100,
-		rowList:[100],
-		//sortname: 'role',
-		viewrecords: true,
-		//sortorder: 'desc',
-		width: 1280,
-		height: "100%",
-		caption: 'Бывшие бойцы клана',
-		rownumbers: false,
-		rownumWidth: 20,
-		//onSelectRow: stickTogetherDMB,
-				
-	});
 		
 	var tmstat = $("#pl_summary_table").jqGrid({
 		sortable: false,
@@ -334,7 +296,52 @@ $(function() {
 		grouping: false,
 		toolbar: false,
 	});
-	
+	var plnews1 = $("#pl_summary_table81").jqGrid({
+		sortable: false,
+		altRows: false,
+		url:'get_plnews1.php',
+		datatype: 'json',
+		mtype: 'POST',
+		postData: {'filterBy':null},
+		colNames:['Id','Дата','Событие'],
+		colModel :[
+			{name:'id_ec', index:'id_ec', width:30, align:"center",sortable:false},
+			{name:'date', index:'date', width:70, align:"center",sortable:false},
+			{name:'message', index:'message', width:305, align:"left",sortable:false},
+			],
+		pager: '#pl_summary_pager81',
+		rowNum:10,
+		rowList:[10],
+		viewrecords: true,
+		//sortname: 'id_ec',
+		//sortorder: 'desc',
+		width: 450,
+		height: "100%",
+		caption: 'Игровые события',
+	});
+	var plnews2 = $("#pl_summary_table82").jqGrid({
+		sortable: false,
+		altRows: false,
+		url:'get_plnews2.php',
+		datatype: 'json',
+		mtype: 'POST',
+		postData: {'filterBy':null},
+		colNames:['Id','Дата','Событие'],
+		colModel :[
+			{name:'id_et', index:'id_et', width:30, align:"center",sortable:false},
+			{name:'date', index:'date', width:70, align:"center",sortable:false},
+			{name:'message', index:'message', width:305, align:"left",sortable:false},
+			],
+		pager: '#pl_summary_pager82',
+		rowNum:10,
+		rowList:[10],
+		viewrecords: true,
+		//sortname: 'id_ec',
+		//sortorder: 'desc',
+		width: 450,
+		height: "100%",
+		caption: 'Танки',
+	});
 	var tmstat2 = $("#pl_summary_table2").jqGrid({
 		sortable: false,
 		url:'get_pls02_json.php',
@@ -673,39 +680,6 @@ $(function() {
 			}
 		}
 	});	
-	var tmstat8 = $("#pl_summary_table8").jqGrid({
-		sortable: true,
-		altRows: false,
-		url:'get_pls08_json.php',
-		datatype: 'json',
-		mtype: "POST",
-		postData: {'filterBy':null},
-		colNames:['Событие','Дата', 'Время'],
-		colModel :[
-			{name:'message', index:'message', width:150, align:"center"},
-			{name:'date', index:'date', width:27, align:"center"},	
-			{name:'time', index:'time', width:37, align:"center"}			
-			],
-		//pager: '#pl_summary_pager8',
-		sortname: 'time',
-		viewrecords: true,
-		sortorder: 'desc',
-		width: 915,
-		height: "100%",
-		rowNum: 2000,
-		//hiddengrid:true,
-		caption: 'События',
-		rownumbers: false,
-		rownumWidth: 40,
-		grouping: true,
-		groupingView : {
-			groupField : ['date'],
-			groupColumnShow : [false],
-			groupText : ['<b>{0} - {1} шт.</b>'],
-			groupCollapse : true,
-			groupOrder: ['desc']
-		},
-	});
 	tmstat9 = $('#cn').jqGrid({
 		sortable: false,
 		altRows: true,
@@ -1487,6 +1461,8 @@ function stickTogether(){
 		var slaveId6  = $('#pl_summary_table6');
 		var slaveId7  = $('#pl_summary_table7');
 		var slaveId8  = $('#pl_summary_table8');
+		var slaveId81  = $('#pl_summary_table81');
+		var slaveId82  = $('#pl_summary_table82');
         $(slaveId).jqGrid('setGridParam',{'postData':{'filterBy':selI}});
 		$(slaveId2).jqGrid('setGridParam',{'postData':{'filterBy':selI}});
         $(slaveId3).jqGrid('setGridParam',{'postData':{'filterBy':selI}});    
@@ -1496,6 +1472,8 @@ function stickTogether(){
 		$(slaveId6).jqGrid('setGridParam',{'postData':{'filterBy':selI}});
 		$(slaveId7).jqGrid('setGridParam',{'postData':{'filterBy':selI}});
 		$(slaveId8).jqGrid('setGridParam',{'postData':{'filterBy':selI}});
+		$(slaveId81).jqGrid('setGridParam',{'postData':{'filterBy':selI}});
+		$(slaveId82).jqGrid('setGridParam',{'postData':{'filterBy':selI}});
         $(slaveId).trigger('reloadGrid');  
 		$(slaveId2).trigger('reloadGrid');
 		$(slaveId3).trigger('reloadGrid');
@@ -1505,6 +1483,8 @@ function stickTogether(){
 		$(slaveId6).trigger('reloadGrid');
 		$(slaveId7).trigger('reloadGrid');
 		$(slaveId8).trigger('reloadGrid');
+		$(slaveId81).trigger('reloadGrid');
+		$(slaveId82).trigger('reloadGrid');
 }
 
 function stickTogetherDMB(){

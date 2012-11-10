@@ -1,25 +1,36 @@
-<?php
+<?
+include error_reporting(0);
 include('settings.kak');
-header('Content-Type: text/html; charset=UTF-8'); 
 
-$page = $_GET['page']; // get the requested page 
-$limit = $_GET['rows']; // get how many rows we want to have into the grid 
-//$sidx = $_GET['sidx']; // get index row - i.e. user click to sort 
-//$sord = $_GET['sord']; // get the direction if(!$sidx)
-$idc = $_GET['idc'];
+$connect = mysql_connect($host, $account, $password);
+$db = mysql_select_db($dbname, $connect) or die("Ошибка подключения к БД");
+$setnames = mysql_query( 'SET NAMES utf8' );
+header('Content-Type: text/html; charset=UTF-8');
+$page = $_REQUEST['page']; // get the requested page
+$limit = $_REQUEST['rows']; // get how many rows we want to have into the grid
+$sidx = $_REQUEST['sidx']; // get index row - i.e. user click to sort
+$sord = $_REQUEST['sord']; // get the direction
+if($_REQUEST['filterBy'] != 'null'){
+$idac = $_REQUEST['filterBy'];
+}
+if(!$limit) $limit =10;
 if(!$sidx) $sidx =1;
-//if(!$limit) $limit =20;
-//if(!$page) $page =1;
+if(!$page) $page =1;
+$totalrows = isset($_REQUEST['totalrows']) ? $_REQUEST['totalrows']: false;
+if($totalrows) {
+	$limit = $totalrows;
+}
+
 $start = $limit*$page - $limit;
 if($start <0) $start = 0;
 $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Не удалось подключиться к базе данных!!!dump_wot_stat");
 $setnames = mysql_query( 'SET NAMES utf8' );
-$result = mysql_query("SELECT COUNT(*) AS count FROM event_tank WHERE idc = '$idc' and type>0"); 
+$result = mysql_query("SELECT COUNT(*) AS count FROM event_tank WHERE idp = '$idac'"); 
 $row = mysql_fetch_array($result,MYSQL_ASSOC); 
 $count = $row['count']; 
 if( $count >0 ) { $total_pages = ceil($count/$limit); } else { $total_pages = 0; }
-$SQL="SELECT id_et,type, message, date FROM event_tank WHERE idc = $idc and type>0 ORDER BY $sidx DESC LIMIT $start , $limit";
+$SQL="SELECT id_et,type, message, date FROM event_tank WHERE idp = $idac ORDER BY $sidx DESC LIMIT $start , $limit";
 $result = mysql_query( $SQL,$connect ) or die("Couldn t execute query.".mysql_error()); 
 $responce->page = $page; 
 $responce->total = $total_pages; 
