@@ -260,37 +260,6 @@ $(function() {
 	
 	
 	//---Бойцы
-	var tplayers = $("#players_dmb_table").jqGrid({
-		sortable: false,
-		altRows: true,
-		rowNum:100,
-		url:'ui_boicy_dmb_json.php&idc='+idc,
-		datatype: 'json',
-		mtype: "POST",
-		postData: {'filterBy':null},
-		colNames:['i','ID','Ник','Покинул клан','Пункт Устава'],
-		colModel :[
-			{name:'id_', index:'id_', width:-1, align:"center"},
-			{name:'idp', index:'idp', width:50, align:"center"},
-			{name:'name', index:'name', width:50, align:"left"},
-			{name:'dateoff', index:'dateoff', width:50, align:"center"},
-			{name:'YctaB', index:'YctaB', width:50, align:"left"}
-			
-			],
-		pager: '#playersdmbpager',
-		rowTotal: 100,
-		rowList:[100],
-		//sortname: 'role',
-		viewrecords: true,
-		//sortorder: 'desc',
-		width: 1280,
-		height: "100%",
-		caption: 'Бывшие бойцы клана',
-		rownumbers: false,
-		rownumWidth: 20,
-		//onSelectRow: stickTogetherDMB,
-				
-	});
 		
 	var tmstat = $("#pl_summary_table").jqGrid({
 		sortable: false,
@@ -711,39 +680,6 @@ $(function() {
 			}
 		}
 	});	
-	var tmstat8 = $("#pl_summary_table8").jqGrid({
-		sortable: true,
-		altRows: false,
-		url:'get_pls08_json.php',
-		datatype: 'json',
-		mtype: "POST",
-		postData: {'filterBy':null},
-		colNames:['Событие','Дата', 'Время'],
-		colModel :[
-			{name:'message', index:'message', width:150, align:"center"},
-			{name:'date', index:'date', width:27, align:"center"},	
-			{name:'time', index:'time', width:37, align:"center"}			
-			],
-		//pager: '#pl_summary_pager8',
-		sortname: 'time',
-		viewrecords: true,
-		sortorder: 'desc',
-		width: 915,
-		height: "100%",
-		rowNum: 2000,
-		//hiddengrid:true,
-		caption: 'События',
-		rownumbers: false,
-		rownumWidth: 40,
-		grouping: true,
-		groupingView : {
-			groupField : ['date'],
-			groupColumnShow : [false],
-			groupText : ['<b>{0} - {1} шт.</b>'],
-			groupCollapse : true,
-			groupOrder: ['desc']
-		},
-	});
 	tmstat9 = $('#cn').jqGrid({
 		sortable: false,
 		altRows: true,
