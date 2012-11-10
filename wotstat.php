@@ -116,18 +116,24 @@ html, body {
 					</div>
 				</td>
 				<td>
-                                        <div id="name"></div>
-					<div class="grid" id="pls2">
+                    <div id="name"></div>
+					<table><tr>
+						<td valign="top">
+							<table id="pl_summary_table81"></table>
+							<div id="pl_summary_pager81"></div>
+						</td>
+						<td valign="top">
+							<table id="pl_summary_table82"></table>
+							<div id="pl_summary_pager82"></div>
+						</td>
+					</tr></table>
 					<table id="pl_summary_table2"></table>
-					<div class="grid" id="pls">
 					<table id="pl_summary_table"></table>
 					<table id="pl_summary_table7"></table>
 					<div id="pl_summary_pager7"></div>
 					<table id="pl_summary_table6"></table>
 					<table id="pl_summary_table5"></table>
 					<div id="pl_summary_pager5"></div>
-
-					<div class="grid" id="pls3">
 					<table id="pl_summary_table3"></table>
 					<div id="pl_summary_pager3"></div>
 					<table><tr>
@@ -138,14 +144,6 @@ html, body {
 							<table id="pl_summary_table42"></table>
 						</td>
 					</tr></table>
-                                        <div id="graphs"></div>
-					<table id="pl_summary_table8"></table>
-				</td>
-			</tr>
-			<tr valign="top">				
-				<td>
-					<table id="boysd"></table>
-					<div id="boydpager"></div>
 				</td>
 			</tr>
 		</table>
