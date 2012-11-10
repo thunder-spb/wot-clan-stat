@@ -15,11 +15,11 @@ if($start <0) $start = 0;
 $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Не удалось подключиться к базе данных!!!dump_wot_stat");
 $setnames = mysql_query( 'SET NAMES utf8' );
-$result = mysql_query("SELECT COUNT(*) AS count FROM event_tank WHERE idc = '$idc'"); 
+$result = mysql_query("SELECT COUNT(*) AS count FROM event_tank WHERE idc = '$idc' and type>0"); 
 $row = mysql_fetch_array($result,MYSQL_ASSOC); 
 $count = $row['count']; 
 if( $count >0 ) { $total_pages = ceil($count/$limit); } else { $total_pages = 0; }
-$SQL="SELECT id_et,type, message, date FROM event_tank WHERE idc = $idc ORDER BY $sidx DESC LIMIT $start , $limit";
+$SQL="SELECT id_et,type, message, date FROM event_tank WHERE idc = $idc and type>0 ORDER BY $sidx DESC LIMIT $start , $limit";
 $result = mysql_query( $SQL,$connect ) or die("Couldn t execute query.".mysql_error()); 
 $responce->page = $page; 
 $responce->total = $total_pages; 
