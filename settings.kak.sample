@@ -12,5 +12,5 @@ $clan_array = array (
 	array("clan_id" => "102", "clan_tag" => "[SMPLC]",  "clan_name" => "Sample clan"),
 );
 $hosttime = " +0 hour";		// timezone shift
-$timetolife = 30;  // time to life stat to each tank
+$timetolife = 30;  // time to life stat for each tank
 ?>
