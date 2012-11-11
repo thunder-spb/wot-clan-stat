@@ -12,22 +12,14 @@ foreach ($clan_array as $clan_i) {
 	$clan_list = mysql_query("select idp from clan where idc='$idc' order by idp",$connect); // получение списка игроков клана из бд
 	$ida = array();
 	while ($members = mysql_fetch_array($clan_list)) {	$ida[]=$members[0];	}
-	//$sql = "select count(*) as cntN from player_ach";
-	//$q2 = mysql_query($sql,$connect);
-	//if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-	//$row = mysql_fetch_array($q2);
-	//$cntN = $row['cntN']; // кол-во записей в достижениях 
-	
 	$sql = "select count(*) as cntt from cat_tanks";
 	$q2 = mysql_query($sql,$connect);
 	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 	$row = mysql_fetch_array($q2);
-	$cntT = $row['cntt']; // кол-во записей в достижениях
-	
+	$cntT = $row['cntt']; 
 	$n = getdate();
 	$m = $n['minutes'];
 	$hourstest=$n['hours'];
-	//$m = $n-5;
 	$clantag1=$clan_i["clan_tag"];
 	$m = $m*2;
         echo ' '.count($ida)." бойцов в клане $clantag1 \n";
@@ -143,7 +135,8 @@ foreach ($clan_array as $clan_i) {
 						$rGPL = mysql_fetch_array($q);
 						if 	($rGPL['mbattles'] == NULL ){ 
 							$newtankist=1;
-							$date1=date("Y-m-d",strtotime(' -31 day '.$hosttime));	//Для корректного отображения  статистики записи новых бойцов делаются задним числом
+							$a11=$timetolife+1;
+							$date1=date("Y-m-d",strtotime(' -'.$a11.' day '.$hosttime));	//Для корректного отображения  статистики записи новых бойцов делаются задним числом
 						}
 						//$sql = "select max(battles_count) as mbattles from player where idp='$id'";
 						//$q = mysql_query($sql,$connect);
@@ -258,7 +251,7 @@ foreach ($clan_array as $clan_i) {
 								///////SELECT sum(amount) FROM `player_ach` c where ida='25'
 							}
 							// работа со списком техники
-							$date2=date("Y-m-d",strtotime(' -30 day '.$hosttime));
+							$date2=date("Y-m-d",strtotime(' -'.$timetolife.' day '.$hosttime));
 							for($i=0;$i<count($data['data']['vehicles']);$i++){
 								//$date2=date("Y-m-d",strtotime(' -30 day '.$hosttime));
 								// проверка на новый танк в клане
