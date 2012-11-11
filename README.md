@@ -51,6 +51,6 @@ $hosttime = " +0 hour";		// timezone shift
 	* get_pls05_json.php - Hangar detailed stats in 7 days
 	* get_pls041_json.php - Stats by tanks types
 	* get_pls042_json.php - Stats by tanks country 
-	* get_pls03_json.php - Events
+	* get_plnews1.php &	get_plnews2.php - events for player
 
 
