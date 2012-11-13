@@ -1,5 +1,13 @@
 ﻿<?php 
-	include('settings.kak');  
+
+require_once('settings.kak');  
+
+if (array_key_exists("idc",$_GET)) {
+	$idc = filter_input(INPUT_GET, "idc", FILTER_VALIDATE_INT);
+} else  {
+	$idc = $clan_array[0]['clan_id'];
+}
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -7,17 +15,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>
 <?php  
-	if (array_key_exists("idc",$_GET)) {
-		$idc = $_GET['idc'];
-		} else  {
-			$idc = "102";
-		}
-		foreach ($clan_array as $clan_i) {
-			$idc_temp = $clan_i["clan_id"];
-			if ($idc == $idc_temp) {
-				echo $clan_i["clan_tag"];
-			}
-		}
+foreach ($clan_array as $clan_i) {
+	$idc_temp = $clan_i["clan_id"];
+	if ($idc == $idc_temp) {
+		echo $clan_i["clan_tag"];
+	}
+}
 ?>
 </title>
 
@@ -32,6 +35,11 @@ html, body {
 	font-size: 80%;
 }
 </style>
+
+<script type="text/javascript">
+	var current_clan_id = <? echo $idc ?>;
+</script>
+
 <script type="text/javascript" src="js/jquery-1.5.1.min.js"></script>
 <script type="text/javascript" src="js/i18n/grid.locale-ru.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.12.custom.min.js"></script>
@@ -41,6 +49,7 @@ html, body {
 
 <script type="text/javascript">
 	jQuery.jgrid.no_legacy_api = true;
+	var current_clan_id = <? echo $idc ?>;
 </script>
 <script type="text/javascript" src="js/jquery.jqGrid.min.js"></script>
 <script type="text/javascript" src="js/wot_tables.js"></script>
