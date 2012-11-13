@@ -142,24 +142,3 @@ width:150px;
 cursor:pointer !important;
 -moz-border-radius:5px; -webkit-border-radius:5px;
 }
-
-.b-encyclopedia-type_lighttank {
-    background-position: 0 -118px;
-}
-.b-encyclopedia-type_mediumtank {
-    background-position: 0 -178px;
-}
-.b-encyclopedia-type_heavytank {
-    background-position: 0 0;
-}
-.b-encyclopedia-type_at-spg {
-    background-position: 0 -237px;
-}
-.b-encyclopedia-type_spg {
-    background-position: 0 -59px;
-}
-.b-encyclopedia-type {
-    background: url("img/level-ico.png") no-repeat scroll 0 0 transparent;
-    margin: 0 0 3px -9px;
-    padding: 14px 0 11px 34px;
-}
