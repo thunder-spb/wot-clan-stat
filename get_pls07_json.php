@@ -63,10 +63,12 @@ $result = mysql_query( $sql,$connect ) or die("<br>Couldn t execute query.".mysq
 				$procsur=round($diffsur*100/$diffb_c,2);
 				$procAsur=$row['procAsur'];
 				$procf = round((double)($difff)/$diffb_c,2);
-				$procAf = $row['procAf'];;
-				//$data->rows[$i]['cell'] = array($row['cls'],$row['localized_name']." (".$row['level']." lvl)","+ ".$diffb_c." / ".$diffw_c." (".$row['maxb_c'].")",$proc." (".$procA.")", $procs." (".$procAs.")", $procD." (".$procAD.")", $procsur." (".$procAsur.")", $procf." (".$procAf.")");
-				$data->rows[$i]['cell'] = array($row['cls'],$row['localized_name']." (".$row['level']." lvl)","+ ".$diffb_c." / ".$diffw_c." (".$row['maxb_c'].")",$proc." (".$procA.")", $procAs,$procAD,$procAsur, $procAf);
-
+				$procAf = $row['procAf'];
+				if ($diffb_c<>$row['maxb_c']){
+					$data->rows[$i]['cell'] = array($row['cls'],$row['localized_name']." (".$row['level']." lvl)","+ ".$diffb_c." / ".$diffw_c." (".$row['maxb_c'].")",$proc." (".$procA.")", $procs." (".$procAs.")", $procD." (".$procAD.")", $procsur." (".$procAsur.")", $procf." (".$procAf.")");
+				}else{
+					$data->rows[$i]['cell'] = array($row['cls'],$row['localized_name']." (".$row['level']." lvl)","+ ".$diffb_c." / ".$diffw_c." (".$row['maxb_c'].")",$proc." (".$procA.")", $procAs,$procAD,$procAsur, $procAf);
+				}
 				$i++;
 		//}
 	}
