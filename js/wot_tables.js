@@ -620,19 +620,19 @@ $(function() {
 		postData: {'filterBy':null},
 		colNames:[' ','Танк', 'Боёв / Побед (Всего боёв)','%% (за период/ всего)','Обнаружено за бой','Урон за бой','Выжил %','Фрагов за бой'],
 		colModel :[
-			{name:'cls', index:'cls', width:-1, align:"center"},
-			{name:'localized_name', index:'localized_name', width:27, align:"center"},	
-			{name:'battle_count', index:'battle_count', width:37, align:"center"},
+			{name:'cls', index:'cls', width:-1, align:"center",sortable:false},
+			{name:'localized_name', index:'localized_name', width:27, align:"center",sortable:false},	
+			{name:'maxb_c', index:'maxb_c', width:37, align:"center"},
 			{name:'proc', index:'proc', width:27, align:"center"},
-                        {name:'procs', index:'procs', width:27, align:"center"},
-                        {name:'procD', index:'procD', width:27, align:"center"},
-                        {name:'procsur', index:'procsur', width:27, align:"center"},
-                        {name:'procf', index:'procf', width:27, align:"center"}
+                        {name:'procAs', index:'procAs', width:27, align:"center"},
+                        {name:'procAD', index:'procAD', width:27, align:"center"},
+                        {name:'procAsur', index:'procAsur', width:27, align:"center"},
+                        {name:'procAf', index:'procAf', width:27, align:"center"}
 			],
 		pager: '#pl_summary_pager7',
-		rowNum: 50,
+		rowNum: 10,
 		rowList:[10,20,30,200],
-		sortname: 'battle_count',
+		sortname: 'proc',
 		viewrecords: true,
 		sortorder: 'desc',
 		width: 915,
@@ -642,42 +642,48 @@ $(function() {
 		rownumbers: false,
 		rownumWidth: 40,
 		grouping: false,
+		onSortCol: function(name,index,sortorder)
+		{	$("#pl_summary_table7").jqGrid('setGridParam',{url:"get_pls07_json.php?sidx="+(index)+"&sord="+sortorder+"&idc="+idc}).trigger("reloadGrid");
+			var col=$('#pl_summary_table7').jqGrid('getGridParam','colNames');
+			var coln=(col[index]);
+			$("#pl_summary_table7").jqGrid('setCaption',"Статистика по танкам за 30 дней, сортировка по полю '"+coln+"'");
+		},
 		afterInsertRow: function(row_id, row_data){
 			if (row_data.cls == 'SPG'){
 				$('#pl_summary_table7').jqGrid('setCell',row_id,'localized_name','',{'background-color':'#ffdab9'});
-				$('#pl_summary_table7').jqGrid('setCell',row_id,'battle_count','',{'background-color':'#ffdab9'});
+				$('#pl_summary_table7').jqGrid('setCell',row_id,'maxb_c','',{'background-color':'#ffdab9'});
 				$('#pl_summary_table7').jqGrid('setCell',row_id,'proc','',{'background-color':'#ffdab9'});
-				$('#pl_summary_table7').jqGrid('setCell',row_id,'procs','',{'background-color':'#ffdab9'});
-				$('#pl_summary_table7').jqGrid('setCell',row_id,'procD','',{'background-color':'#ffdab9'});
-				$('#pl_summary_table7').jqGrid('setCell',row_id,'procsur','',{'background-color':'#ffdab9'});
-				$('#pl_summary_table7').jqGrid('setCell',row_id,'procf','',{'background-color':'#ffdab9'});
+				$('#pl_summary_table7').jqGrid('setCell',row_id,'procAs','',{'background-color':'#ffdab9'});
+				$('#pl_summary_table7').jqGrid('setCell',row_id,'procAD','',{'background-color':'#ffdab9'});
+				$('#pl_summary_table7').jqGrid('setCell',row_id,'procAsur','',{'background-color':'#ffdab9'});
+				$('#pl_summary_table7').jqGrid('setCell',row_id,'procAf','',{'background-color':'#ffdab9'});
 			}
 			if (row_data.cls == 'AT-SPG'){
 				$('#pl_summary_table7').jqGrid('setCell',row_id,'localized_name','',{'background-color':'#c6efef'});
-				$('#pl_summary_table7').jqGrid('setCell',row_id,'battle_count','',{'background-color':'#c6efef'});
+				$('#pl_summary_table7').jqGrid('setCell',row_id,'maxb_c','',{'background-color':'#c6efef'});
 				$('#pl_summary_table7').jqGrid('setCell',row_id,'proc','',{'background-color':'#c6efef'});
-				$('#pl_summary_table7').jqGrid('setCell',row_id,'procs','',{'background-color':'#c6efef'});
-				$('#pl_summary_table7').jqGrid('setCell',row_id,'procD','',{'background-color':'#c6efef'});
-				$('#pl_summary_table7').jqGrid('setCell',row_id,'procsur','',{'background-color':'#c6efef'});
-				$('#pl_summary_table7').jqGrid('setCell',row_id,'procf','',{'background-color':'#c6efef'});
+				$('#pl_summary_table7').jqGrid('setCell',row_id,'procAs','',{'background-color':'#c6efef'});
+				$('#pl_summary_table7').jqGrid('setCell',row_id,'procAD','',{'background-color':'#c6efef'});
+				$('#pl_summary_table7').jqGrid('setCell',row_id,'procAsur','',{'background-color':'#c6efef'});
+				$('#pl_summary_table7').jqGrid('setCell',row_id,'procAf','',{'background-color':'#c6efef'});
 			}
 			if (row_data.cls == 'mediumTank'){
 				$('#pl_summary_table7').jqGrid('setCell',row_id,'localized_name','',{'background-color':'#d0f0c0'});
-				$('#pl_summary_table7').jqGrid('setCell',row_id,'battle_count','',{'background-color':'#d0f0c0'});
+				$('#pl_summary_table7').jqGrid('setCell',row_id,'maxb_c','',{'background-color':'#d0f0c0'});
 				$('#pl_summary_table7').jqGrid('setCell',row_id,'proc','',{'background-color':'#d0f0c0'});
-				$('#pl_summary_table7').jqGrid('setCell',row_id,'procs','',{'background-color':'#d0f0c0'});
-				$('#pl_summary_table7').jqGrid('setCell',row_id,'procD','',{'background-color':'#d0f0c0'});
-				$('#pl_summary_table7').jqGrid('setCell',row_id,'procsur','',{'background-color':'#d0f0c0'});
-				$('#pl_summary_table7').jqGrid('setCell',row_id,'procf','',{'background-color':'#d0f0c0'});
+				$('#pl_summary_table7').jqGrid('setCell',row_id,'procAs','',{'background-color':'#d0f0c0'});
+				$('#pl_summary_table7').jqGrid('setCell',row_id,'procAD','',{'background-color':'#d0f0c0'});
+				$('#pl_summary_table7').jqGrid('setCell',row_id,'procAsur','',{'background-color':'#d0f0c0'});
+				$('#pl_summary_table7').jqGrid('setCell',row_id,'procAf','',{'background-color':'#d0f0c0'});
 			}
 			if (row_data.cls == 'heavyTank'){
 				$('#pl_summary_table7').jqGrid('setCell',row_id,'localized_name','',{'background-color':'#98ff98'});
-				$('#pl_summary_table7').jqGrid('setCell',row_id,'battle_count','',{'background-color':'#98ff98'});
+				$('#pl_summary_table7').jqGrid('setCell',row_id,'maxb_c','',{'background-color':'#98ff98'});
 				$('#pl_summary_table7').jqGrid('setCell',row_id,'proc','',{'background-color':'#98ff98'});
-				$('#pl_summary_table7').jqGrid('setCell',row_id,'procs','',{'background-color':'#98ff98'});
-				$('#pl_summary_table7').jqGrid('setCell',row_id,'procD','',{'background-color':'#98ff98'});
-				$('#pl_summary_table7').jqGrid('setCell',row_id,'procsur','',{'background-color':'#98ff98'});
-				$('#pl_summary_table7').jqGrid('setCell',row_id,'procf','',{'background-color':'#98ff98'});
+				$('#pl_summary_table7').jqGrid('setCell',row_id,'procAs','',{'background-color':'#98ff98'});
+				$('#pl_summary_table7').jqGrid('setCell',row_id,'procAD','',{'background-color':'#98ff98'});
+				$('#pl_summary_table7').jqGrid('setCell',row_id,'procAsur','',{'background-color':'#98ff98'});
+				$('#pl_summary_table7').jqGrid('setCell',row_id,'procAf','',{'background-color':'#98ff98'});
 			}
 		}
 	});	

@@ -15,14 +15,15 @@ if($_REQUEST['filterBy'] != 'null'){
 $idac = $_REQUEST['filterBy'];
 }
 if(!$limit) $limit =10;
-if(!$sidx) $sidx =3;
+if(!$sidx) $sidx =4;
 if(!$page) $page =1;
 $totalrows = isset($_REQUEST['totalrows']) ? $_REQUEST['totalrows']: false;
 if($totalrows) {
 	$limit = $totalrows;
 }
 $minDate=date("Y-m-d",strtotime(' -30 day '.$hosttime));
-$sql="SELECT count(*) as cnt from `player_btl` c, cat_tanks a WHERE idp='$idac' and c.idt=a.id_t and date>='$minDate'";
+$sql="SELECT count(distinct `idt`) as cnt from `player_btl`  WHERE idp='$idac'and date>='$minDate'";
+//SELECT count(*) as cnt from `player_btl` c, cat_tanks a WHERE idp='$idac' and c.idt=a.id_t and date>='$minDate'";
 $result = mysql_query($sql); 
 $row = mysql_fetch_array($result,MYSQL_ASSOC); 
 $count = $row['cnt']; 
@@ -35,7 +36,7 @@ if ($page > $total_pages) $page=$total_pages;
 $start = $limit*$page - $limit;
 if($start <0) $start = 0;
 //$sql="SELECT a.localized_name,a.class as cls,max(c.battle_count) as maxb_c,max(c.win_count) as maxw_c,min(c.battle_count) as minb_c,min(c.win_count) as minw_c, max(c.spotted) as maxs, min(c.spotted) as mins, max(c.damageDealt) as maxD, min(c.damageDealt) as minD, max(c.survivedBattles) as maxsur, min(c.survivedBattles) as minsur, max(c.frags) as maxf, min(c.frags) as minf, (max(c.battle_count)-min(c.battle_count)) as diffb_c,(max(c.win_count)-min(c.win_count)) as diffw_c,c.date,c.time, a.level from `player_btl` c, cat_tanks a WHERE idp='$idac' and c.idt=a.id_t and date>='$minDate' group by idt having (max(c.battle_count)-min(c.battle_count))>0 order by diffb_c desc,date desc,time desc,maxb_c desc LIMIT $start , $limit";
-$sql="SELECT c.idt as idt, a.localized_name,a.class as cls,max(c.battle_count) as maxb_c,max(c.win_count) as maxw_c, max(c.spotted) as maxs,  max(c.damageDealt) as maxD,  max(c.survivedBattles) as maxsur,  max(c.frags) as maxf,(max(c.battle_count)-min(c.battle_count)) as diffb_c,  c.date,c.time, a.level from `player_btl` c, cat_tanks a WHERE idp='$idac' and c.idt=a.id_t and date>='$minDate' group by idt order by diffb_c desc, level desc,maxb_c desc LIMIT $start , $limit";
+$sql="SELECT c.idt as idt, a.localized_name,a.class as cls,max(c.battle_count) as maxb_c, ROUND((max(c.win_count)*100/max(c.battle_count)),2) as proc, max(c.win_count) as maxw_c, max(c.spotted) as maxs,ROUND((max(c.spotted)/max(c.battle_count)),2) as procAs, max(c.damageDealt) as maxD, ROUND((max(c.damageDealt)/max(c.battle_count)),2) as procAD,  max(c.survivedBattles) as maxsur, ROUND((max(c.survivedBattles)*100/max(c.battle_count)),2) as procAsur,  max(c.frags) as maxf, ROUND((max(c.frags)/max(c.battle_count)),2) as procAf, c.date,c.time, a.level from `player_btl` c, cat_tanks a WHERE idp='$idac' and c.idt=a.id_t and date>='$minDate' group by idt order by $sidx $sord LIMIT $start , $limit";
 $result = mysql_query( $sql,$connect ) or die("<br>Couldn t execute query.".mysql_error()); 
 	$data->page       = $page;
 	$data->total      = $total_pages;
@@ -43,7 +44,7 @@ $result = mysql_query( $sql,$connect ) or die("<br>Couldn t execute query.".mysq
 	$i = 0;
 	while($row = mysql_fetch_assoc($result)) {
 			$idtank=$row['idt'];
-			$sqlmax="SELECT a.localized_name,a.class as cls,max(c.battle_count) as maxb_c,max(c.win_count) as maxw_c, max(c.spotted) as maxs,  max(c.damageDealt) as maxD,  max(c.survivedBattles) as maxsur,  max(c.frags) as maxf,  c.date,c.time, a.level from `player_btl` c, cat_tanks a WHERE idp='$idac' and c.idt=a.id_t and c.idt='$idtank' and date<'$minDate' group by idt order by date desc,time desc,maxb_c desc";
+			$sqlmax="SELECT a.localized_name,a.class as cls,max(c.battle_count) as maxb_c,max(c.win_count) as maxw_c, max(c.spotted) as maxs,   max(c.damageDealt) as maxD,  max(c.survivedBattles) as maxsur,  max(c.frags) as maxf,  c.date,c.time, a.level from `player_btl` c, cat_tanks a WHERE idp='$idac' and c.idt=a.id_t and c.idt='$idtank' and date<'$minDate' group by idt order by date desc,time desc,maxb_c desc";
 			$resultmax = mysql_query( $sqlmax,$connect ) or die("<br>Couldn t execute query.".mysql_error()); 
 			$rowmax = mysql_fetch_array($resultmax,MYSQL_ASSOC); 
 			$diffb_c= $row['maxb_c']-$rowmax['maxb_c'];
@@ -54,15 +55,15 @@ $result = mysql_query( $sql,$connect ) or die("<br>Couldn t execute query.".mysq
 				$diffsur=$row['maxsur']-$rowmax['maxsur'];
 				$difff=$row['maxf']-$rowmax['maxf'];
 				$proc=round(($diffw_c*100/$diffb_c),2);
-				$procA=round(($row['maxw_c']*100/$row['maxb_c']),2);
+				$procA=$row['proc'];
 				$procs=round((double)($diffs)/$diffb_c,2);
-				$procAs=round((double)($row['maxs'])/$row['maxb_c'],2);
+				$procAs=$row['procAs'];
 				$procD=round($diffD/$diffb_c);
-				$procAD=round($row['maxD']/$row['maxb_c']);
+				$procAD=$row['procAD'];
 				$procsur=round($diffsur*100/$diffb_c,2);
-				$procAsur=round($row['maxsur']*100/$row['maxb_c'],2);
+				$procAsur=$row['procAsur'];
 				$procf = round((double)($difff)/$diffb_c,2);
-				$procAf = round((double)($row['maxf'])/$row['maxb_c'],2);
+				$procAf = $row['procAf'];;
 				//$data->rows[$i]['cell'] = array($row['cls'],$row['localized_name']." (".$row['level']." lvl)","+ ".$diffb_c." / ".$diffw_c." (".$row['maxb_c'].")",$proc." (".$procA.")", $procs." (".$procAs.")", $procD." (".$procAD.")", $procsur." (".$procAsur.")", $procf." (".$procAf.")");
 				$data->rows[$i]['cell'] = array($row['cls'],$row['localized_name']." (".$row['level']." lvl)","+ ".$diffb_c." / ".$diffw_c." (".$row['maxb_c'].")",$proc." (".$procA.")", $procAs,$procAD,$procAsur, $procAf);
 
