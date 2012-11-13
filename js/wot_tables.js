@@ -54,7 +54,8 @@ $(function() {
 	// initialize the function
 	// as a parameter we are sending a selector. For this particular script we must select the unordeblue (or ordeblue) list item element 
 	tabs('nav ul');*/
-	var idc = gup("idc");
+//	var idc = gup("idc");
+	var idc = current_clan_id;
 	if (idc == "") idc = "102"
 	
 	$( "#tabs" ).tabs({
