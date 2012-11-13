@@ -185,13 +185,10 @@ html, body {
                 <br>
                 <table id="wmWinProvinces"></table>
 	</div>
-        <div id="tab-7">
-                <table id="techABS2"></table>
-<table> <tr>
-                <td><table id="techCHAMP2"></table></td>
-                <td><table id="techMED2"></table></td>
-</tr></table>
-         </div>
+	<div id="tab-7">
+		<table id="techABS2"></table>
+		<table id="techCHAMP2"></table>
+	</div>
        <div id="tab-8">
                   <table>
                           <tr valign="top">
@@ -210,10 +207,12 @@ html, body {
                            </tr>
                </table>
       </div>
+<!--	  
  <div id="tab-9">
              <div id="upload" >Загрузить</div>
              <div id="status" ></div>
       </div>
+//-->	  
 </div>
 </div>
 
