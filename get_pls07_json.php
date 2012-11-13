@@ -67,7 +67,7 @@ $result = mysql_query( $sql,$connect ) or die("<br>Couldn t execute query.".mysq
 				if ($diffb_c<>$row['maxb_c']){
 					$data->rows[$i]['cell'] = array($row['cls'],$row['localized_name']." (".$row['level']." lvl)","+ ".$diffb_c." / ".$diffw_c." (".$row['maxb_c'].")",$proc." (".$procA.")", $procs." (".$procAs.")", $procD." (".$procAD.")", $procsur." (".$procAsur.")", $procf." (".$procAf.")");
 				}else{
-					$data->rows[$i]['cell'] = array($row['cls'],$row['localized_name']." (".$row['level']." lvl)","+ ".$diffb_c." / ".$diffw_c." (".$row['maxb_c'].")",$proc." (".$procA.")", $procAs,$procAD,$procAsur, $procAf);
+					$data->rows[$i]['cell'] = array($row['cls'],$row['localized_name']." (".$row['level']." lvl)","+ ".$diffb_c." / ".$diffw_c,$proc, $procAs,$procAD,$procAsur, $procAf);
 				}
 				$i++;
 		//}
