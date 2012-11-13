@@ -133,6 +133,7 @@ foreach ($clan_array as $clan_i) {
 					<table id="pl_summary_table"></table>
 					<table id="pl_summary_table7"></table>
 					<div id="pl_summary_pager7"></div>
+					Примечание:*-неверные данные с сервера
 					<table id="pl_summary_table6"></table>
 					<table id="pl_summary_table5"></table>
 					<div id="pl_summary_pager5"></div>
