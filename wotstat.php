@@ -58,19 +58,14 @@ html, body {
  <a href="https://github.com/thunder-spb/wot-clan-stat">Скачать статистику себе c github'a</a>
 <header>
 	<h1><?php  
-	if (array_key_exists("idc",$_GET)) {
-		$idc = $_GET['idc'];
-		} else  {
-			$idc = "102";
-		}
-		foreach ($clan_array as $clan_i) {
-			$idc_temp = $clan_i["clan_id"];
-			if ($idc == $idc_temp) {
-				echo $clan_i["clan_tag"];
-				echo '  -   ';
-				echo $clan_i["clan_name"];
-			}
-		}
+foreach ($clan_array as $clan_i) {
+	$idc_temp = $clan_i["clan_id"];
+	if ($idc == $idc_temp) {
+		echo $clan_i["clan_tag"];
+		echo '  -   ';
+		echo $clan_i["clan_name"];
+	}
+}
 ?></h1>
 </header>
 <nav> 
@@ -90,11 +85,9 @@ html, body {
 	    <li><a href="#tab-1">Клан</a></li>
 		<li><a href="#tab-2">Бойцы</a></li>
 		<li><a href="#tab-3">Техника</a></li>
-
 		<li><a href="#tab-6">ГК</a></li>
 		<li><a href="#tab-7">Техника 2</a></li>
-                <li><a href="#tab-8">Графики</a></li>
-                <li><a href="#tab-9">Реплеи</a></li>
+		<li><a href="#tab-8">Графики</a></li>
 	</ul>
 	
 	<div id="tab-1">
