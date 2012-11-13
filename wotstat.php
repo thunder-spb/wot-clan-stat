@@ -207,12 +207,6 @@ html, body {
                            </tr>
                </table>
       </div>
-<!--	  
- <div id="tab-9">
-             <div id="upload" >Загрузить</div>
-             <div id="status" ></div>
-      </div>
-//-->	  
 </div>
 </div>
 
