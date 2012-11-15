@@ -25,6 +25,7 @@ $clan_array = array (
 	array("clan_id" => "102", "clan_tag" => "[SMPLC]",  "clan_name" => "Sample clan"),
 );
 $hosttime = " +0 hour";		// timezone shift
+$timetolife = 30;               // time to life stat for each tank
 ```
 
 2. After that you need to create mySQL tables. Tables structures located under *mysql* folder.
