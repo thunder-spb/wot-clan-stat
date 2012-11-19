@@ -50,7 +50,7 @@ html, body {
 <script type="text/javascript" src="js/jqgrid/jquery.jqGrid.js"></script>
 <script type="text/javascript" src="js/wot_tables.js"></script>
 <script type="text/javascript">
-	jQuery.jgrid.no_legacy_api = true;
+//	jQuery.jgrid.no_legacy_api = true;
 </script>
 </head>
 <body>
