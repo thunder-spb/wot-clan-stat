@@ -40,19 +40,18 @@ html, body {
 	var current_clan_id = <? echo $idc ?>;
 </script>
 
-<script type="text/javascript" src="js/jquery-1.5.1.min.js"></script>
-<script type="text/javascript" src="js/i18n/grid.locale-ru.js"></script>
+<script type="text/javascript" src="js/jquery-1.4.2.js"></script>
+
 <script type="text/javascript" src="js/jquery-ui-1.8.12.custom.min.js"></script>
 <script type="text/javascript" src="js/jquery.jqplot.min.js"></script>
 <script type="text/javascript" src="js/jqplot.dateAxisRenderer.min.js"></script>
 <script type="text/javascript" src="js/ajaxupload.3.5.js"></script>
 
+<script type="text/javascript" src="js/jqgrid/jquery.jqGrid.js"></script>
+<script type="text/javascript" src="js/wot_tables.js"></script>
 <script type="text/javascript">
 	jQuery.jgrid.no_legacy_api = true;
-	var current_clan_id = <? echo $idc ?>;
 </script>
-<script type="text/javascript" src="js/jquery.jqGrid.min.js"></script>
-<script type="text/javascript" src="js/wot_tables.js"></script>
 </head>
 <body>
  <a href="https://github.com/thunder-spb/wot-clan-stat">Скачать статистику себе c github'a</a>
