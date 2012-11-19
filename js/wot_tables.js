@@ -1440,7 +1440,7 @@ function stickTogether(){
         var selId = $(masterId).jqGrid('getGridParam','selrow');
 		var selI = $(masterId).jqGrid('getCell',selId,'id_');
          var selName =$(masterId).jqGrid('getCell',selId,'name');
-         $('#name').html('<h1>'+selName+'</h1>').css("padding", "10px");
+         $('#name').html('<h1>'+selName+'</h1>');
       
         if(masterPostData.filterBy){
             $(masterId).jqGrid('setGridParam',{'postData':{'filterBy':null}});
