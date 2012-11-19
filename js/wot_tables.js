@@ -54,7 +54,7 @@ $(function() {
 	// initialize the function
 	// as a parameter we are sending a selector. For this particular script we must select the unordeblue (or ordeblue) list item element 
 	tabs('nav ul');*/
-//	var idc = gup("idc");
+
 	var idc = current_clan_id;
 	if (idc == "") idc = "102"
 	
@@ -66,24 +66,6 @@ $(function() {
             }
         });
 	$('#link').change(stickTogether);
-	$.datepicker.setDefaults($.extend($.datepicker.regional["ru"]));
-	$( "#startdate" ).datepicker({
-		dateFormat: 'yy-mm-dd',
-		minDate: "2011-09-01",
-		maxDate: "+0d",
-		beforeShow: function(input) {$(input).css("background-color","#ff9");},
-		onSelect: function(dateText, inst) {$(this).css("background-color","");},
-		onClose: function(dateText, inst) {$(this).css("background-color","")}
-	});
-	$( "#enddate" ).datepicker({
-		dateFormat: 'yy-mm-dd',
-		minDate: "2011-09-02",
-		maxDate: "+0d",
-		beforeShow: function(input) {$(input).css("background-color","#ff9");},
-		onSelect: function(dateText, inst) {$(this).css("background-color","");},
-		onClose: function(dateText, inst) {$(this).css("background-color","")}
-	});
-	
 //--------Новости
 	var tnews1 = $("#news1").jqGrid({
 		sortable: false,
@@ -1453,7 +1435,7 @@ function stickTogether(){
         var selId = $(masterId).jqGrid('getGridParam','selrow');
 		var selI = $(masterId).jqGrid('getCell',selId,'id_');
          var selName =$(masterId).jqGrid('getCell',selId,'name');
-         $('#name').html('<h1>'+selName+'</h1>');
+         $('#name').html('<h1>'+selName+'</h1>').css("padding", "10px");
       
         if(masterPostData.filterBy){
             $(masterId).jqGrid('setGridParam',{'postData':{'filterBy':null}});
