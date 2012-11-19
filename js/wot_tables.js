@@ -1171,6 +1171,11 @@ $(function() {
 		scroll: false
 		
 	});
+/*
+ * 19.11.2012 / thunder
+ * commented out since we do not have such file
+ * 
+ * 
 	var twm2 = $('#wmWinProvinces').jqGrid({
 		sortable: false,
 		altRows: false,
@@ -1201,7 +1206,7 @@ $(function() {
 		scroll: false
 		
 	});
-
+*/
 	var tmstat20 = $('#techABS2').jqGrid({
 		sortable: true,
 		altRows: true,
