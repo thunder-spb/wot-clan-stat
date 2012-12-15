@@ -263,6 +263,7 @@ foreach ($clan_array as $clan_i) {
 								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 								$qqtt = mysql_fetch_array($qt);
 								$localized_name=$data['data']['vehicles'][$i]['localized_name']; 
+								//$lonamesql=$qqtt['localized_name'];
 								$image_url=$data['data']['vehicles'][$i]['image_url']; 
 								//$level=$data['data']['vehicles'][$i]['level']; 
 								$class=$data['data']['vehicles'][$i]['class'];
@@ -285,7 +286,7 @@ foreach ($clan_array as $clan_i) {
 									$qt = mysql_query($sqlt, $connect);
 									if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 									
-									$sqlt = "select id_t from cat_tanks where name='$tname' and nation='$nation' and level='$level'";
+								    $sqlt = "select id_t from cat_tanks where name='$tname' and nation='$nation' and level='$level'";
 									$qt = mysql_query($sqlt, $connect);
 									if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 									$qqtt = mysql_fetch_array($qt);
@@ -304,11 +305,12 @@ foreach ($clan_array as $clan_i) {
 									}
 									$newtankexist=1;
 								}
-								$sqlt = "select id_t from cat_tanks where name='$tname' and nation='$nation' and level='$level'";
+								$sqlt = "select id_t,localized_name from cat_tanks where name='$tname' and nation='$nation' and level='$level'";
 								$qt = mysql_query($sqlt, $connect);
 								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 								$qqtt = mysql_fetch_array($qt);
 								$idt=$qqtt['id_t'];
+								$lonamesql=$qqtt['localized_name'];
 								//проверка на изменение ангара у игрока + исключение повторной записи в лог танков
 								if ($newtankexist!=1){
 									$sqlt2 = "select count(*) as cnt2 from player_btl where idt='$idt' and idp='$id'";
@@ -316,7 +318,7 @@ foreach ($clan_array as $clan_i) {
 									if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 									$qqtt2 = mysql_fetch_array($qt2);
 									if((($qqtt2['cnt2']==NULL) or ($qqtt2['cnt2']==0)) and ($newtankist!=1) and ($cntT>0)){
-										$message=$localized_name.' ('.$classRu.' '.$level.' ур. '.$nation.') у '.$pname;
+										$message=$lonamesql.' ('.$classRu.' '.$level.' ур. '.$nation.') у '.$pname;
                                                                                 echo "добавлен танк $localized_name \n";
 										$type=0;
 										if ($level==10  or ($level==8 and $class=='SPG')){$type=1;}
