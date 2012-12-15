@@ -58,6 +58,7 @@ for($i=0;$i<$count;$i++) {
 	 if($a==1) {$sp5="<span style='color: blue;'><b>"; $sp6="</b></span>";}
 	 if($a==2) {$sp5="<span style='color: green;'><b>"; $sp6="</b></span>";}
 	$amessage=$sp5.$amessage.$sp6;
+	if ($tnation==NULL) $amessage="";
 	// $procmessage=$sp1.$proc.$sp2;
 	//$s=$i+1;
 	//$responce->rows[$i]['id_ec']=$s;
