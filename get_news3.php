@@ -13,30 +13,44 @@ if(!$sidx) $sidx =1;
 $start = $limit*$page - $limit;
 if($start <0) $start = 0;
 $connect = mysql_connect($host, $account, $password);
-$db = mysql_select_db($dbname, $connect) or die("ÕÂ Û‰‡ÎÓÒ¸ ÔÓ‰ÍÎ˛˜ËÚ¸Òˇ Í ·‡ÁÂ ‰‡ÌÌ˚ı!!!dump_wot_stat");
+$db = mysql_select_db($dbname, $connect) or die("–ù–µ —É–¥–∞–ª–æ—Å—å –ø–æ–¥–∫–ª—é—á–∏—Ç—å—Å—è –∫ –±–∞–∑–µ –¥–∞–Ω–Ω—ã—Ö!!!dump_wot_stat");
 $setnames = mysql_query( 'SET NAMES utf8' );
 $result = mysql_query("SELECT COUNT(*) AS count FROM event_tank WHERE idc = '$idc' and type>0"); 
 $row = mysql_fetch_array($result,MYSQL_ASSOC); 
 $count = $row['count']; 
 if( $count >0 ) { $total_pages = ceil($count/$limit); } else { $total_pages = 0; }
-$SQL="SELECT id_et,type, message, date FROM event_tank WHERE idc = $idc and type>0 ORDER BY $sidx DESC LIMIT $start , $limit";
+//$SQL="SELECT id_et,type, message, date FROM event_tank WHERE idc = $idc and type>0 ORDER BY $sidx DESC LIMIT $start , $limit";
+$SQL="SELECT distinct (a.id_et),a.type,b.class as classt, b.localized_name,b.level,b.nation,  a.date, d.name FROM event_tank a,cat_tanks b,player d  WHERE a.idc = $idc and b.id_t=a.idt  and a.type>0 and d.idp=a.idp  ORDER BY $sidx DESC LIMIT $start , $limit";
 $result = mysql_query( $SQL,$connect ) or die("Couldn t execute query.".mysql_error()); 
 $responce->page = $page; 
 $responce->total = $total_pages; 
 $responce->records = $count; 
 for($i=0;$i<$count;$i++) { 
 	$row = mysql_fetch_array($result,MYSQL_ASSOC);
-	 $a=$row[type];
-	 $amessage=$row[message];
-	 $sp5="";$sp6="";
-	 if($a==1) {$sp5="<span style='color: blue;'><b>"; $sp6="</b></span> ";}
-	 if($a==2) {$sp5="<span style='color: green;'><b>"; $sp6="</b></span> ";}
+		$class=$row[classt];
+		if ($class=='heavyTank') $loclass='<img src="images/icons/ht.png" style="width: 20px; height:20px;" align="absmiddle"/>'; else
+		if ($class=='mediumTank') $loclass='<img src="images/icons/mt.png" style="width: 20px; height:20px;" align="absmiddle"/>'; else
+		//if ($class=='lightTank') $loclass='<img src="images/icons/lt.png" style="width: 20px; height:20px;" align="absmiddle"/>'; else
+		if ($class=='SPG') $loclass='<img src="images/icons/spg.png" style="width: 20px; height:20px;" align="absmiddle"/>'; else
+		if ($class=='AT-SPG') $loclass='<img src="images/icons/at.png" style="width: 20px; height:20px;" align="absmiddle"/>'; else
+		$loclass=$class;
+		//ECHO $loclass;
+	$a=$row[type];
+	$tnation=$row[nation];
+	$tname=$row[localized_name];
+	$pname=$row[name];
+	// $amessage=$tname.' ('.$classRu.' '.$tlevel.' —É—Ä. '.$nation.') —É '.$pname;
+	$amessage=$tname.' ('.$tnation.') —É '.$pname;
+	$sp5="";$sp6="";
+	if($a==1) {$sp5="<span style='color: blue;'><b>"; $sp6="</b></span> ";}
+	if($a==2) {$sp5="<span style='color: green;'><b>"; $sp6="</b></span> ";}
 	$amessage=$sp5.$amessage.$sp6;
+	if ($tnation==NULL) $amessage="";
 	// $procmessage=$sp1.$proc.$sp2;
 	//$s=$i+1;
 	//$responce->rows[$i]['id_ec']=$s;
-	$responce->rows[$i]['cell']=array($row['id_et'],$row['date'],$amessage); 
+	$responce->rows[$i]['cell']=array($row['id_et'],$row['date'],$loclass,$row[level],$amessage); 
 } 
-header("Content-type: text/script;charset=utf-8");
+//header("Content-type: text/script;charset=UTF-8");
 echo json_encode($responce);
 ?>

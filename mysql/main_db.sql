@@ -1,4 +1,4 @@
--- phpMyAdmin SQL Dump
+﻿-- phpMyAdmin SQL Dump
 -- version 3.5.1
 -- http://www.phpmyadmin.net
 --
@@ -108,7 +108,6 @@ CREATE TABLE IF NOT EXISTS `event_tank` (
   `idp` int(11) NOT NULL,
   `idc` int(11) NOT NULL,
   `idt` int(11) NOT NULL,
-  `message` varchar(300) COLLATE utf8_unicode_ci NOT NULL,
   `date` date NOT NULL,
   `time` time NOT NULL,
   PRIMARY KEY (`id_et`)
