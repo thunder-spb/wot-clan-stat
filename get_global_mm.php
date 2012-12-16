@@ -174,6 +174,13 @@ foreach ($clan_array as $clan_i) {
 										+$spotted/$battles_count*200+$dropped_capture_points/$battles_count*150
 										+$capture_points/$battles_count*150);
 							}
+							if ($battles_count<100) {
+								$rating=0;
+								$dropped_capture_points=0;
+								$capture_points=0;
+								$frags=0;
+								$spotted=0;
+							}
 							if 	(($rGPL['mbattles']<>$data['data']['summary']['battles_count']) or $rGPL['mbattles'] == NULL or $newtankist==1) {
 								if ($rGPL['mdate']<>$date) {
 									$sql = "INSERT INTO player (idp,idc,name,created_at,spotted, hits_percents,capture_points,damage_dealt,frags,dropped_capture_points,wins,losses,battles_count,survived_battles,xp,battle_avg_xp,max_xp,in_clan, date, time, rating)";

@@ -163,7 +163,7 @@ $(function() {
 		datatype: 'json',
 		mtype: "POST",
 		postData: {'filterBy':null},
-		colNames:['ID','Ник','Боёв','%%','РЭ','Фр/бой', 'Урон ср.','Опыт.ср','Захват/бой', 'Защита/бой','Побед','Фрагов','Опыт','Опыт макс.','Урон'],
+		colNames:['ID','Ник','Боёв','%%','РЭ','Фр/бой', 'Урон ср.','Опыт.ср','Захват/бой', 'Защита/бой','Свет/бой','Побед','Фрагов','Опыт','Опыт макс.','Урон'],
 		colModel :[			
 			{name:'idp', index:'idp', width:33, align:"center"},
 			{name:'name', index:'name', width:45, align:"center"},
@@ -175,6 +175,7 @@ $(function() {
 			{name:'battle_avg_xp', index:'battle_avg_xp', width:30, align:"center"},
 			{name:'capture_p', index:'capture_p', width:25, align:"center"},
 			{name:'dropped_capture_p', index:'dropped_capture_p', width:25, align:"center"},
+			{name:'spotted_p', index:'spotted_p', width:25, align:"center"},
 			{name:'wins', index:'wins', width:30, align:"center"},
 			{name:'frags', index:'frags', width:30, align:"center"},
 			{name:'xp', index:'xp', width:40, align:"center"},

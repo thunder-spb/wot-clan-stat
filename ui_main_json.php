@@ -16,7 +16,7 @@ $result = mysql_query("SELECT COUNT(*) AS count FROM clan WHERE idc = '$idc'");
 $row = mysql_fetch_array($result,MYSQL_ASSOC); 
 $count = $row['count']; 
 //$SQL="SELECT idp,name,battles_count,wins,ROUND((wins*100/battles_count),2) as proc,frags,ROUND((frags/battles_count),2) as akillm,battle_avg_xp,xp,max_xp,capture_points,dropped_capture_points,damage_dealt, ROUND((damage_dealt/battles_count),2) as adamagem  from player c where idp = c.idp and in_clan>0 and id_p in (select max(id_p) FROM `player` WHERE idp=c.idp) ORDER BY $sidx $sord ,name";
-$SQL="SELECT pl.idp,pl.name,pl.battles_count,round((pl.wins*100/pl.battles_count),2) AS proc, pl.rating,round((pl.frags/pl.battles_count),2) AS akillm,round((pl.damage_dealt/pl.battles_count),2) AS adamagem, pl.battle_avg_xp, round((pl.capture_points/pl.battles_count),2) as capture_p,round((pl.dropped_capture_points/pl.battles_count),2) as dropped_capture_p,pl.wins,pl.frags,pl.xp,pl.max_xp,pl.damage_dealt FROM player pl,(select max(id_p) as maxid, name from player group by name) lastresults WHERE idc = '$idc' and in_clan > 0  and pl.name = lastresults.name and pl.id_p = lastresults.maxid ORDER BY $sidx $sord";
+$SQL="SELECT pl.idp,pl.name,pl.battles_count,round((pl.wins*100/pl.battles_count),2) AS proc, pl.rating,round((pl.frags/pl.battles_count),2) AS akillm,round((pl.damage_dealt/pl.battles_count),2) AS adamagem, pl.battle_avg_xp, round((pl.capture_points/pl.battles_count),2) as capture_p,round((pl.dropped_capture_points/pl.battles_count),2) as dropped_capture_p,round((pl.spotted/pl.battles_count),2) as spotted_p, pl.wins,pl.frags,pl.xp,pl.max_xp,pl.damage_dealt FROM player pl,(select max(id_p) as maxid, name from player group by name) lastresults WHERE idc = '$idc' and in_clan > 0  and pl.name = lastresults.name and pl.id_p = lastresults.maxid ORDER BY $sidx $sord";
 $result = mysql_query( $SQL,$connect ) or die("Couldn t execute query.".mysql_error()); 
 $responce->page = $page; 
 $responce->total = 1; 
@@ -39,7 +39,7 @@ for($i=0;$i<$count;$i++) {
 	$procmessage=$sp1.$proc.$sp2;
 	$s=$i+1;
 	$responce->rows[$i]['idp']=$s;
-	$responce->rows[$i]['cell']=array($s,$link,$row[battles_count],$procmessage,$ratingmessage,$row[akillm],$row[adamagem],$row[battle_avg_xp],$row[capture_p],$row[dropped_capture_p],$row[wins],$row[frags],$row[xp],$row[max_xp],$row[damage_dealt]); 
+	$responce->rows[$i]['cell']=array($s,$link,$row[battles_count],$procmessage,$ratingmessage,$row[akillm],$row[adamagem],$row[battle_avg_xp],$row[capture_p],$row[dropped_capture_p],$row[spotted_p],$row[wins],$row[frags],$row[xp],$row[max_xp],$row[damage_dealt]); 
 } 
 header("Content-type: text/script;charset=utf-8");
 echo json_encode($responce);
