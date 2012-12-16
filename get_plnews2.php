@@ -48,11 +48,18 @@ for($i=0;$i<$count;$i++) {
 		$loclass=$class;
 	 $a=$row[type];
 	 $tnation=$row[nation];
+		if ($tnation=='ussr') $n='<img src="images/stickers/ussr.png" style="width: 20px; height:20px;" align="absmiddle"/>'; else
+		if ($tnation=='germany') $n='<img src="images/stickers/germany.png" style="width: 20px; height:20px;" align="absmiddle"/>'; else
+		if ($tnation=='usa') $n='<img src="images/stickers/usa.png" style="width: 20px; height:20px;" align="absmiddle"/>'; else
+		if ($tnation=='france') $n='<img src="images/stickers/france.png" style="width: 20px; height:20px;" align="absmiddle"/>'; else
+		if ($tnation=='uk') $n='<img src="images/stickers/uk.png" style="width: 20px; height:20px;" align="absmiddle"/>'; else
+		if ($tnation=='china') $n='<img src="images/stickers/china.png" style="width: 20px; height:20px;" align="absmiddle"/>'; else
+		$n=" ";
 	 $tname=$row[localized_name];
 	// $tlevel=$row[level];
 	 $pname=$row[name];
 	// $amessage=$tname.' ('.$classRu.' '.$tlevel.' ур. '.$nation.') у '.$pname;
-	 $amessage=$tname.' ('.$tnation.') у '.$pname;
+	 $amessage=$n.'  '.$tname;
 	 //$amessage=$row[message];
 	 $sp5="";$sp6="";
 	 if($a==1) {$sp5="<span style='color: blue;'><b>"; $sp6="</b></span>";}
