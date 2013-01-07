@@ -188,9 +188,11 @@ $cntT = $row['cntt'];
 							}
 							if 	(($rGPL['mbattles']<>$data['data']['summary']['battles_count']) or $rGPL['mbattles'] == NULL or $newtankist==1) {
 								echo "<br> ЕСТЬ новые данные: коэф=$target";
-								if ($target>1){
-									$target=$target-1;
+								if (($rGPL['mbattles']<>$data['data']['summary']['battles_count']) and ($rGPL['mbattles'] != NULL) and ($newtankist!=1)){
+								$ktar=(int)(($data['data']['summary']['battles_count']-$rGPL['mbattles'])/20+1);
+									if ($target>$ktar) $target=$target-$ktar; else $target=1;
 								}
+								echo "<br> новый коэф=$target";
 								if ($rGPL['mdate']<>$date) {
 									$sql = "INSERT INTO player (idp,idc,name,created_at,spotted, hits_percents,capture_points,damage_dealt,frags,dropped_capture_points,wins,losses,battles_count,survived_battles,xp,battle_avg_xp,max_xp,in_clan, date, time, rating)";
 									$sql.= " VALUES ('$id','$idc','$pname','$created_at', '$spotted','$hits_percents','$capture_points','$damage_dealt','$frags','$dropped_capture_points','$wins','$losses','$battles_count','$survived_battles','$xp','$battle_avg_xp','$max_xp','1', '$date1', '$time', '$rating')";
