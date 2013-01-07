@@ -12,5 +12,8 @@ $clan_array = array (
 	array("clan_id" => "102", "clan_tag" => "[SMPLC]",  "clan_name" => "Sample clan"),
 );
 $hosttime = " +0 hour";		// timezone shift
+
 $timetolife = 30;  // time to life stat for each tank
+$max_player_request=10; // количество одновременных запросов к серверам КВГ
+
 ?>

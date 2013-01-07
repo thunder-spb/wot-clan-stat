@@ -49,6 +49,8 @@ CREATE TABLE IF NOT EXISTS `clan` (
   `idp` int(11) NOT NULL,
   `role_localised` varchar(150) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'новобранец',
   `date` date NOT NULL,
+  `freq` int(11) NOT NULL DEFAULT '1',
+  `target` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_c`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
@@ -238,6 +240,24 @@ CREATE TABLE IF NOT EXISTS `wm_event` (
   `idc` int(11) NOT NULL,
   PRIMARY KEY (`id_e`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `tech`
+--
+CREATE TABLE IF NOT EXISTS `tech` (
+  `current` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`current`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Дамп данных таблицы `tech`
+--
+
+INSERT INTO `tech` (`current`) VALUES
+(0);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
