@@ -225,7 +225,7 @@ header('Content-Type: text/html; charset=UTF-8');
 									$q = mysql_query($sql, $connect);
 									if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 								}else{
-										if ($target<24){
+										if ($target<$req_freq){
 										$target=$target+1;
 									}
 								}
