@@ -189,7 +189,7 @@ $cntT = $row['cntt'];
 							if 	(($rGPL['mbattles']<>$data['data']['summary']['battles_count']) or $rGPL['mbattles'] == NULL or $newtankist==1) {
 								echo "<br> ЕСТЬ новые данные: коэф=$target";
 								if (($rGPL['mbattles']<>$data['data']['summary']['battles_count']) and ($rGPL['mbattles'] != NULL) and ($newtankist!=1)){
-								$ktar=(int)(($data['data']['summary']['battles_count']-$rGPL['mbattles'])/20+1);
+								$ktar=(int)((($data['data']['summary']['battles_count']-$rGPL['mbattles'])/(20*($req_freq/24)))+1);
 									if ($target>$ktar) $target=$target-$ktar; else $target=1;
 								}
 								echo "<br> новый коэф=$target";
