@@ -26,6 +26,11 @@ $sql="UPDATE `tech` SET `current`='$offs'";
 mysql_query($sql, $connect);
 if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $ida = array();
+$force=0;
+if (isset($_REQUEST['idp'])) {
+	$ida[]=(int)($_REQUEST['idp']);
+	$force=1;
+}
 while ($members = mysql_fetch_array($clan_list)) {	$ida[]=$members['idp'];	}
 $sql = "select count(*) as cntt from cat_tanks";
 $q2 = mysql_query($sql,$connect);
@@ -40,6 +45,8 @@ $cntT = $row['cntt'];
 		$idc=$qqt['idc'];
 		$freq=$qqt['freq'];
 		$target=$qqt['target'];
+		if ($force==1) $target=$freq;
+		$force=0;
 		if ($freq >= $target) {
 			if ($count1>=10) break;//не стоит злоупотреблять доверием
 			$count1=$count1+1;
@@ -189,7 +196,7 @@ $cntT = $row['cntt'];
 							if 	(($rGPL['mbattles']<>$data['data']['summary']['battles_count']) or $rGPL['mbattles'] == NULL or $newtankist==1) {
 								echo "<br> ЕСТЬ новые данные: коэф=$target";
 								if (($rGPL['mbattles']<>$data['data']['summary']['battles_count']) and ($rGPL['mbattles'] != NULL) and ($newtankist!=1)){
-								$ktar=(int)((($data['data']['summary']['battles_count']-$rGPL['mbattles'])/(20*($req_freq/24)))+1);
+								$ktar=(int)((($data['data']['summary']['battles_count']-$rGPL['mbattles'])/(10*($req_freq/24)))+1);
 									if ($target>$ktar) $target=$target-$ktar; else $target=1;
 								}
 								echo "<br> новый коэф=$target";
@@ -417,5 +424,5 @@ function get_page($url) {
 	return $data;
 }	
 mysql_close($connect);
-echo "get_global_mm done!"
+echo "<br>get_global_mm done!"
 ?>
