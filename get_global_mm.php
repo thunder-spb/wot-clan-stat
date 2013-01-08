@@ -193,11 +193,11 @@ $cntT = $row['cntt'];
 								$frags=0;
 								$spotted=0;
 							}
+							echo "<br> коэф=$target";
 							if 	(($rGPL['mbattles']<>$data['data']['summary']['battles_count']) or $rGPL['mbattles'] == NULL or $newtankist==1) {
-								echo "<br> ЕСТЬ новые данные: коэф=$target";
+								echo "<br> Есть новые данные";
 								if (($rGPL['mbattles']<>$data['data']['summary']['battles_count']) and ($rGPL['mbattles'] != NULL) and ($newtankist!=1)){
-								$ktar=(int)((($data['data']['summary']['battles_count']-$rGPL['mbattles'])/(10*($req_freq/24)))+1);
-									if ($target>$ktar) $target=$target-$ktar; else $target=1;
+									if ($target>1) $target=(int)($target/2);
 								}
 								echo "<br> новый коэф=$target";
 								if ($rGPL['mdate']<>$date) {
