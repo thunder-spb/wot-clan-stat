@@ -11,7 +11,9 @@ Working demo is here: [http://thunder.wot-blackdeath.ru/wot-stat](http://thunder
 
 1. Rename _settings.kak.sample_ into _settings.kak_. Then change _settings.kak_
 	You need to set there:
+
 ```php
+
 $host = "localhost";		// your mySQL server host
 $account = "username";		// your mySQL username
 $password = "passwd";		// your mySQL password
@@ -27,7 +29,6 @@ $clan_array = array (
 $hosttime = " +0 hour";		// timezone shift
 $timetolife = 30;               // time to life stat for each tank
 $max_player_request=10; // количество одновременных запросов к серверам КВГ
-
 ```
 
 2. After that you need to create mySQL tables. Tables structures located under *mysql* folder.
