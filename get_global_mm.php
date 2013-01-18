@@ -62,7 +62,7 @@ $cntT = $row['cntt'];
 				}
 			}
 			echo "<br>checking $id from $clantag1 \n";
-			$pageidp = "community/accounts/".$id."/api/1.8/?source_token=WG-WoT_Assistant-test";		
+			$pageidp = "community/accounts/".$id."/api/1.9/?source_token=WG-WoT_Assistant-test";		
 			$pageidp = $wot_host.'/'.$pageidp;	
 			$date = date("Y-m-d",strtotime($hosttime));
 			$date1=$date;
@@ -250,7 +250,7 @@ $cntT = $row['cntt'];
 								} else {
 									$mdlamount=$data['data']['achievements'][$mdl];
 								}
-								if ($type==4){
+								if (($type==4) or ($type==6)){
 								$type_ach=0;
 								}
 								$SQL33="SELECT amount from player_ach where idp='$id' and ida='$mdl_id'";
