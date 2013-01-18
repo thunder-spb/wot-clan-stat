@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Окт 28 2012 г., 14:38
+-- Время создания: Янв 19 2013 г., 02:21
 -- Версия сервера: 5.1.61-rel13.2-log
 -- Версия PHP: 5.3.13
 
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `cat_achiev` (
   `img` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
   `type` int(11) NOT NULL,
   PRIMARY KEY (`id_ac`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=73 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=79 ;
 
 --
 -- Дамп данных таблицы `cat_achiev`
@@ -108,7 +108,12 @@ INSERT INTO `cat_achiev` (`id_ac`, `medal`, `medal_ru`, `img`, `type`) VALUES
 (69, 'medalLehvaslaiho', 'Лехвеслайхо ', 'medalLehvaslaiho', 2),
 (70, 'medalDumitru', 'Думитру', 'medalDumitru', 2),
 (71, 'medalRadleyWalters', 'Рэдли-Уолтерс', 'medalRadleyWalters', 2),
-(72, 'bombardier', 'Бомбардир ', 'bombardier', 3);
+(72, 'bombardier', 'Бомбардир ', 'bombardier', 3),
+(75, 'luckyDevil', 'Счастливчик', 'Lucky', 6),
+(74, 'huntsman', 'Егерь', 'Jager', 6),
+(76, 'ironMan', 'Невозмутимый', 'Imperturbable', 6),
+(77, 'pattonValley', 'Долина Паттонов', 'Pattonvalley', 3),
+(78, 'sturdy', 'Спартанец', 'Sparta', 6);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
