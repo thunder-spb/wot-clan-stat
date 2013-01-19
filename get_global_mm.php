@@ -368,11 +368,11 @@ $cntT = $row['cntt'];
 										$sqlt.= " VALUES ('$id', '$idt', '$date1', '$time', '$battle_count', '$win_count', '$frags', '$spotted', '$survivedBattles', '$damageDealt')";
 									}	
 								}
-								else
-								{ 
-									 //привет варгеймингу, из-за сбоев в отдаче статистики приходится добавлять этот костыль
-									$sqlt = "UPDATE player_btl SET `time`='$time', `battle_count`='$battle_count', `win_count`='$win_count',`frags`='$frags', `spotted`='$spotted', `survivedBattles`='$survivedBattles', `damageDealt`='$damageDealt' WHERE `idp`='$id' and `idt`='$idt' and`date`='$dateb' ";
-								}
+								 else
+								 { 
+								 // //привет варгеймингу, из-за сбоев в отдаче статистики приходится добавлять этот костыль
+								 $sqlt = "UPDATE player_btl SET `time`='$time', `battle_count`='$battle_count', `win_count`='$win_count',`frags`='$frags', `spotted`='$spotted', `survivedBattles`='$survivedBattles', `damageDealt`='$damageDealt' WHERE `idp`='$id' and `idt`='$idt' and`date`='$dateb' ";
+								 }
 								$qt = mysql_query($sqlt, $connect);
 								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 								//удаляем старые выборки

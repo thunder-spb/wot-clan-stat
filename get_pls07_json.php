@@ -64,20 +64,23 @@ $result = mysql_query( $sql,$connect ) or die("<br>Couldn t execute query.".mysq
 				$procAsur=$row['procAsur'];
 				$procf = round((double)($difff)/$diffb_c,2);
 				$procAf = $row['procAf'];
-				if (($rowmax['maxD']==0) and ($rowmax['maxb_c']<>0)){
-				$procs="*";
-				$procD="*";
-				$procsur="*";
-				$procf="*";
+				if ((($rowmax['maxD']==0) and ($rowmax['maxb_c']<>0)) or (($diffb_c>=2) and ($diffD==0))){
+				 $procs="*";
+				 $procD="*";
+				 $procsur="*";
+				 $procf="*";
 				}
-				if ($diffb_c<>$row['maxb_c']){
-					$data->rows[$i]['cell'] = array($row['cls'],$row['localized_name']." (".$row['level']." lvl)","+ ".$diffb_c." / ".$diffw_c." (".$row['maxb_c'].")",$proc." (".$procA.")", $procs." (".$procAs.")", $procD." (".$procAD.")", $procsur." (".$procAsur.")", $procf." (".$procAf.")");
+				if (($diffb_c>=2) and ($diffD==0)){
+				 $procAs=$procAD=$procAsur=$procAf="*";
+				 
+				}
+				 if ($diffb_c<>$row['maxb_c']){
+					 $data->rows[$i]['cell'] = array($row['cls'],$row['localized_name']." (".$row['level']." lvl)","+ ".$diffb_c." / ".$diffw_c." (".$row['maxb_c'].")",$proc." (".$procA.")", $procs." (".$procAs.")", $procD." (".$procAD.")", $procsur." (".$procAsur.")", $procf." (".$procAf.")");
 				}else{
-					$data->rows[$i]['cell'] = array($row['cls'],$row['localized_name']." (".$row['level']." lvl)","+ ".$diffb_c." / ".$diffw_c,$proc, $procAs,$procAD,$procAsur, $procAf);
+					 $data->rows[$i]['cell'] = array($row['cls'],$row['localized_name']." (".$row['level']." lvl)","+ ".$diffb_c." / ".$diffw_c,$proc, $procAs,$procAD,$procAsur, $procAf);
 				}
 				$i++;
-		//}
-	}
+			}
 
 header("Content-type: text/script;charset=utf-8");
 echo json_encode($data);
