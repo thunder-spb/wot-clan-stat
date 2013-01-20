@@ -30,8 +30,9 @@ $force=0;
 if (isset($_REQUEST['idp'])) {
 	$ida[]=(int)($_REQUEST['idp']);
 	$force=1;
+}else{
+	while ($members = mysql_fetch_array($clan_list)) {	$ida[]=$members['idp'];	}
 }
-while ($members = mysql_fetch_array($clan_list)) {	$ida[]=$members['idp'];	}
 $sql = "select count(*) as cntt from cat_tanks";
 $q2 = mysql_query($sql,$connect);
 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
@@ -73,7 +74,8 @@ $cntT = $row['cntt'];
 								//echo "тест \n";
 				$account_name=$data['data']['name'];
 				if (( $data['data']['clan']['clan'] == null) or ($inclan==0) ) { // игрок уже не в клане или клан не в альянсе			
-										 echo "NOT in clan $id \n";
+										 echo "<br>NOT in clan $id \n";
+										 echo "<br> deleting \n";
 					$sql12 = "delete from `clan` where idp='$id'"; 
 					$qq2 = mysql_query($sql12,$connect);
 					if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
@@ -269,6 +271,7 @@ $cntT = $row['cntt'];
 								if ($a_co<>$mdlamount){
 									if(($newtankist!=1) and ($mdlamount<>NULL)){
 										$message='<'.$mdl_ru.'> '.$mdlamount.' у '.$pname;
+										echo "<br>".$message;
 										if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 										$sql5 = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
 										$sql5.= " VALUES ('$type_ach','$id', '$idc', '$message', NULL, '$date', '$time')";
