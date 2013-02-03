@@ -148,25 +148,33 @@ $cntT = $row['cntt'];
 							if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
 						}
 						$newtankist=0;
-						$sql = "select max(battles_count) as mbattles, max(date) as mdate from player where idp='$id'";
+						$sql = "select max(battles_count) as mbattles, max(date) as mdate, name from player where idp='$id'";
 						$q = mysql_query($sql,$connect);
 						if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 						$rGPL = mysql_fetch_array($q);
 						if 	($rGPL['mbattles'] == NULL ){ 
-							$newtankist=1;
-							$a11=$timetolife+1;
-							$date1=date("Y-m-d",strtotime(' -'.$a11.' day '.$hosttime));	//Для корректного отображения  статистики записи новых бойцов делаются задним числом
+								$newtankist=1;
+								$a11=$timetolife+1;
+								$date1=date("Y-m-d",strtotime(' -'.$a11.' day '.$hosttime));	//Для корректного отображения  статистики записи новых бойцов делаются задним числом
 						}
-						 
-							$pname=$data['data']['name'];
-							echo "<br>обработка бойца $pname\n";
-							$created_at=date("Y-m-d",$data['data']['created_at']);
-							$spotted=$data['data']['battles']['spotted'];
-							$hits_percents=trim(str_replace("%"," ",$data['data']['battles']['hits_percents']));
-							$capture_points=$data['data']['battles']['capture_points'];
-							$damage_dealt=$data['data']['battles']['damage_dealt'];
-							$frags=$data['data']['battles']['frags'];
-							$dropped_capture_points=$data['data']['battles']['dropped_capture_points'];
+					 	$pname=$data['data']['name'];
+						$pnameDB=$rGPL['name'];
+						//Смена ника
+						if (($newtankist==0) and ($pname<>$pnameDB)){
+							$message="Боец".$pnameDB." cменил ник на ".$pname;
+							$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
+							$sql.= " VALUES (4,'$id', '$idc', '$message', NULL, '$date', '$time')";
+							$q = mysql_query($sql, $connect);
+							if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";					
+						}
+						echo "<br>обработка бойца $pname\n";
+						$created_at=date("Y-m-d",$data['data']['created_at']);
+						$spotted=$data['data']['battles']['spotted'];
+						$hits_percents=trim(str_replace("%"," ",$data['data']['battles']['hits_percents']));
+						$capture_points=$data['data']['battles']['capture_points'];
+						$damage_dealt=$data['data']['battles']['damage_dealt'];
+						$frags=$data['data']['battles']['frags'];
+						$dropped_capture_points=$data['data']['battles']['dropped_capture_points'];
 							$wins=$data['data']['summary']['wins'];
 							$losses=$data['data']['summary']['losses'];
 							$battles_count=$data['data']['summary']['battles_count'];
@@ -400,7 +408,7 @@ $cntT = $row['cntt'];
 								$qq2 = mysql_query($sql12,$connect);
 								if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
 							}
-						 $sql="UPDATE `player` SET `in_clan`='1' WHERE `idp`='$id'";
+						 $sql="UPDATE `player` SET `in_clan`='1', `name`='$pname' WHERE `idp`='$id'";
 						 mysql_query($sql, $connect);
 						 if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
 						 
