@@ -37,7 +37,7 @@ html, body {
 </style>
 
 <script type="text/javascript">
-	var current_clan_id = <? echo $idc ?>;
+	var current_clan_id = <?php echo $idc ?>;
 </script>
 
 <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
