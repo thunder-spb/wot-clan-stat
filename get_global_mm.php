@@ -192,9 +192,15 @@ $cntT = $row['cntt'];
 							$rating=0;
 							if ($battles_count<>0){
 								$level_avg /= $battles_count;
-								$rating = round($frags/$battles_count*(350-20*$level_avg)+$damage_dealt/$battles_count*(0.2+1.5/$level_avg)
-										+$spotted/$battles_count*200+$dropped_capture_points/$battles_count*150
-										+$capture_points/$battles_count*150);
+								//$rating = round($frags/$battles_count*(350-20*$level_avg)+$damage_dealt/$battles_count*(0.2+1.5/$level_avg)
+								//		+$spotted/$battles_count*200+$dropped_capture_points/$battles_count*150
+								//		+$capture_points/$battles_count*150);
+								$rating = round($frags/$battles_count*250
+										+$damage_dealt/$battles_count*(10/($level_avg+2))*(0.23+2*$level_avg/100)
+										+$spotted/$battles_count*150
+										+$dropped_capture_points/$battles_count*150
+										+(log($capture_points/$battles_count+1,1.732))*150);
+								echo "<br> Рейтинг ".$rating;			
 							}
 							if ($battles_count<100) {
 								$rating=0;
