@@ -144,6 +144,7 @@ CREATE TABLE IF NOT EXISTS `player` (
   `date` date NOT NULL,
   `time` time NOT NULL,
   `rating` int(11) NOT NULL,
+  `wn6` int(11) NOT NULL,
   PRIMARY KEY (`id_p`),
   KEY `date` (`date`),
   KEY `idc` (`idc`),
@@ -250,8 +251,7 @@ CREATE TABLE IF NOT EXISTS `wm_event` (
 CREATE TABLE IF NOT EXISTS `tech` (
   `current` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`current`)
-)ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
 -- Дамп данных таблицы `tech`
