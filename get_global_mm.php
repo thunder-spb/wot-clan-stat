@@ -64,7 +64,7 @@ $cntT = $row['cntt'];
 			}
 			echo "<br>checking $id from $clantag1 \n";
 			$pageidp = "community/accounts/".$id."/api/1.9/?source_token=WG-WoT_Assistant-test";		
-			$pageidp = $wot_host.'/'.$pageidp;	
+			$pageidp = "api.".$wot_host.'/'.$pageidp;	
 			$date = date("Y-m-d",strtotime($hosttime));
 			$date1=$date;
 			$date30=date("Y-m-d",strtotime(' -30 day '.$hosttime));
@@ -363,7 +363,7 @@ $cntT = $row['cntt'];
 									$qt = mysql_query($sqlt, $connect);
 									if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 									
-									$sqlt = "select id_t from cat_tanks where name='$tname' and nation='$nation' and level='$level'";
+									$sqlt = "select id_t from cat_tanks where name='$tname' and nation='$nation'";
 									$qt = mysql_query($sqlt, $connect);
 									if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 									$qqtt = mysql_fetch_array($qt);
@@ -381,7 +381,10 @@ $cntT = $row['cntt'];
 									}
 									$newtankexist=1;
 								}
-								$sqlt = "select id_t from cat_tanks where name='$tname' and nation='$nation' and level='$level'";
+								$sqlt = "UPDATE cat_tanks SET  `level`='$level', `image_url`='$image_url',`class`='$class' WHERE name='$tname' and nation='$nation'";
+								$qt = mysql_query($sqlt, $connect);
+								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+								$sqlt = "select id_t from cat_tanks where name='$tname' and nation='$nation'";
 								$qt = mysql_query($sqlt, $connect);
 								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 								$qqtt = mysql_fetch_array($qt);
