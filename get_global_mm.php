@@ -14,7 +14,7 @@ $qqt = mysql_fetch_array($q);
 $start=$qqt['current'];
 $sql = "select count(*) as cntpl from clan";
 $q2 = mysql_query($sql,$connect);
-if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+if (mysql_errno() <> 0) echo "MySQL Error 1 ".mysql_errno().": ".mysql_error()."\n";
 $row = mysql_fetch_array($q2);
 $cntplayer = $row['cntpl'];
 $clan_list = mysql_query("select idp from clan order by idp LIMIT $start,$max_player_request",$connect); // получение списка игроков клана из бд
@@ -138,8 +138,10 @@ $cntT = $row['cntt'];
 						// блок общей статы
 						$dolgnDB=$qqt['role_localised'];
 						$role_lo=$data['data']['clan']['member']['role'];
+						$role1=$clanrange[$dolgnDB];
+						$role2=$clanrange[$role_lo];
 						if ($dolgnDB<>$role_lo) {
-							$message="Изменение должности ".$account_name." c ".$dolgnDB." на ".$role_lo;
+							$message="Изменение должности ".$account_name." c ".$role1." на ".$role2;
 							$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
 							$sql.= " VALUES (4,'$id', '$idc', '$message', NULL, '$date', '$time')";
 							$q = mysql_query($sql, $connect);
@@ -149,9 +151,9 @@ $cntT = $row['cntt'];
 							if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
 						}
 						$newtankist=0;
-						$sql = "select max(battles_count) as mbattles, max(date) as mdate, name from player where idp='$id'";
+						$sql = "select max(battles_count) as mbattles, max(date) as mdate, name from player where idp='$id' group by idp" ;
 						$q = mysql_query($sql,$connect);
-						if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+						if (mysql_errno() <> 0) echo "MySQL Error 1 ".mysql_errno().": ".mysql_error()."\n";
 						$rGPL = mysql_fetch_array($q);
 						if 	($rGPL['mbattles'] == NULL ){ 
 								$newtankist=1;
@@ -162,9 +164,9 @@ $cntT = $row['cntt'];
 						$pnameDB=$rGPL['name'];
 						//Смена ника
 						if (($newtankist==0) and ($pname<>$pnameDB)){
-							$message="Боец".$pnameDB." cменил ник на ".$pname;
+							$message="Боец ".$pnameDB." cменил ник на ".$pname;
 							$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
-							$sql.= " VALUES (4,'$id', '$idc', '$message', NULL, '$date', '$time')";
+							$sql.= " VALUES (10,'$id', '$idc', '$message', NULL, '$date', '$time')";
 							$q = mysql_query($sql, $connect);
 							if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";					
 						}
@@ -202,14 +204,22 @@ $cntT = $row['cntt'];
 										+$spotted/$battles_count*150
 										+$dropped_capture_points/$battles_count*150
 										+(log($capture_points/$battles_count+1,1.732))*150);
-								echo "<br> Рейтинг ".$rating;	
+								echo "<br> Рейтинг newEFF ".$rating;	
 								$wn6=round((1240-1040/pow(min($level_avg,6), 0.164))*$frags/$battles_count
 									   +$damage_dealt/$battles_count*530/(184*exp(0.24*$level_avg)+130)
 									   +$spotted/$battles_count*125
 									   +min($dropped_capture_points/$battles_count,2.2)*100
 									   +((185/(0.17+exp(($wins*100/$battles_count-35)*-0.134)))-500)*0.45
 									   +(6-min($level_avg,6))*-60);
-								echo "<br> Рейтинг ".$wn6;	   
+								echo "<br> Рейтинг WN6 ".$wn6;	  
+								$wn7=round((1240-1040/pow(min($level_avg,6), 0.164))*$frags/$battles_count
+									   +$damage_dealt/$battles_count*530/(184*exp(0.24*$level_avg)+130)
+									   +$spotted/$battles_count*125
+									   +min($dropped_capture_points/$battles_count,2.2)*100
+									   +((185/(0.17+exp(($wins*100/$battles_count-35)*-0.134)))-500)*0.45
+									   -((5-min($level_avg,5))*125)/(1+exp(($level_avg-pow($battles_count/220,3/$lewel_avg)*1.5))));
+									   //-[(5 - MIN(TIER,5))*125] / [1 + e^( ( TIER - (GAMESPLAYED/220)^(3/TIER) )*1.5 )] 
+								echo "<br> Рейтинг WN7 ".$wn7;	
 							}
 							if ($battles_count<100) {
 								$wn6=0;
@@ -466,7 +476,9 @@ $cntT = $row['cntt'];
 						$databefore = mysql_fetch_array($q);
 						$battlesdelta=$battles_count-$databefore['battles_count'];
 						$rating30=0;
-						if ($battlesdelta>30){
+						$wn630=0;
+						$win30=0;
+						if ($battlesdelta>100){
 							$fragsdelta=$frags-$databefore['frags'];
 							$damagedelta=$damage_dealt-$databefore['damage_dealt'];
 							//echo "<br> боёв за месяц=$battlesdelta дамаг $damagedelta";
@@ -480,17 +492,32 @@ $cntT = $row['cntt'];
 									+$dropdelta/$battlesdelta*150
 									+(log($captdelta/$battlesdelta+1,1.732))*150);
 							echo "<br> Рейтинг30 ".$rating30; 	
+							
+							$win30=round($wins30t*100/$battlesdelta,2);
+							
 							$wn630=round((1240-1040/pow(min($level_avg,6), 0.164))*$fragsdelta/$battlesdelta
 								   +$damagedelta/$battlesdelta*530/(184*exp(0.24*$level_avg)+130)
 								   +$spotteddelta/$battlesdelta*125
 								   +min($dropdelta/$battlesdelta,2.2)*100
 								   +((185/(0.17+exp(($wins30t*100/$battlesdelta-35)*-0.134)))-500)*0.45
 								   +(6-min($level_avg,6))*-60);
-							echo "<br> Рейтинг wn630 ".$wn630;	   
-							$sql="UPDATE `player` SET `in_clan`='1', `name`='$pname', `rating30`='$rating30',`wn630`='$wn630'  WHERE `idp`='$id'";
+							echo "<br> Рейтинг wn630 ".$wn630;
+							$wn730=round((1240-1040/pow(min($level_avg,6), 0.164))*$fragsdelta/$battlesdelta
+								   +$damagedelta/$battlesdelta*530/(184*exp(0.24*$level_avg)+130)
+								   +$spotteddelta/$battlesdelta*125
+								   +min($dropdelta/$battlesdelta,2.2)*100
+								   +((185/(0.17+exp(($wins30t*100/$battlesdelta-35)*-0.134)))-500)*0.45
+								   -((5-min($level_avg,5))*125)/(1+exp(($level_avg-pow($battlesdelta/220,3/$lewel_avg)*1.5))));
+								   //+(6-min($level_avg,6))*-60);
+							echo "<br> Рейтинг wn730 ".$wn730;
+							echo "<br> % побед ".$win30;
+							// $sql="UPDATE `player` SET `in_clan`='1', `name`='$pname', `rating30`='$rating30',`wn630`='$wn630', `win30`= '$win30' WHERE `idp`='$id'";
+						 // mysql_query($sql, $connect);
+						 // if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
+						}
+						$sql="UPDATE `player` SET `in_clan`='1', `name`='$pname', `rating30`='$rating30',`wn630`='$wn630', `win30`= '$win30' WHERE `idp`='$id'";
 						 mysql_query($sql, $connect);
 						 if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-						}
 					}
 				}
 			}
