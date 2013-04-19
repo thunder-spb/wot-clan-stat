@@ -20,7 +20,7 @@ $result = mysql_query("SELECT COUNT(*) AS count FROM event_clan WHERE idc = '$id
 $row = mysql_fetch_array($result,MYSQL_ASSOC); 
 $count = $row['count']; 
 if( $count >0 ) { $total_pages = ceil($count/$limit); } else { $total_pages = 0; }
-$SQL="SELECT id_ec, message, type, date FROM event_clan WHERE idc = $idc and (type=2 or type=1 or type=4) ORDER BY $sidx DESC LIMIT $start , $limit";
+$SQL="SELECT id_ec, message, type, date FROM event_clan WHERE idc = $idc and (type=2 or type=1 or type=4 or type=10) ORDER BY $sidx DESC LIMIT $start , $limit";
 $result = mysql_query( $SQL,$connect ) or die("Couldn t execute query.".mysql_error()); 
 $responce->page = $page; 
 $responce->total = $total_pages; 
@@ -32,6 +32,7 @@ for($i=0;$i<$count;$i++) {
 	 $sp5="";$sp6="";
 	 if($a==1) {$sp5="<span style='color: red;'><b>"; $sp6="</b></span>";}
 	 if($a==2) {$sp5="<span style='color: green;'><b>"; $sp6="</b></span>";}
+	 if($a==10) {$sp5="<span style='color: blue;'><b>"; $sp6="</b></span>";}
 	$amessage=$sp5.$amessage.$sp6;
 	// $procmessage=$sp1.$proc.$sp2;
 	//$s=$i+1;
