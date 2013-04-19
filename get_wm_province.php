@@ -10,7 +10,8 @@ header('Content-Type: text/html; charset=UTF-8');
 $total_poss = array();
 foreach ($clan_array as $clan_i) {
 	$idc = $clan_i["clan_id"];
-	$pageidp = "community/clans/".$idc."/provinces/?type=table";
+	//$pageidp = "community/clans/".$idc."/provinces/?type=table";
+	$pageidp = "community/clans/".$idc."/provinces/list/";
 	$pageidp = $wot_host.'/'.$pageidp;	
 	//$date = date("Y-m-d",strtotime($hosttime));
 	//$time = date("H:i:s",strtotime($hosttime));

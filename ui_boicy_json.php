@@ -25,7 +25,9 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 	$las_onl=min($clandays,$las_onl);
 	$responce->rows[$i]['idp']=$row[idp]; 
 	$s=$i+1;
-	$responce->rows[$i]['cell']=array($row[idp],$s, $link, $row[role_localised], $clandays, $las_onl); 
+	$a=$row[role_localised];
+	$role1=$clanrange[$a];
+	$responce->rows[$i]['cell']=array($row[idp],$s, $link, $role1, $clandays, $las_onl); 
 	$i++; 
 } 	
 header("Content-type: text/script;charset=utf-8");
