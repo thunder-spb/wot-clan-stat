@@ -1,15 +1,15 @@
-﻿<?
-/////Достижения и медали
-function get_max_amount($idplayer,$id_ach){
-	$a=array("16"=>40, "19"=>41, "5"=>42, "33"=>43, "30"=>44);
-	$idf=$a[$id_ach];
-      $resultkosa = mysql_query("SELECT amount as amnt from `player_ach` where idp='$idplayer' and ida='$idf'");
-		$rowkosa = mysql_fetch_array($resultkosa,MYSQL_ASSOC); 
-		$u = $rowkosa['amnt']; 
-		return $u;
-}
+<?php
+//header('Content-Type: text/html; charset=UTF-8');
 include error_reporting(0);
 include('settings.kak');
+//function get_max_amount($idplayer,$id_ach){
+//	$a=array("16"=>40, "19"=>41, "5"=>42, "33"=>43, "30"=>44);
+//	$idf=$a[$id_ach];
+//     $resultkosa = mysql_query("SELECT amount as amnt from `player_ach` where idp='$idplayer' and ida='$idf'");
+//		$rowkosa = mysql_fetch_array($resultkosa,MYSQL_ASSOC); 
+//		$u = $rowkosa['amnt']; 
+//		return $u;
+//}
 $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Ошибка подключения к БД");
 $setnames = mysql_query( 'SET NAMES utf8' );
@@ -53,6 +53,7 @@ for($i=0;$i<$count;$i++) {
 	else {
 		
 		$img='<img alt="'.$row[medal_ru].'" src="images/'.$row[img].'.png" />';
+		//$img='<img src="images/stickers/ussr.png" style="width: 20px; height:20px;" align="absmiddle"/>';
 		$value=$a_co;
 		if(($row[type]==3)and($a_co==1)) { $value="";}
 		if($row[type]==5) { $value="";}
@@ -70,5 +71,13 @@ if ($st==1) $message=str_replace("</tr>","",$message."</table>");
 if ($st==0) $message=$message."</table>";
 $responce->rows[0]['cell']=array($message);
 header("Content-type: text/script;charset=utf-8");
+function get_max_amount($idplayer,$id_ach){
+	$a=array("16"=>40, "19"=>41, "5"=>42, "33"=>43, "30"=>44);
+	$idf=$a[$id_ach];
+      $resultkosa = mysql_query("SELECT amount as amnt from `player_ach` where idp='$idplayer' and ida='$idf'");
+		$rowkosa = mysql_fetch_array($resultkosa,MYSQL_ASSOC); 
+		$u = $rowkosa['amnt']; 
+		return $u;
+}
 echo json_encode($responce);
 ?>
