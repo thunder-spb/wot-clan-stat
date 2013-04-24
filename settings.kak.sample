@@ -9,7 +9,17 @@ $wot_host = "worldoftanks.ru"; // leave it unchanged if you plan use it on Russi
 // clan_tag -- your clan tag, will be shown as tab on the top of the page
 // clan_name -- your clan name
 $clan_array = array (
-	array("clan_id" => "102", "clan_tag" => "[SMPLC]",  "clan_name" => "Sample clan"),
+	array("clan_id" => "1", "clan_tag" => "[SMPLC]",  "clan_name" => "Sample clan"),
+);
+$clanrange = array(
+	"leader" => "командир",
+	"private" => "солдат",
+	"recruit" => "новобранец",
+	"diplomat" => "дипломат",
+	"commander" => "полевой командир",
+	"recruiter"=>"вербовщик",
+	"vice_leader"=>"замком",
+	"treasurer" =>"казначей"
 );
 $hosttime = " +0 hour";		// timezone shift
 
