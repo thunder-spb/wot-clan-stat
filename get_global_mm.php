@@ -64,7 +64,7 @@ $cntT = $row['cntt'];
 					break;
 				}
 			}
-			echo "<br>\n\nchecking $id from $clantag1 \n";
+			echo "<br>---------------------------------<br>\n\nchecking $id from $clantag1 \n";
 			$pageidp = "community/accounts/".$id."/api/1.9/?source_token=WG-WoT_Assistant-test";		
 			$pageidp = "api.".$wot_host.'/'.$pageidp;	
 			$date = date("Y-m-d",strtotime($hosttime));
@@ -77,8 +77,8 @@ $cntT = $row['cntt'];
 								//echo "тест \n";
 				$account_name=$data['data']['name'];
 				if (( $data['data']['clan']['clan'] == null) or ($inclan==0) ) { // игрок уже не в клане или клан не в альянсе			
-										 echo "<br>\nNOT in clan $id \n";
-										 echo "<br>\ndeleting \n";
+										 echo "<br><b>\nNOT in clan $id \n";
+										 echo "<br>\ndeleting \n</b>";
 					$sql12 = "delete from `clan` where idp='$id'"; 
 					$qq2 = mysql_query($sql12,$connect);
 					if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
@@ -172,7 +172,7 @@ $cntT = $row['cntt'];
 							$q = mysql_query($sql, $connect);
 							if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";					
 						}
-						echo "<br>\nName:    $pname";
+						echo "<br>\nName:  <b>  $pname</b>";
 						$created_at=date("Y-m-d",$data['data']['created_at']);
 						$spotted=$data['data']['battles']['spotted'];
 						$hits_percents=trim(str_replace("%"," ",$data['data']['battles']['hits_percents']));
@@ -512,7 +512,7 @@ $cntT = $row['cntt'];
 								   +$spotteddelta/$battlesdelta*125
 								   +min($dropdelta/$battlesdelta,2.2)*100
 								   +((185/(0.17+exp(($wins30t*100/$battlesdelta-35)*-0.134)))-500)*0.45
-								   -((5-min($level_avg,5))*125)/(1+exp(($level_avg-pow($battlesdelta/220,3/$lewel_avg)*1.5))));
+								   -((5-min($level_avg,5))*125)/(1+exp(($level_avg-pow($battlesdelta/220,3/$level_avg)*1.5))));
 								   //+(6-min($level_avg,6))*-60);
 							echo "<br> Рейтинг wn730 ".$wn730;
 							echo "<br> % побед ".$win30;
