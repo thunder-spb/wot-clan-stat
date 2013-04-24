@@ -6,6 +6,9 @@ $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Ошибка подключения к БД");
 $setnames = mysql_query( 'SET NAMES utf8' );
 header('Content-Type: text/html; charset=UTF-8'); 
+//$clan_array[] = array("clan_id" => "12638", "clan_tag" => "[SMPLC]",  "clan_name" => "Sample clan");
+
+
 foreach ($clan_array as $clan_i) {
 	$idc = $clan_i["clan_id"];
 	$clantag = $clan_i["clan_tag"];

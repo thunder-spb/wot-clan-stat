@@ -147,6 +147,7 @@ CREATE TABLE IF NOT EXISTS `player` (
   `wn6` int(4) NOT NULL,
   `rating30` int(4) NOT NULL,
   `wn630` int(4) NOT NULL,
+  `win30` decimal(5,2) NOT NULL,
   PRIMARY KEY (`id_p`),
   KEY `date` (`date`),
   KEY `idc` (`idc`),
