@@ -6,6 +6,9 @@ $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Ошибка подключения к БД");
 $setnames = mysql_query( 'SET NAMES utf8' );
 header('Content-Type: text/html; charset=UTF-8'); 
+//$clan_array[] = array("clan_id" => "12638", "clan_tag" => "[SMPLC]",  "clan_name" => "Sample clan");
+
+
 foreach ($clan_array as $clan_i) {
 	$idc = $clan_i["clan_id"];
 	$clantag = $clan_i["clan_tag"];
@@ -60,8 +63,8 @@ foreach ($clan_array as $clan_i) {
 					$created_at=date("Y-m-d",$data['data']['members'][$i]['created_at']); //дата вступления в клан
 					//$role=$data['data']['members'][$i]['role'];
 					$role_lo=$data['data']['members'][$i]['role_localised'];
-					$sql  = "insert into clan (idp, idc, date)";
-					$sql .=" values('$idp', '$idc', '$created_at')";
+					$sql  = "insert into clan (idp, idc, date,role_localised)";
+					$sql .=" values('$idp', '$idc', '$created_at','recruit')";
 					//echo $sql.'<br>';
 					mysql_query($sql, $connect);
 				}
