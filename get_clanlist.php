@@ -69,55 +69,9 @@ foreach ($clan_array as $clan_i) {
 					mysql_query($sql, $connect);
 				}
 			}
-			// else  //клановый игрок. проверка на изменения
-			// {	$sql = "select * from clan where idp='$idp'";
-				// $q = mysql_query($sql, $connect);
-				// if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-				// $qqt = mysql_fetch_array($q);
-				// $dolgnDB=$qqt['role_localised'];
-				// $role_lo=$data['data']['members'][$i]['role_localised'];
-				// $role=$data['data']['members'][$i]['role'];
-				// $account_name=$data['data']['members'][$i]['account_name'];
-// //echo $role_lo;
-				// if ($dolgnDB<>$role_lo) {
-					// $message="Изменение должности ".$account_name." c ".$dolgnDB." на ".$data['data']['members'][$i]['role_localised'];
-					// $sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
-					// $sql.= " VALUES (4,'$idp', '$idc', '$message', NULL, '$date', '$time')";
-					// $q = mysql_query($sql, $connect);
-					// if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-					
-					// $sql="UPDATE `clan` SET `role`='$role', `role_localised`='$role_lo' WHERE `idp`='$idp'";
-					// mysql_query($sql, $connect);
-					// if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-				// }	
-			//}
-		}
+		}	
 	}
-	// $id=0;
-    // $sql = "select * from player where in_clan=0";
-	// $q = mysql_query($sql, $connect);
-	// if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-	// $qqt = mysql_fetch_array($q);
-	// $id=$qqt['idp'];
-	// echo 'удаляется '.$id;
-	// $sql12 = "delete from `clan` where idp='$id'"; 
-	// $qq2 = mysql_query($sql12,$connect);
-	// if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-	// //$sql12 = "delete from `event_clan` where idp='$id'"; 
-	// //$qq2 = mysql_query($sql12,$connect);
-	// //if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-	// $sql12 = "delete from `event_tank` where idp='$id'"; 
-	// $qq2 = mysql_query($sql12,$connect);
-	// if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-	// $sql12 = "delete from `player` where idp='$id'"; 
-	// $qq2 = mysql_query($sql12,$connect);
-	// if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-	// $sql12 = "delete from `player_ach` where idp='$id'"; 
-	// $qq2 = mysql_query($sql12,$connect);
-	// if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-	// $sql12 = "delete from `player_btl` where idp='$id'"; 
-	// $qq2 = mysql_query($sql12,$connect);
-	// if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
+	
 }
 	
 function get_page($url) {

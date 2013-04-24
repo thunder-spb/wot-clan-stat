@@ -137,21 +137,6 @@ $cntT = $row['cntt'];
 						if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 						}
 					else {  												// игрок в клане
-						// блок общей статы
-						$dolgnDB=$qqt['role_localised'];
-						$role_lo=$data['data']['clan']['member']['role'];
-						$role1=$clanrange[$dolgnDB];
-						$role2=$clanrange[$role_lo];
-						if ($dolgnDB<>$role_lo) {
-							$message="Изменение должности ".$account_name." c ".$role1." на ".$role2;
-							$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
-							$sql.= " VALUES (4,'$id', '$idc', '$message', NULL, '$date', '$time')";
-							$q = mysql_query($sql, $connect);
-							if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-							$sql="UPDATE clan SET `role_localised`='$role_lo' WHERE `idp`='$id'";
-							mysql_query($sql, $connect);
-							if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-						}
 						$newtankist=0;
 						$sql = "select max(battles_count) as mbattles, max(date) as mdate, name from player where idp='$id' group by idp" ;
 						$q = mysql_query($sql,$connect);
@@ -161,6 +146,22 @@ $cntT = $row['cntt'];
 								$newtankist=1;
 								$a11=$timetolife+1;
 								$date1=date("Y-m-d",strtotime(' -'.$a11.' day '.$hosttime));	//Для корректного отображения  статистики записи новых бойцов делаются задним числом
+						}
+						$dolgnDB=$qqt['role_localised'];
+						$role_lo=$data['data']['clan']['member']['role'];
+						$role1=$clanrange[$dolgnDB];
+						$role2=$clanrange[$role_lo];
+						if ($dolgnDB<>$role_lo) {
+							if ($newtankist==0) {
+								$message="Изменение должности ".$account_name." c ".$role1." на ".$role2;
+								$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
+								$sql.= " VALUES (4,'$id', '$idc', '$message', NULL, '$date', '$time')";
+								$q = mysql_query($sql, $connect);
+								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+							};
+							$sql="UPDATE clan SET `role_localised`='$role_lo' WHERE `idp`='$id'";
+							mysql_query($sql, $connect);
+							if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
 						}
 					 	$pname=$data['data']['name'];
 						$pnameDB=$rGPL['name'];
