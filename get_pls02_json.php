@@ -69,7 +69,7 @@ if ($st==3) $message=str_replace("</tr></tr></tr>","",$message."</table>");
 if ($st==2) $message=str_replace("</tr></tr>","",$message."</table>");
 if ($st==1) $message=str_replace("</tr>","",$message."</table>");
 if ($st==0) $message=$message."</table>";
-$responce->rows[0]['cell']=array($message);
+$responce->rows[0]['cell']=array($messag);
 header("Content-type: text/script;charset=utf-8");
 function get_max_amount($idplayer,$id_ach){
 	$a=array("16"=>40, "19"=>41, "5"=>42, "33"=>43, "30"=>44);
@@ -78,6 +78,7 @@ function get_max_amount($idplayer,$id_ach){
 		$rowkosa = mysql_fetch_array($resultkosa,MYSQL_ASSOC); 
 		$u = $rowkosa['amnt']; 
 		return $u;
-}
-echo json_encode($responce);
+		}
+		
+		echo json_encode($responce);
 ?>

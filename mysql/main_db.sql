@@ -10,7 +10,6 @@
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -166,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `player_ach` (
   `idp` int(11) NOT NULL,
   `ida` int(11) NOT NULL,
   `amount` int(11) NOT NULL,
-  PRIMARY KEY (`id_pa`)
+  PRIMARY KEY (`id_pa`),
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -211,7 +210,6 @@ CREATE TABLE IF NOT EXISTS `possession` (
   `occupancy_time` int(11) NOT NULL,
   PRIMARY KEY (`id_pos`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
 -- --------------------------------------------------------
 
 --

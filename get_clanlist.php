@@ -1,4 +1,4 @@
-<?
+<?php
 // выборка списка клана. анализ, внесение изменений, запись в лог-таблицу
 
 include('settings.kak');
@@ -8,13 +8,11 @@ $setnames = mysql_query( 'SET NAMES utf8' );
 header('Content-Type: text/html; charset=UTF-8'); 
 //$clan_array[] = array("clan_id" => "12638", "clan_tag" => "[SMPLC]",  "clan_name" => "Sample clan");
 
-
 foreach ($clan_array as $clan_i) {
 	$idc = $clan_i["clan_id"];
 	$clantag = $clan_i["clan_tag"];
 	$pageidc = "community/clans/".$idc."/api/1.1/?source_token=WG-WoT_Assistant-test";		
-	$pageidc = $wot_host.'/'.$pageidc;	
-		
+	$pageidc = $wot_host.'/'.$pageidc;
 	$date = date("Y-m-d",strtotime($hosttime));
 	$time = date("H:i:s",strtotime($hosttime));
 	//$date = date("Y-m-d");
@@ -22,11 +20,8 @@ foreach ($clan_array as $clan_i) {
 
 	$data = get_page($pageidc);
 	$data = json_decode($data, true);
-
 	if ($data['status'] == 'ok') {
-		
 		// тут добавить сбор инфы о клане //
-
 		for($i=0;$i<count($data['data']['members']);$i++){
 			//проверка на "нового игрока в клане"
 			$t=date("Y-m-d",($data['data']['members'][$i]['created_at']));
@@ -51,14 +46,13 @@ foreach ($clan_array as $clan_i) {
 					$sql = "UPDATE `clan` SET `idc`='$idc' WHERE `idp`='$idp'";
 					$q = mysql_query($sql, $connect);
 					if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-				
+			
 				} else {
 					$message="Приветствуем ".$data['data']['members'][$i]['account_name'].' в '.$clantag;
 					$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
 					$sql.= " VALUES (2,'$idp', '$idc', '$message', NULL, '$date', '$time')";
 					$q = mysql_query($sql, $connect);
-					if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-					
+					if (mysql_errno() <> 0) echo "MyQL Error ".mysql_errno().": ".mysql_error()."\n";
 					#=================== Insert into clan tables ==============#
 					$created_at=date("Y-m-d",$data['data']['members'][$i]['created_at']); //дата вступления в клан
 					//$role=$data['data']['members'][$i]['role'];
@@ -66,14 +60,13 @@ foreach ($clan_array as $clan_i) {
 					$sql  = "insert into clan (idp, idc, date,role_localised)";
 					$sql .=" values('$idp', '$idc', '$created_at','recruit')";
 					//echo $sql.'<br>';
-					mysql_query($sql, $connect);
+					mysql_query($sql, $onnect);
 				}
 			}
-		}	
+		}
 	}
-	
+
 }
-	
 function get_page($url) {
 		$ch = curl_init();
 		curl_setopt ($ch, CURLOPT_HEADER, 0);
@@ -85,7 +78,7 @@ function get_page($url) {
 		$data = curl_exec($ch);
 		curl_close($ch);
 		return $data;
-}	
+}
 mysql_close($connect);
 echo "Done"
 ?>

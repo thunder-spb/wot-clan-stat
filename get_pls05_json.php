@@ -1,4 +1,4 @@
-<?
+<?php
 /////Ангар за 7 дней
 //include error_reporting(0);
 include('settings.kak');
@@ -26,25 +26,25 @@ $st=0;
 $brr="";
 for($i=0;$i<$count;$i++) { 
 	$row = mysql_fetch_array($result,MYSQL_ASSOC);
-	$id_tank=$row[idtr];
+	$id_tank=$row['idtr'];
 	$sqlbefore="SELECT max(battle_count) as bc_before, max(win_count) as wc_before from `player_btl` where idp='$idac' and idt='$id_tank' and date<'$minDate'";
 	$resultbefore = mysql_query( $sqlbefore,$connect ) or die("Couldn t execute query.".mysql_error()); 
 	$bef = mysql_fetch_array($resultbefore);
 	$befb_c = $bef['bc_before'];
 	$befw_c = $bef['wc_before'];
-	$diffb_c=$row[b_c]-$befb_c;
-	$diffw_c=$row[w_c]-$befw_c;
-	if(($row[b_c]!=NULL)and ($diffb_c>0)){
+	$diffb_c=$row['b_c']-$befb_c;
+	$diffw_c=$row['w_c']-$befw_c;
+	if(($row['b_c']!=NULL)and ($diffb_c>0)){
 		if($newtype<>$row['class']) {
 			if ($newtype>0)
 				$message="</tr>".$message."<tr>";
 			else
 				$message=$message."<tr>";
 			$newtype=$row['class'];
-			$st=st+1;
+			$st=$st+1;
 			$br=0; $brr="";
 		}
-		$img="<img src='http://".$wot_host.$row[image_url]."'/>"; 
+		$img="<img src='http://".$wot_host.$row['image_url']."'/>"; 
 		$sp1=""; $sp2="";$sp3="";$sp4="";$sp5="";$sp6="";
 		if($row['class']=='SPG') $color='ffdab9';
 		if($row['class']=='AT-SPG') $color='c6efef';
@@ -69,7 +69,7 @@ for($i=0;$i<$count;$i++) {
 		if($procdiff>51) {$sp3="<span style='color: green;'>"; $sp4="</span>";}
 		if($procdiff>54) {$sp3="<span style='color: blue;'>"; $sp4="</span>";}
 		if($br==3) {$brr="</tr><tr>"; $br=0;} else $brr="";
-		$message=$message.$brr."<td width='250' align='center' style='border: 1px solid #faf0e6;background: #".$color."'><table><tr><td><center>".$img."<br>".$row[level]." lvl.</center></td><td><table><tr><td>".$row[localized_name]."</td></tr><tr><td>+".$diffb_c."(".$sp3.$procdiff."%".$sp4.")/".$row['b_c']." (".$sp1.$proc."%".$sp2.")</td></tr><tr><td>".$deltamessage."</td></tr></table></td></tr></table></td>";
+		$message=$message.$brr."<td width='250' align='center' style='border: 1px solid #faf0e6;background: #".$color."'><table><tr><td><center>".$img."<br>".$row['level']." lvl.</center></td><td><table><tr><td>".$row['localized_name']."</td></tr><tr><td>+".$diffb_c."(".$sp3.$procdiff."%".$sp4.")/".$row['b_c']." (".$sp1.$proc."%".$sp2.")</td></tr><tr><td>".$deltamessage."</td></tr></table></td></tr></table></td>";
 		$br=$br+1;
 	}
 }

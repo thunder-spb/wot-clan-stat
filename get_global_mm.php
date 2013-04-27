@@ -1,6 +1,5 @@
 <?
 // выборка данных игрока. анализ, внесение изменений, запись в лог-таблицу
-
 include('settings.kak');
 $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Ошибка подключения к БД");

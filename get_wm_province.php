@@ -1,4 +1,4 @@
-<?
+<?php
 // выборка владений клана на ГК, обновление и удаление владений
 
 include('settings.kak');
@@ -72,7 +72,6 @@ foreach ($lost as $lost_prov) {
 	mysql_query("insert into wm_event (idpr, type, time, idc) values ('$lost_prov', '0', '$t', '$idc_lost')",$connect);
 	mysql_query("delete from possession where idpr='$lost_prov'",$connect);
 }
-
 function get_page($url) {
 		$ch = curl_init();
 		curl_setopt ($ch, CURLOPT_HEADER, 0);
@@ -86,3 +85,4 @@ function get_page($url) {
 		return $data;
 }	
 mysql_close($connect);
+?>
