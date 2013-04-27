@@ -4,7 +4,7 @@ header('Content-Type: text/html; charset=UTF-8');
 
 $page = $_GET['page']; // get the requested page 
 $limit = $_GET['rows']; // get how many rows we want to have into the grid 
-//$sidx = $_GET['sidx']; // get index row - i.e. user click to sort 
+$sidx = $_GET['sidx']; // get index row - i.e. user click to sort 
 //$sord = $_GET['sord']; // get the direction if(!$sidx)
 $idc = $_GET['idc'];
 
@@ -22,13 +22,14 @@ $count = $row['count'];
 if( $count >0 ) { $total_pages = ceil($count/$limit); } else { $total_pages = 0; }
 $SQL="SELECT id_ec, message, type, date FROM event_clan WHERE idc = $idc and (type=2 or type=1 or type=4 or type=10) ORDER BY $sidx DESC LIMIT $start , $limit";
 $result = mysql_query( $SQL,$connect ) or die("Couldn t execute query.".mysql_error()); 
+$responce = new stdclass;
 $responce->page = $page; 
 $responce->total = $total_pages; 
 $responce->records = $count; 
 for($i=0;$i<$count;$i++) { 
 	$row = mysql_fetch_array($result,MYSQL_ASSOC);
-	 $a=$row[type];
-	 $amessage=$row[message];
+	 $a=$row['type'];
+	 $amessage=$row['message'];
 	 $sp5="";$sp6="";
 	 if($a==1) {$sp5="<span style='color: red;'><b>"; $sp6="</b></span>";}
 	 if($a==2) {$sp5="<span style='color: green;'><b>"; $sp6="</b></span>";}
@@ -38,7 +39,7 @@ for($i=0;$i<$count;$i++) {
 	//$s=$i+1;
 	//$responce->rows[$i]['id_ec']=$s;
 	$responce->rows[$i]['cell']=array($row['id_ec'],$row['date'],$amessage); 
-} 
+}
 header("Content-type: text/script;charset=utf-8");
 echo json_encode($responce);
 ?>
