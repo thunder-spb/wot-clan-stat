@@ -58,5 +58,4 @@ $max_player_request=10; // количество одновременных за�
 	* get_pls041_json.php - Stats by tanks types
 	* get_pls042_json.php - Stats by tanks country 
 	* get_plnews1.php &	get_plnews2.php - events for player
-
-
+	* get_news1(2,3).php - events for clan
