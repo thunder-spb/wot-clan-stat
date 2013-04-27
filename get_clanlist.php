@@ -60,7 +60,7 @@ foreach ($clan_array as $clan_i) {
 					$sql  = "insert into clan (idp, idc, date,role_localised)";
 					$sql .=" values('$idp', '$idc', '$created_at','recruit')";
 					//echo $sql.'<br>';
-					mysql_query($sql, $onnect);
+					mysql_query($sql, $connect);
 				}
 			}
 		}
