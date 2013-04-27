@@ -6,34 +6,14 @@ header('Content-Type: text/html; charset=UTF-8');
 if($_REQUEST['filterBy'] != 'null'){
 	$idac = $_REQUEST['filterBy'];
 }
-$page = $_GET['page']; // get the requested page 
-$limit = $_GET['rows']; // get how many rows we want to have into the grid 
-$sidx = $_GET['sidx']; // get index row - i.e. user click to sort 
-$sord = $_GET['sord']; // get the direction if(!$sidx) 
+//$page = $_GET['page']; // get the requested page 
+//$limit = $_GET['rows']; // get how many rows we want to have into the grid 
+//$sidx = $_GET['sidx']; // get index row - i.e. user click to sort 
+//$sord = $_GET['sord']; // get the direction if(!$sidx) 
 $limit=100;
 $page=1;
 
 //$idac=259339;
-/*
-$connect = mysql_connect($host, $account, $password);
-$db = mysql_select_db($dbname, $connect) or die("Не удалось подключиться к базе данных!!!dump_wot_stat");
-$setnames = mysql_query( 'SET NAMES utf8' );
-$count = 3;
- $SQL="SELECT battles_count,wins,ROUND((wins*100/battles_count),2) as proc,hits_percents,frags,ROUND((frags/battles_count),2) as akillm,spotted,battle_avg_xp,xp,max_xp,capture_points,dropped_capture_points,damage_dealt, ROUND((damage_dealt/battles_count),2) as adamagem,name from player";
- $SQL.=" WHERE idp=$idac and id_p in (select max(id_p) FROM `player` WHERE idp=$idac)";
-$result = mysql_query( $SQL,$connect ) or die("Couldn t execute query.".mysql_error()); 
-
-$minDate=date("Y-m-d",strtotime(' -30 day '.$hosttime));// за 30 дней
- $SQL="SELECT battles_count,wins,ROUND((wins*100/battles_count),2) as proc,hits_percents,frags,ROUND((frags/battles_count),2) as akillm,spotted,battle_avg_xp,xp,max_xp,capture_points,dropped_capture_points,damage_dealt, ROUND((damage_dealt/battles_count),2) as adamagem,name from player";
- $SQL.=" WHERE idp=$idac and id_p in (select min(id_p) FROM `player` WHERE idp=$idac and date>='$minDate')";
-$result2 = mysql_query( $SQL,$connect ) or die("Couldn t execute query.".mysql_error()); 
-
-//date("Y-m-d",strtotime($hosttime));
-$minDate=date("Y-m-d",strtotime(' -7 day '.$hosttime));// за 7 дней
-
- $SQL="SELECT battles_count,wins,ROUND((wins*100/battles_count),2) as proc,hits_percents,frags,ROUND((frags/battles_count),2) as akillm,spotted,battle_avg_xp,xp,max_xp,capture_points,dropped_capture_points,damage_dealt, ROUND((damage_dealt/battles_count),2) as adamagem,name from player";
- $SQL.=" WHERE idp=$idac and id_p in (select min(id_p) FROM `player` WHERE idp=$idac and date>='$minDate')";
-$result3 = mysql_query( $SQL,$connect ) or die("Couldn t execute query.".mysql_error()); */
 
 $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Не удалось подключиться к базе данных!!!dump_wot_stat");
@@ -61,36 +41,29 @@ $minDate=date("Y-m-d",strtotime(' -7 day '.$hosttime));// за 7 дней
 // $SQL.=" WHERE idp=$idac and id_p in (select min(id_p) FROM `player` WHERE idp=$idac and date>='$minDate')";
 $SQL="SELECT battles_count,wins,round((wins*100/battles_count),2) AS proc,hits_percents,frags,round((frags/battles_count),2) AS akillm,spotted,battle_avg_xp,xp,max_xp,capture_points,dropped_capture_points,damage_dealt,ROUND((damage_dealt/battles_count),2) AS adamagem,pl.name FROM player pl,(SELECT max(id_p) AS maxid,name FROM player WHERE date<'$minDate' GROUP BY name) lastresults WHERE idp =$idac AND pl.id_p = lastresults.maxid;"; 
 $result3 = mysql_query( $SQL,$connect ) or die("Couldn t execute query.".mysql_error()); 
-
-// <script type="text/javascript">
-//$(document).ready(function() {
-//      $('tr:odd').addClass('odd');
-//      $('tr:even').addClass('even');
-///});
-//</script> 
-
+$responce= new stdclass;
 $responce->page = $page; 
 $responce->total = 1; 
 $responce->records = $count; 
 	$row = mysql_fetch_array($result,MYSQL_ASSOC);
 	$row2 = mysql_fetch_array($result2,MYSQL_ASSOC);
 	$row3 = mysql_fetch_array($result3,MYSQL_ASSOC);
-	$responce->rows[0]['idp']=$row[idp]; 
-	$responce->rows[0]['cell']=array($row[battles_count],$row[wins],$row[proc],$row[hits_percents],$row[frags],$row[akillm],$row[spotted],$row[battle_avg_xp],$row[xp],$row[max_xp],$row[capture_points],$row[dropped_capture_points],$row[damage_dealt],$row[adamagem],$row[name]); 
-	$battles_count=$row[battles_count]-$row2[battles_count];
-	$wins=$row[wins]-$row2[wins];
-	$proc=round(($row[proc]-$row2[proc]),2);
-	$hits_percents=$row[hits_percents]-$row2[hits_percents];
-	$frags=$row[frags]-$row2[frags];
-	$akillm=round(($row[akillm]-$row2[akillm]),2);
-	$spotted=$row[spotted]-$row2[spotted];
-	$battle_avg_xp=$row[battle_avg_xp]-$row2[battle_avg_xp];
-	$xp=$row[xp]-$row2[xp];
-	$max_xp=$row[max_xp]-$row2[max_xp];
-	$capture_points=$row[capture_points]-$row2[capture_points];
-	$dropped_capture_points=$row[dropped_capture_points]-$row2[dropped_capture_points];
-	$damage_dealt=$row[damage_dealt]-$row2[damage_dealt];
-	$adamagem=round(($row[adamagem]-$row2[adamagem]),2);
+//	$responce->rows[0]['idp']=$row['idp'];
+	$responce->rows[0]['cell']=array($row['battles_count'],$row['wins'],$row['proc'],$row['hits_percents'],$row['frags'],$row['akillm'],$row['spotted'],$row['battle_avg_xp'],$row['xp'],$row['max_xp'],$row['capture_points'],$row['dropped_capture_points'],$row['damage_dealt'],$row['adamagem'],$row['name']); 
+	$battles_count=$row['battles_count']-$row2['battles_count'];
+	$wins=$row['wins']-$row2['wins'];
+	$proc=round(($row['proc']-$row2['proc']),2);
+	$hits_percents=$row['hits_percents']-$row2['hits_percents'];
+	$frags=$row['frags']-$row2['frags'];
+	$akillm=round(($row['akillm']-$row2['akillm']),2);
+	$spotted=$row['spotted']-$row2['spotted'];
+	$battle_avg_xp=$row['battle_avg_xp']-$row2['battle_avg_xp'];
+	$xp=$row['xp']-$row2['xp'];
+	$max_xp=$row['max_xp']-$row2['max_xp'];
+	$capture_points=$row['capture_points']-$row2['capture_points'];
+	$dropped_capture_points=$row['dropped_capture_points']-$row2['dropped_capture_points'];
+	$damage_dealt=$row['damage_dealt']-$row2['damage_dealt'];
+	$adamagem=round(($row['adamagem']-$row2['adamagem']),2);
 
 	if($proc>0) $proc="<span style='color: green;'>+".$proc."<span>"; else
 		if($proc<0) $proc="<span style='color: red;'>".$proc."<span>"; else 
@@ -118,22 +91,22 @@ $responce->records = $count;
 	if($damage_dealt==0) $damage_dealt="<span style='color: #faf0e6;'>".$damage_dealt."<span>";
 	
 
-	$responce->rows[1]['cell']=array($battles_count,$wins,$proc,$hits_percents,$frags,$akillm,$spotted,$battle_avg_xp,$xp,$max_xp,$capture_points,$dropped_capture_points,$damage_dealt,$adamagem,$row2[name]); 
+	$responce->rows[1]['cell']=array($battles_count,$wins,$proc,$hits_percents,$frags,$akillm,$spotted,$battle_avg_xp,$xp,$max_xp,$capture_points,$dropped_capture_points,$damage_dealt,$adamagem,$row2['name']); 
 	
-	$battles_count2=$row[battles_count]-$row3[battles_count];
-	$wins2=$row[wins]-$row3[wins];
-	$proc2=round(($row[proc]-$row3[proc]),2);
-	$hits_percents2=$row[hits_percents]-$row3[hits_percents];
-	$frags2=$row[frags]-$row3[frags];
-	$akillm2=round(($row[akillm]-$row3[akillm]),2);
-	$spotted2=$row[spotted]-$row3[spotted];
-	$battle_avg_xp2=$row[battle_avg_xp]-$row3[battle_avg_xp];
-	$xp2=$row[xp]-$row3[xp];
-	$max_xp2=$row[max_xp]-$row3[max_xp];
-	$capture_points2=$row[capture_points]-$row3[capture_points];
-	$dropped_capture_points2=$row[dropped_capture_points]-$row3[dropped_capture_points];
-	$damage_dealt2=$row[damage_dealt]-$row3[damage_dealt];
-	$adamagem2=round(($row[adamagem]-$row3[adamagem]),2);
+	$battles_count2=$row['battles_count']-$row3['battles_count'];
+	$wins2=$row['wins']-$row3['wins'];
+	$proc2=round(($row['proc']-$row3['proc']),2);
+	$hits_percents2=$row['hits_percents']-$row3['hits_percents'];
+	$frags2=$row['frags']-$row3['frags'];
+	$akillm2=round(($row['akillm']-$row3['akillm']),2);
+	$spotted2=$row['spotted']-$row3['spotted'];
+	$battle_avg_xp2=$row['battle_avg_xp']-$row3['battle_avg_xp'];
+	$xp2=$row['xp']-$row3['xp'];
+	$max_xp2=$row['max_xp']-$row3['max_xp'];
+	$capture_points2=$row['capture_points']-$row3['capture_points'];
+	$dropped_capture_points2=$row['dropped_capture_points']-$row3['dropped_capture_points'];
+	$damage_dealt2=$row['damage_dealt']-$row3['damage_dealt'];
+	$adamagem2=round(($row['adamagem']-$row3['adamagem']),2);
 	if($proc2>0) $proc2="<span style='color: green;'>+".$proc2."<span>"; else
 		if($proc2<0) $proc2="<span style='color: red;'>".$proc2."<span>"; else 
 			$proc2="<span style='color: #faf0e6;'>".$proc2."<span>";
@@ -158,8 +131,8 @@ $responce->records = $count;
 	if($capture_points2==0) $capture_points2="<span style='color: #faf0e6;'>".$capture_points2."<span>";
 	if($dropped_capture_points2==0) $dropped_capture_points2="<span style='color: #faf0e6;'>".$dropped_capture_points2."<span>";
 	if($damage_dealt2==0) $damage_dealt2="<span style='color: #faf0e6;'>".$damage_dealt2."<span>";
-	if($row3[battles_count]==0) $responce->rows[2]['cell']=array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0); 
-	else $responce->rows[2]['cell']=array($battles_count2,$wins2,$proc2,$hits_percents2,$frags2,$akillm2,$spotted2,$battle_avg_xp2,$xp2,$max_xp2,$capture_points2,$dropped_capture_points2,$damage_dealt2,$adamagem2,$row3[name]); 
+	if($row3['battles_count']==0) $responce->rows[2]['cell']=array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0); 
+	else $responce->rows[2]['cell']=array($battles_count2,$wins2,$proc2,$hits_percents2,$frags2,$akillm2,$spotted2,$battle_avg_xp2,$xp2,$max_xp2,$capture_points2,$dropped_capture_points2,$damage_dealt2,$adamagem2,$row3['name']); 
 //} 
 header("Content-type: text/script;charset=utf-8");
 echo json_encode($responce);

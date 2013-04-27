@@ -37,7 +37,7 @@ for($i=0;$i<$count;$i++) {
 	$a_co=$qqtt33['amount'];
 	if (($row['type']<>10)and ($a_co<>0)){ // 10-максимальная серия для других медалек
 	$cnt=$cnt+1;
-	if(($newtype<>$row['type'])or($cnt>10)){
+	if(($newtype<>$row['type'])or($cnt>9)){
 		if ($newtype>0)
 			$message="</tr>".$message."<tr>";
 		else

@@ -1,6 +1,6 @@
-<?
+<?php
 /////Статистика по танкам разных стран
-include error_reporting(0);
+//include error_reporting(0);
 include('settings.kak');
 
 $connect = mysql_connect($host, $account, $password);
@@ -47,15 +47,16 @@ $sql="SELECT sum(bc) AS b_c,sum(wc) AS w_c, nation FROM (SELECT max(battle_count
 //SELECT * from `player_btl` c, `cat_tanks` a where c.idp='4479693' and c.idt=a.id_t and id_pb in (select max(id_pb) from `player_btl` where idp='4479693' and idt=c.idt) //список последней техники
 
 $result = mysql_query( $sql,$connect ) or die("<br>Couldn t execute query.".mysql_error()); 
+$data=new stdclass;
 	$data->page       = $page;
 	$data->total      = $total_pages;
 	$data->records    = $count;
 	$i = 0;
 	while($row = mysql_fetch_assoc($result)) {
 		//                                a.localized_name,  c.battle_count,      proc,    a.level,cls,a.nation
-		$proc=$row[w_c]*100/$row[b_c];
+		$proc=$row['w_c']*100/$row['b_c'];
 		//$proca=$row[b_c]*100/$row[battles_count];
-		$data->rows[$i]['cell'] = array($row[nation],$row[b_c],round($proc,2));
+		$data->rows[$i]['cell'] = array($row['nation'],$row['b_c'],round($proc,2));
 		$i++;
 	}
 

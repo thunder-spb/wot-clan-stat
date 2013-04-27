@@ -1,6 +1,6 @@
-<?
+<?php
 /////Общая статистика по танкам
-include error_reporting(0);
+//include error_reporting(0);
 include('settings.kak');
 
 $connect = mysql_connect($host, $account, $password);
@@ -47,13 +47,14 @@ $sql="SELECT a.localized_name ,max(c.battle_count) as battle_count,ROUND((max(c.
 
 //echo $sql.'<br>';
 $result = mysql_query( $sql,$connect ) or die("<br>Couldn t execute query.".mysql_error()); 
+$data=new stdclass;
 	$data->page       = $page;
 	$data->total      = $total_pages;
 	$data->records    = $count;
 	$i = 0;
 	while($row = mysql_fetch_assoc($result)) {
 		//                                a.localized_name,  c.battle_count,      proc,    a.level,cls,a.nation
-		$data->rows[$i]['cell'] = array($row[localized_name],$row[battle_count],$row[proc],$row[level],$row[cls],$row[nation]);
+		$data->rows[$i]['cell'] = array($row['localized_name'],$row['battle_count'],$row['proc'],$row['level'],$row['cls'],$row['nation']);
 		$i++;
 	}
 

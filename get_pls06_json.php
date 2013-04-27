@@ -1,6 +1,6 @@
-<?
+<?php
 /////Развернутая статистика по боям за 30дней
-include error_reporting(0);
+//include error_reporting(0);
 include('settings.kak');
 $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Ошибка подключения к БД");
@@ -35,6 +35,7 @@ $start = $limit*$page - $limit;
 if($start <0) $start = 0;
 $sql="SELECT c.idt,a.localized_name,c.battle_count as minb_c,c.win_count as minw_c,c.date,c.time from `player_btl` c, cat_tanks a WHERE idp='$idac' and c.idt=a.id_t and date>='$minDate' order by date desc,time desc,c.battle_count desc";
 $result = mysql_query( $sql,$connect ) or die("<br>Couldn t execute query.".mysql_error()); 
+$data=new stdclass;
 	$data->page       = $page;
 	$data->total      = $total_pages;
 	$data->records    = $count;
