@@ -1,4 +1,4 @@
-<?
+<?php
 // выборка данных игрока. анализ, внесение изменений, запись в лог-таблицу
 include('settings.kak');
 $connect = mysql_connect($host, $account, $password);
