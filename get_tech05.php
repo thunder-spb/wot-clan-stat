@@ -1,4 +1,4 @@
-<?
+<?php
 /////Список ТТ.json.
 include error_reporting(0);
 include('settings.kak');

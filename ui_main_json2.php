@@ -1,4 +1,5 @@
 <?php
+error_reporting(0);
 include('settings.kak');
 header('Content-Type: text/html; charset=UTF-8'); 
 //$page = $_GET['page']; // get the requested page 

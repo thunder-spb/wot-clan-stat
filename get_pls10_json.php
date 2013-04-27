@@ -1,4 +1,4 @@
-<?
+<?php
 /////Список топ-техники.json. абсолют
 include error_reporting(0);
 include('settings.kak');

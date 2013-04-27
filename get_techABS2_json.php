@@ -1,4 +1,4 @@
-<?
+<?php
 /////Ñïèñîê òîï-òåõíèêè.json. àáñîëþò
 include error_reporting(0);
 include('settings.kak');

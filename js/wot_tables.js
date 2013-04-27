@@ -1305,7 +1305,7 @@ var tplayers = $("#players_table_2").jqGrid({
 		sortable: true,
 		altRows: true,
 		rowNum:100,
-		url:'ui_boicy_json.php?sidx=2&idc='+idc,
+		url:'ui_boicy_json.php?sidx=2&sord=asc&idc='+idc,
 		datatype: 'json',
 		mtype: "POST",
 		postData: {'filterBy':null},

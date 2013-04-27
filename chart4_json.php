@@ -1,6 +1,6 @@
-<?
+<?php
 
-include error_reporting(0);
+error_reporting(0);
 include('settings.kak');
 $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Îøèáêà ïîäêëþ÷åíèÿ ê ÁÄ");
