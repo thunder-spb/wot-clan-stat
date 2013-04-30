@@ -53,7 +53,11 @@ for($i=0;$i<$count;$i++) {
 		if($row['class']=='lightTank') $color='ffffff';
 		$procdiff=round(($diffw_c*100/$diffb_c),2);
 		$proc=round(($row['w_c']*100/$row['b_c']),2);
-		$procbef=round(($befw_c*100/$befb_c),2);
+		if ($befb_c<>0){
+	 	    $procbef=round(($befw_c*100/$befb_c),2);
+		}else{
+		     $procbef=0;
+		}
 		$deltaproc=round($proc-$procbef,2);
 		if($proc<48) {$sp1="<span style='color: red;'>"; $sp2="</span>";}
 		if($proc>51) {$sp1="<span style='color: green;'>"; $sp2="</span>";}
