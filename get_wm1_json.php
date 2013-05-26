@@ -1,8 +1,8 @@
 <?php
-//Âëàäåíèÿ íà ÃÊ
+//Ð’Ð»Ð°Ð´ÐµÐ½Ð¸Ñ Ð½Ð° Ð“Ðš
 include('settings.kak');
 $connect = mysql_connect($host, $account, $password);
-$db = mysql_select_db($dbname, $connect) or die("Îøèáêà ïîäêëþ÷åíèÿ ê ÁÄ");
+$db = mysql_select_db($dbname, $connect) or die("ÐžÑˆÐ¸Ð±ÐºÐ° Ð¿Ð¾Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ñ Ðº Ð‘Ð”");
 $setnames = mysql_query( 'SET NAMES utf8' );
 $idc = $_GET['idc'];
 $sql="SELECT count(*) as cnt from `possession` where idc='$idc'";
@@ -27,13 +27,13 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 	$responce->rows[$i]['id'] = $idpr;
 	switch ($row2["type"]) {
 		case "normal":
-			$type = "<img src='images/province_type_normal.png'>";// alt='Îáû÷íàÿ ïðîâèíöèÿ' >";
+			$type = "<img src='images/province_type_normal.png'>";// alt='ÐžÐ±Ñ‹Ñ‡Ð½Ð°Ñ Ð¿Ñ€Ð¾Ð²Ð¸Ð½Ñ†Ð¸Ñ' >";
 			break;
 		case "gold":
-			$type = "<img src='images/province_type_gold.png'>"; //alt='Êëþ÷åâàÿ ïðîâèíöèÿ' >";
+			$type = "<img src='images/province_type_gold.png'>"; //alt='ÐšÐ»ÑŽÑ‡ÐµÐ²Ð°Ñ Ð¿Ñ€Ð¾Ð²Ð¸Ð½Ñ†Ð¸Ñ' >";
 			break;
 		case "start":
-			$type = "<img src='images/province_type_start.png'>";// alt='Ñòàðòîâàÿ ïðîâèíöèÿ' >";
+			$type = "<img src='images/province_type_start.png'>";// alt='Ð¡Ñ‚Ð°Ñ€Ñ‚Ð¾Ð²Ð°Ñ Ð¿Ñ€Ð¾Ð²Ð¸Ð½Ñ†Ð¸Ñ' >";
 			break;
 	}
 	if ($row["attacked"]==1){
