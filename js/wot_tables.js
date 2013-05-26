@@ -1160,9 +1160,10 @@ $(function() {
 		datatype: 'json',
 		mtype: "POST",
 		postData: {'filterBy':null},
-		colNames:['Тип','Название','Карта','Прайм-тайм','Доход','Время владения'],
+		colNames:['Тип','?','Название','Карта','Прайм-тайм','Доход','Время владения'],
 		colModel :[
 			{name:'type', index:'type', width:40, align:"center"},
+			{name:'status', index:'status', width:25, align:"center"},
 			{name:'name', index:'name', width:200, align:"left"},
 			{name:'map', index:'map', width:140, align:"left"},
 			{name:'prime_time', index:'prime_time', width:100, align:"left"},
