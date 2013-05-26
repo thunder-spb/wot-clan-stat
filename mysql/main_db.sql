@@ -1,14 +1,15 @@
-﻿-- phpMyAdmin SQL Dump
--- version 3.5.1
+-- phpMyAdmin SQL Dump
+-- version 3.5.8
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Окт 28 2012 г., 14:37
--- Версия сервера: 5.1.61-rel13.2-log
--- Версия PHP: 5.3.13
+-- Время создания: Май 15 2013 г., 21:45
+-- Версия сервера: 5.1.67-log
+-- Версия PHP: 5.3.23-pl0-gentoo
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- База данных: `u2903659_atastats`
+-- База данных: `stat`
 --
 
 -- --------------------------------------------------------
@@ -34,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `cat_tanks` (
   `nation` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `class` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id_t`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1;
 
 -- --------------------------------------------------------
 
@@ -165,7 +166,7 @@ CREATE TABLE IF NOT EXISTS `player_ach` (
   `idp` int(11) NOT NULL,
   `ida` int(11) NOT NULL,
   `amount` int(11) NOT NULL,
-  PRIMARY KEY (`id_pa`),
+  PRIMARY KEY (`id_pa`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -209,7 +210,8 @@ CREATE TABLE IF NOT EXISTS `possession` (
   `attacked` tinyint(1) NOT NULL,
   `occupancy_time` int(11) NOT NULL,
   PRIMARY KEY (`id_pos`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
 -- --------------------------------------------------------
 
 --
@@ -226,7 +228,18 @@ CREATE TABLE IF NOT EXISTS `province` (
   `revenue` int(10) NOT NULL,
   `type` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id_pr`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `tech`
+--
+
+CREATE TABLE IF NOT EXISTS `tech` (
+  `current` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`current`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -241,26 +254,7 @@ CREATE TABLE IF NOT EXISTS `wm_event` (
   `time` int(11) NOT NULL,
   `idc` int(11) NOT NULL,
   PRIMARY KEY (`id_e`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `tech`
---
-CREATE TABLE IF NOT EXISTS `tech` (
-  `current` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`current`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-
---
--- Дамп данных таблицы `tech`
---
-
-INSERT INTO `tech` (`current`) VALUES
-(0);
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
