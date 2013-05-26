@@ -1,4 +1,4 @@
-<?
+<?php
 //Владения на ГК
 include('settings.kak');
 $connect = mysql_connect($host, $account, $password);
@@ -10,9 +10,9 @@ $sql="SELECT count(*) as cnt from `possession` where idc='$idc'";
 $res = mysql_query($sql,$connect);
 $row = mysql_fetch_array($res,MYSQL_ASSOC); 
 $count = $row['cnt'];
-
-$response->page = 1;
-$response->total = 1;
+$responce = new stdclass;
+$responce->page = 1;
+$responce->total = 1;
 $responce->records = $count;
 $i=0;
 
@@ -24,7 +24,7 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 	$sql2 = "select prime_time, name, arena_name, revenue, type from province where id='$idpr'";
 	$q2 = mysql_query($sql2,$connect);
 	$row2 = mysql_fetch_array($q2,MYSQL_ASSOC);
-	$response->rows[$i]['id'] = $idpr;
+	$responce->rows[$i]['id'] = $idpr;
 	switch ($row2["type"]) {
 		case "normal":
 			$type = "<img src='images/province_type_normal.png'>";// alt='Обычная провинция' >";

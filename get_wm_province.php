@@ -10,13 +10,14 @@ header('Content-Type: text/html; charset=UTF-8');
 $total_poss = array();
 foreach ($clan_array as $clan_i) {
 	$idc = $clan_i["clan_id"];
-	$pageidp = "community/clans/".$idc."/provinces/?type=table";
-	$pageidp = $wot_host.'/'.$pageidp;	
+	$pageidp = "clans/".$idc."/provinces/?type=table";
+	$pageidp = "cw.".$wot_host.'/'.$pageidp;	
 	//$date = date("Y-m-d",strtotime($hosttime));
 	//$time = date("H:i:s",strtotime($hosttime));
 	$data = get_page($pageidp);
 	$data = json_decode($data, true);
 	$t = time();
+	if ($data["result"]=="success"){
 	foreach($data["request_data"]["items"] as $item) {
 		$prime_time = $item["prime_time"];
 		$id = $item["id"];
@@ -57,6 +58,8 @@ foreach ($clan_array as $clan_i) {
 			//клан уже владеет провинцией
 			mysql_query("update possession set attacked='$attacked', occupancy_time='$occupancy_time' where idpr='$id'",$connect);
 		}
+	}
+	echo "<br>".$idc." Done ";
 	}
 }
 $total_poss_old = array();
