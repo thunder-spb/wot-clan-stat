@@ -17,7 +17,6 @@ $i=0;
 
 $SQL = "select idpr, attacked, occupancy_time from possession where idc='$idc'";
 $result2 = mysql_query( $SQL,$connect );
-
 while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) { 
 	$status="";
 	$idpr = $row["idpr"];
