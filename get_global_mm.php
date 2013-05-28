@@ -98,6 +98,7 @@ $cntT = $row['cntt'];
 					if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
 					$account_name=$data['data']['name'];
 					if ($inclan != 0){ 
+					$account_name='<a href="http://worldoftanks.ru/community/accounts/'.$id.'/" target="_blank">'.$account_name.'</a>';
 					$message="Покинул клан ".$clantag1." боец ".$account_name;
 					$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
 					$sql.= " VALUES (1,'$id', '$idc', '$message', NULL, '$date', '$time')";
@@ -128,6 +129,7 @@ $cntT = $row['cntt'];
 						$abbreviation=$data['data']['clan']['clan']['abbreviation'];
 						$idcl=$data['data']['clan']['clan']['id'];
 						$namecl=$data['data']['clan']['clan']['name'];
+						$account_name='<a href="http://worldoftanks.ru/community/accounts/'.$id.'/" target="_blank">'.$account_name.'</a>';
 						$link='<a href="http://worldoftanks.ru/community/clans/'.$idcl.'/" target="_blank">['.$abbreviation.']:'.$namecl.'</a>';
 						$message="Покинул клан ".$clantag1." боец ".$account_name." и перешел в ".$link;
 						$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
