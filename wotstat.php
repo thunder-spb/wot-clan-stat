@@ -94,12 +94,8 @@ foreach ($clan_array as $clan_i) {
             <table> <td valign="top">  
                 <table id="news1"></table>
 				<div id="n1pager"></div>
-                 </td>
-				 <td valign="top">  
-				 <table id="news4"></table>
-				 <div id="n4pager"></div>
-                 </td>
-                 <td valign="top"> 
+                </td>
+				<td valign="top"> 
 				<table id="news2"></table>
 				<div id="n2pager"></div>
                  </td>
@@ -178,11 +174,17 @@ foreach ($clan_array as $clan_i) {
 		<div id="techATpager"></div>				
 	</div>
 	<div id="tab-6">
-
-		<table id="wmProvinces"></table>
-                <br>
-                <table id="wmWinProvinces"></table>
-	</div>
+		<table>
+			<td valign="top">  
+				<table id="wmProvinces"></table>
+			</td>
+			<td valign="top">  
+				<table id="news4"></table>
+				<div id="n4pager"></div>
+             </td>
+		</table>
+        <table id="battles1"></table>
+     </div>
 	<div id="tab-7">
 		<table id="techABS2"></table>
 		<table id="techCHAMP2"></table>

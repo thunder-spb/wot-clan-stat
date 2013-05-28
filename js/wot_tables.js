@@ -88,7 +88,7 @@ $(function() {
 		viewrecords: true,
 		//sortname: 'id_ec',
 		//sortorder: 'desc',
-		width: 300,
+		width: 410,
 		height: 200,
 		caption: 'Личный состав',
 	});
@@ -112,7 +112,7 @@ $(function() {
 		//sortname: 'role',
 		viewrecords: true,
 		//sortorder: 'desc',
-		width: 250,
+		width: 410,
 		height: 200,
 		scroll: true,
 		caption: 'Наградная ведомость',
@@ -144,7 +144,7 @@ $(function() {
 		//sortname: 'role',
 		viewrecords: true,
 		//sortorder: 'desc',
-		width: 325,
+		width: 410,
 		height: 200,
 		scroll:true,
 		caption: 'Пополнение ангара',
@@ -173,7 +173,7 @@ $(function() {
 		//sortname: 'role',
 		viewrecords: true,
 		//sortorder: 'desc',
-		width: 360,
+		width: 390,
 		height: 200,
 		scroll:true,
 		caption: 'События ГК',
@@ -1200,7 +1200,7 @@ $(function() {
 			{name:'occ_time', index:'occ_time', width:140, align:"center"}
 												
 			],
-		pager: '#wmProvPager',
+		//pager: '#wmProvPager',
 		sortname: 'class',
 		viewrecords: true,
 		sortorder: 'desc',
@@ -1209,6 +1209,38 @@ $(function() {
 		rowNum: 100,
 		//hiddengrid:true,
 		caption: 'Владения на ГК',
+		rownumbers: false,
+		rownumWidth: 40,
+		grouping: false,
+		toolbar: false,
+		scroll: false
+		
+	});
+	var bwm1 = $('#battles1').jqGrid({
+		sortable: false,
+		altRows: false,
+		url:'get_btl1_json.php?idc='+idc,
+		datatype: 'json',
+		mtype: "POST",
+		postData: {'filterBy':null},
+		colNames:['Тип','Провинция','Карта','Время','Соперник'],
+		colModel :[
+			{name:'type', index:'type', width:150, align:"left"},
+			{name:'name', index:'name', width:200, align:"center"},
+			{name:'map', index:'map', width:200, align:"center"},
+			{name:'time', index:'time', width:100, align:"center"},
+			{name:'enemy', index:'enemy', width:140, align:"left"}
+												
+			],
+		//pager: '#wmProvPager',
+		sortname: 'time',
+		viewrecords: true,
+		sortorder: 'desc',
+		width: 900,
+		height: "100%",
+		rowNum: 100,
+		//hiddengrid:true,
+		caption: 'Запланированные битвы',
 		rownumbers: false,
 		rownumWidth: 40,
 		grouping: false,

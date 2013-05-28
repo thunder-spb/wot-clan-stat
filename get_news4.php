@@ -38,7 +38,7 @@ for($i=0;$i<$count;$i++) {
 	if ($typepr=="normal"){$messagetype='<img src="images/province_type_normal.png" style="width: 20px; height:20px;" align="absmiddle"/>';$amessage=" провинция ";}
 	$atype=$row['type'];
 	$sp5="";$sp6="";
-	if ($atype==0){$typea=" Потряна ";$sp5="<span style='color: red;'><b>"; $sp6="</b></span> ";}
+	if ($atype==0){$typea=" Потеряна ";$sp5="<span style='color: red;'><b>"; $sp6="</b></span> ";}
 	if ($atype==1){
 		$typea=" Захвачена ";
 		$sp5="<span style='color: green;'><b>"; $sp6="</b></span> ";
