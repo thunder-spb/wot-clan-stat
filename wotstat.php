@@ -95,6 +95,10 @@ foreach ($clan_array as $clan_i) {
                 <table id="news1"></table>
 				<div id="n1pager"></div>
                  </td>
+				 <td valign="top">  
+				 <table id="news4"></table>
+				 <div id="n4pager"></div>
+                 </td>
                  <td valign="top"> 
 				<table id="news2"></table>
 				<div id="n2pager"></div>

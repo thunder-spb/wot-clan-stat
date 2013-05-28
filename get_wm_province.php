@@ -93,14 +93,14 @@ foreach ($clan_array as $clan_i) {
 			$btlarena1=$item["arenas"][1];
 		}
 		$btldate=date("Y-m-d",$item["time"]);	
-		$btltime=date("H:i",$item["time"]);		
+		$btltime=$item["time"];		
 		$btlarena=$item["arenas"][0];
 		$btlchips=$item["chips"];
 		$btlid=0;
 		if ($type<>"landing"){
 			$btlid=$item["id"];}
 		if ($item["time"]<>0){
-			// провинции нет в таблице province
+			// таблица с текущими битвами клана.
 			$sql = "insert into btl (idb, idc, date, time, type, id_prov,prov, id_prov1,prov1, started, arena, arena1, chips)";
 			$sql .= " values ('$btlid', '$idc', '$btldate', '$btltime', '$type', '$provinces_id','$provinces_name', '$provinces_id1','$provinces_name1','$started', '$btlarena','$btlarena1','$btlchips')";
 			mysql_query($sql, $connect);
