@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Май 28 2013 г., 08:05
+-- Время создания: Май 28 2013 г., 23:39
 -- Версия сервера: 5.1.67-log
 -- Версия PHP: 5.3.23-pl0-gentoo
 
@@ -118,6 +118,38 @@ INSERT INTO `cat_achiev` (`id_ac`, `medal`, `medal_ru`, `img`, `type`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `province`
+--
+
+CREATE TABLE IF NOT EXISTS `province` (
+  `id_pr` int(11) NOT NULL AUTO_INCREMENT,
+  `prime_time` double NOT NULL,
+  `id` varchar(7) COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `arena_id` int(10) NOT NULL,
+  `arena_name` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `revenue` int(10) NOT NULL,
+  `type` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id_pr`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=9 ;
+
+--
+-- Дамп данных таблицы `province`
+--
+
+INSERT INTO `province` (`id_pr`, `prime_time`, `id`, `name`, `arena_id`, `arena_name`, `revenue`, `type`) VALUES
+(1, 1369587602, 'TR_05', 'Галатия', 32, 'Южный берег', 960, 'normal'),
+(2, 1369587602, 'TR_02', 'Мизия', 9, 'Рудники', 480, 'normal'),
+(3, 1369587602, 'TR_06', 'Пафлагония', 9, 'Рудники', 1200, 'normal'),
+(4, 1369587602, 'TR_01', 'Фракия', 32, 'Южный берег', 4320, 'gold'),
+(5, 1369591202, 'ES_05', 'Арагон', 12, 'Монастырь', 1200, 'normal'),
+(6, 1369591202, 'ES_03', 'Кастилия - Ла Манча', 5, 'Ласвилль', 1680, 'gold'),
+(7, 1369764002, 'ES_07', 'Кастилия и Леон', 5, 'Ласвилль', 480, 'normal'),
+(8, 1369764003, 'ES_10', 'Балеарские острова', 5, 'Ласвилль', 240, 'start');
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `tech`
 --
 
@@ -131,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `tech` (
 --
 
 INSERT INTO `tech` (`current`) VALUES
-(300);
+(70);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

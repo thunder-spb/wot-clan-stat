@@ -17,9 +17,6 @@ foreach ($clan_array as $clan_i) {
 	// if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 	$a=$a+1;
 	$idc = $clan_i["clan_id"];
-	$sql12 = "delete from `btl` where idc='$idc'"; 
-	$qq2 = mysql_query($sql12,$connect);
-	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 	$pageidp = "clans/".$idc."/provinces/?type=table";
 	$pageidp = "cw.".$wot_host.'/'.$pageidp;	
 	//$date = date("Y-m-d",strtotime($hosttime));
@@ -32,6 +29,9 @@ foreach ($clan_array as $clan_i) {
 	$databtl = json_decode($databtl, true);
 	$t = time();
 	if ($data["result"]=="success"){
+	$sql12 = "delete from `btl` where idc='$idc'"; 
+	$qq2 = mysql_query($sql12,$connect);
+	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 	$b=$b+1;
 	foreach($data["request_data"]["items"] as $item) {
 		$prime_time = $item["prime_time"];

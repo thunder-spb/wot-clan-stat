@@ -21,8 +21,10 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 	$provm=$row['type'];
 	$timem="";
 	$clane="";
-	$pr=$row['prov'];
+	//$pr=$row['prov'];
 	$idpr=$row['id_prov'];
+	$pr = $row["prov"];
+	$pr = "<a href='http://worldoftanks.ru/uc/clanwars/maps/?province=$idpr' target='_blank'>$pr</a>";
 	if ($row['type']=="landing"){$provm="Высадка";}
 		$SQL2 = "select * from possession where idpr='$idpr'and idc='$idc'";
 		$result22 = mysql_query( $SQL2,$connect );
@@ -66,8 +68,6 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 			break;
 		}
 	}
-	$name = $row["prov"];
-	$name = "<a href='http://worldoftanks.ru/uc/clanwars/maps/?province=' target='_blank'>$name</a>";
 	$responce->rows[$i]['cell']=array("<b>".$provm."</b>","<b>".$pr."</b>", "<b>".$row["arena"]."</b>",$timem,$clane); //$clandays,$las_onl); 
 	$i++; 
 } 
