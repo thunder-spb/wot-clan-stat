@@ -33,9 +33,9 @@ for($i=0;$i<$count;$i++) {
 	$amessage=$messagetype=$typea="";
 	$date=date("Y-m-d",$row["time"]);
 	$typepr=$row['typepr'];
-	if ($typepr=="start"){$messagetype='<img src="images/province_type_start.png" style="width: 20px; height:20px;" align="absmiddle"/>';$amessage=" высадка ";}
-	if ($typepr=="gold"){$messagetype='<img src="images/province_type_gold.png" style="width: 20px; height:20px;" align="absmiddle"/>';$amessage=" столица ";}
-	if ($typepr=="normal"){$messagetype='<img src="images/province_type_normal.png" style="width: 20px; height:20px;" align="absmiddle"/>';$amessage=" провинция ";}
+	if ($typepr=="start"){$messagetype='<img src="images/province_type_start.png" style="width: 16px; height:16px;" align="absmiddle"/>';$amessage=" высадка ";}
+	if ($typepr=="gold"){$messagetype='<img src="images/province_type_gold.png" style="width: 16px; height:16px;" align="absmiddle"/>';$amessage=" столица ";}
+	if ($typepr=="normal"){$messagetype='<img src="images/province_type_normal.png" style="width: 16px; height:16px;" align="absmiddle"/>';$amessage=" провинция ";}
 	$atype=$row['type'];
 	$sp5="";$sp6="";
 	if ($atype==0){$typea=" Потеряна ";$sp5="<span style='color: red;'><b>"; $sp6="</b></span> ";}
