@@ -8,16 +8,31 @@ $setnames = mysql_query( 'SET NAMES utf8' );
 header('Content-Type: text/html; charset=UTF-8'); 
 
 $total_poss = array();
+//счётчики для проверки валиности данных
+$a=0;
+$b=0;
 foreach ($clan_array as $clan_i) {
+    // $sql12 = "delete from `btl` where idc='$clan_i'"; 
+	// $qq2 = mysql_query($sql12,$connect);
+	// if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+	$a=$a+1;
 	$idc = $clan_i["clan_id"];
+	$sql12 = "delete from `btl` where idc='$idc'"; 
+	$qq2 = mysql_query($sql12,$connect);
+	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 	$pageidp = "clans/".$idc."/provinces/?type=table";
 	$pageidp = "cw.".$wot_host.'/'.$pageidp;	
 	//$date = date("Y-m-d",strtotime($hosttime));
 	//$time = date("H:i:s",strtotime($hosttime));
 	$data = get_page($pageidp);
 	$data = json_decode($data, true);
+	$pageidp = "clans/".$idc."/battles/?type=table";
+	$pageidp = "cw.".$wot_host.'/'.$pageidp;
+	$databtl = get_page($pageidp);
+	$databtl = json_decode($databtl, true);
 	$t = time();
 	if ($data["result"]=="success"){
+	$b=$b+1;
 	foreach($data["request_data"]["items"] as $item) {
 		$prime_time = $item["prime_time"];
 		$id = $item["id"];
@@ -61,7 +76,42 @@ foreach ($clan_array as $clan_i) {
 	}
 	echo "<br>".$idc." Done ";
 	}
+	if ($databtl["result"]=="success"){
+	// print_r($databtl);
+	foreach($databtl["request_data"]["items"] as $item) {
+		$provinces_name=$item["provinces"][0]["name"];
+		$provinces_id=$item["provinces"][0]["id"];
+		$provinces_name1=$item["provinces"][0]["name"];
+		$provinces_id1=$item["provinces"][0]["id"];
+		$btlarena=$item["arenas"][0];
+		$btlarena1=$item["arenas"][0];
+		$started=$item["started"];
+		$type=$item["type"];
+		if ($type=='meeting_engagement'){
+			$provinces_name1=$item["provinces"][1]["name"];
+			$provinces_id1=$item["provinces"][1]["id"];
+			$btlarena1=$item["arenas"][1];
+		}
+		$btldate=date("Y-m-d",$item["time"]);	
+		$btltime=date("H:i",$item["time"]);		
+		$btlarena=$item["arenas"][0];
+		$btlchips=$item["chips"];
+		$btlid=0;
+		if ($type<>"landing"){
+			$btlid=$item["id"];}
+		if ($item["time"]<>0){
+			// провинции нет в таблице province
+			$sql = "insert into btl (idb, idc, date, time, type, id_prov,prov, id_prov1,prov1, started, arena, arena1, chips)";
+			$sql .= " values ('$btlid', '$idc', '$btldate', '$btltime', '$type', '$provinces_id','$provinces_name', '$provinces_id1','$provinces_name1','$started', '$btlarena','$btlarena1','$btlchips')";
+			mysql_query($sql, $connect);
+			if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+			echo $provinces_name." id=".$provinces_id."<br>".$started."<br>тип ".$type."<br>время".$btltime."<br>карта ".$btlarena."<br>номер ".$btlid."<br>фишки ".$btlchips."<br>";
+		}
+	  //print_r($item);
+	}
+	}
 }
+if ($a==$b){
 $total_poss_old = array();
 $all = mysql_query("select idpr from possession");
 while ($res = mysql_fetch_array($all,MYSQL_ASSOC)) {
@@ -74,6 +124,7 @@ foreach ($lost as $lost_prov) {
 	$idc_lost = $res["idc"];
 	mysql_query("insert into wm_event (idpr, type, time, idc) values ('$lost_prov', '0', '$t', '$idc_lost')",$connect);
 	mysql_query("delete from possession where idpr='$lost_prov'",$connect);
+}
 }
 function get_page($url) {
 		$ch = curl_init();

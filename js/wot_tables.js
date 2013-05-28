@@ -1166,9 +1166,9 @@ $(function() {
 			{name:'status', index:'status', width:25, align:"center"},
 			{name:'name', index:'name', width:200, align:"left"},
 			{name:'map', index:'map', width:140, align:"left"},
-			{name:'prime_time', index:'prime_time', width:100, align:"left"},
-			{name:'revenue', index:'revenue', width:60, align:"center"},
-			{name:'occ_time', index:'occ_time', width:150, align:"left"}
+			{name:'prime_time', index:'prime_time', width:100, align:"center"},
+			{name:'revenue', index:'revenue', width:60, align:"left"},
+			{name:'occ_time', index:'occ_time', width:140, align:"center"}
 												
 			],
 		pager: '#wmProvPager',

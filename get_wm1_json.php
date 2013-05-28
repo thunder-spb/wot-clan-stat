@@ -38,9 +38,10 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 	if ($row["attacked"]==1){
 	$status="<img src='images/icons/attacked.png'>";
 	}
+	$bank="<img src='images/icons/gold.png'> ".$row2["revenue"];
 	$name = $row2["name"];
 	$name = "<a href='http://worldoftanks.ru/uc/clanwars/maps/?province=$idpr' target='_blank'>$name</a>";
-	$responce->rows[$i]['cell']=array($type,$status,$name, $row2["arena_name"],date("H:i",$row2["prime_time"]),$row2["revenue"],$row["occupancy_time"]); //$clandays,$las_onl); 
+	$responce->rows[$i]['cell']=array($type,$status,$name, $row2["arena_name"],date("H:i",$row2["prime_time"]),$bank,$row["occupancy_time"]); //$clandays,$las_onl); 
 	$i++; 
 } 
 //header("Content-type: text/script;charset=utf-8");
