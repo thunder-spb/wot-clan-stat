@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.1
+-- version 3.5.8
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Янв 19 2013 г., 02:21
--- Версия сервера: 5.1.61-rel13.2-log
--- Версия PHP: 5.3.13
+-- Время создания: Май 28 2013 г., 08:05
+-- Версия сервера: 5.1.67-log
+-- Версия PHP: 5.3.23-pl0-gentoo
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- База данных: `u2903659_atastats`
+-- База данных: `stat`
 --
 
 -- --------------------------------------------------------
@@ -114,6 +114,24 @@ INSERT INTO `cat_achiev` (`id_ac`, `medal`, `medal_ru`, `img`, `type`) VALUES
 (76, 'ironMan', 'Невозмутимый', 'Imperturbable', 6),
 (77, 'pattonValley', 'Долина Паттонов', 'Pattonvalley', 3),
 (78, 'sturdy', 'Спартанец', 'Sparta', 6);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `tech`
+--
+
+CREATE TABLE IF NOT EXISTS `tech` (
+  `current` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`current`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Дамп данных таблицы `tech`
+--
+
+INSERT INTO `tech` (`current`) VALUES
+(300);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Май 15 2013 г., 21:45
+-- Время создания: Май 28 2013 г., 08:04
 -- Версия сервера: 5.1.67-log
 -- Версия PHP: 5.3.23-pl0-gentoo
 
@@ -23,6 +23,30 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `btl`
+--
+
+CREATE TABLE IF NOT EXISTS `btl` (
+  `id_b` int(11) NOT NULL AUTO_INCREMENT,
+  `idb` int(11) NOT NULL,
+  `idc` int(7) NOT NULL,
+  `date` date NOT NULL,
+  `time` time NOT NULL,
+  `type` char(25) NOT NULL,
+  `id_prov` varchar(7) NOT NULL,
+  `prov` varchar(30) NOT NULL,
+  `id_prov1` varchar(7) NOT NULL,
+  `prov1` varchar(30) NOT NULL,
+  `started` tinyint(1) NOT NULL,
+  `arena` varchar(20) NOT NULL,
+  `arena1` varchar(20) NOT NULL,
+  `chips` int(2) NOT NULL DEFAULT '15',
+  PRIMARY KEY (`id_b`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='текущие битвы клана' AUTO_INCREMENT=233 ;
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `cat_tanks`
 --
 
@@ -35,7 +59,7 @@ CREATE TABLE IF NOT EXISTS `cat_tanks` (
   `nation` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `class` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id_t`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=285 ;
 
 -- --------------------------------------------------------
 
@@ -52,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `clan` (
   `freq` int(11) NOT NULL DEFAULT '1',
   `target` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_c`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=871 ;
 
 -- --------------------------------------------------------
 
@@ -96,7 +120,7 @@ CREATE TABLE IF NOT EXISTS `event_clan` (
   PRIMARY KEY (`id_ec`),
   KEY `idc` (`idc`),
   KEY `date` (`date`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=17123 ;
 
 -- --------------------------------------------------------
 
@@ -113,7 +137,7 @@ CREATE TABLE IF NOT EXISTS `event_tank` (
   `date` date NOT NULL,
   `time` time NOT NULL,
   PRIMARY KEY (`id_et`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1106 ;
 
 -- --------------------------------------------------------
 
@@ -153,7 +177,7 @@ CREATE TABLE IF NOT EXISTS `player` (
   KEY `idc` (`idc`),
   KEY `idp` (`idp`),
   KEY `idcidp` (`idc`,`idp`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7042 ;
 
 -- --------------------------------------------------------
 
@@ -167,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `player_ach` (
   `ida` int(11) NOT NULL,
   `amount` int(11) NOT NULL,
   PRIMARY KEY (`id_pa`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=57203 ;
 
 -- --------------------------------------------------------
 
@@ -195,7 +219,7 @@ CREATE TABLE IF NOT EXISTS `player_btl` (
   KEY `idt` (`idt`),
   KEY `idtidp` (`idt`,`idp`),
   KEY `idpidt` (`idp`,`idt`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=125982 ;
 
 -- --------------------------------------------------------
 
@@ -210,7 +234,7 @@ CREATE TABLE IF NOT EXISTS `possession` (
   `attacked` tinyint(1) NOT NULL,
   `occupancy_time` int(11) NOT NULL,
   PRIMARY KEY (`id_pos`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=13 ;
 
 -- --------------------------------------------------------
 
@@ -228,18 +252,7 @@ CREATE TABLE IF NOT EXISTS `province` (
   `revenue` int(10) NOT NULL,
   `type` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id_pr`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `tech`
---
-
-CREATE TABLE IF NOT EXISTS `tech` (
-  `current` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`current`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=9 ;
 
 -- --------------------------------------------------------
 
@@ -254,7 +267,7 @@ CREATE TABLE IF NOT EXISTS `wm_event` (
   `time` int(11) NOT NULL,
   `idc` int(11) NOT NULL,
   PRIMARY KEY (`id_e`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=18 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
