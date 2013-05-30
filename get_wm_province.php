@@ -11,22 +11,27 @@ $total_poss = array();
 //счётчики для проверки валиности данных
 $a=0;
 $b=0;
+echo $a;
 foreach ($clan_array as $clan_i) {
     // $sql12 = "delete from `btl` where idc='$clan_i'"; 
 	// $qq2 = mysql_query($sql12,$connect);
 	// if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 	$a=$a+1;
 	$idc = $clan_i["clan_id"];
-	$pageidp = "clans/".$idc."/provinces/?type=table";
+	$pageidp = "clans/".$idc."-"."/provinces/?type=table";
 	$pageidp = "cw.".$wot_host.'/'.$pageidp;	
 	//$date = date("Y-m-d",strtotime($hosttime));
 	//$time = date("H:i:s",strtotime($hosttime));
 	$data = get_page($pageidp);
 	$data = json_decode($data, true);
-	$pageidp = "clans/".$idc."/battles/?type=table";
+	$pageidp = "clans/".$idc."-"."/battles/?type=table";
 	$pageidp = "cw.".$wot_host.'/'.$pageidp;
+	// $pageidp = "community/clans/".$idc."/battles/?type=table";
+	// $pageidp = $wot_host.'/'.$pageidp;
 	$databtl = get_page($pageidp);
+	//echo $databtl;
 	$databtl = json_decode($databtl, true);
+	//print_r($databtl);
 	$t = time();
 	if ($data["result"]=="success"){
 	$sql12 = "delete from `btl` where idc='$idc'"; 
@@ -36,11 +41,14 @@ foreach ($clan_array as $clan_i) {
 	foreach($data["request_data"]["items"] as $item) {
 		$prime_time = $item["prime_time"];
 		$id = $item["id"];
-		//echo $id."   ";
+		echo $id."   ";
 		$name = $item["name"];
 		$arena_id = $item["arena_id"];
 		$arena_name = $item["arena_name"];
 		$revenue = $item["revenue"];
+		$capital=$item["capital"];
+		echo "<br> capital ".$capital."<br>";
+		echo $revenue;
 		$type = $item["type"];
 		$attacked = $item["attacked"];
 		$occupancy_time = $item["occupancy_time"];
@@ -54,6 +62,7 @@ foreach ($clan_array as $clan_i) {
 			mysql_query($sql, $connect);
 			
 		}
+		mysql_query("update province set revenue='$revenue', prime_time='$prime_time', name='$name', arena_id='$arena_id',arena_name='$arena_name', type='$type' where id='$id'",$connect);
 		$poss = mysql_query("select id_pos from possession where idpr='$id' and idc='$idc'",$connect);
 		if (!mysql_fetch_array($poss,MYSQL_ASSOC)) {
 			//новая провинция
@@ -61,17 +70,18 @@ foreach ($clan_array as $clan_i) {
 			if (mysql_fetch_array($poss1,MYSQL_ASSOC)) {
 				//провинция получена от союзника
 				$idc_old = $poss1["idc"];
-				mysql_query("update possession set idc='$idc' where idpr='$id'",$connect);
+				mysql_query("update possession set idc='$idc', capital='$capital' where idpr='$id'",$connect);
+				
 				mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '2', '$t', '$idc')",$connect);
 				mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '3', '$t', '$idc_old')",$connect);
 			} else {
 				//провинция захвачена у врага
-				mysql_query("insert into possession (idc, idpr, attacked, occupancy_time) values ('$idc','$id','$attacked','$occupancy_time')",$connect);
+				mysql_query("insert into possession (idc, idpr, attacked, occupancy_time, capital) values ('$idc','$id','$attacked','$occupancy_time','$capital')",$connect);
 				mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '1', '$t', '$idc')",$connect);
 			}
 		} else {
 			//клан уже владеет провинцией
-			mysql_query("update possession set attacked='$attacked', occupancy_time='$occupancy_time' where idpr='$id'",$connect);
+			mysql_query("update possession set attacked='$attacked', occupancy_time='$occupancy_time', capital='$capital' where idpr='$id'",$connect);
 		}
 	}
 	echo "<br>".$idc." Done ";
@@ -97,8 +107,8 @@ foreach ($clan_array as $clan_i) {
 		$btlarena=$item["arenas"][0];
 		$btlchips=$item["chips"];
 		$btlid=0;
-		if ($type<>"landing"){
-			$btlid=$item["id"];}
+		// if ($type<>"landing"){
+			// $btlid=$item["id"];}
 		if ($item["time"]<>0){
 			// таблица с текущими битвами клана.
 			$sql = "insert into btl (idb, idc, date, time, type, id_prov,prov, id_prov1,prov1, started, arena, arena1, chips)";

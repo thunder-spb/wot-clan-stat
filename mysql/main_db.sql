@@ -233,6 +233,7 @@ CREATE TABLE IF NOT EXISTS `possession` (
   `idc` int(11) NOT NULL,
   `attacked` tinyint(1) NOT NULL,
   `occupancy_time` int(11) NOT NULL,
+  `capital` tinyint(1) NOT NULL,
   PRIMARY KEY (`id_pos`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=13 ;
 

@@ -15,7 +15,7 @@ $responce->total = 1;
 $responce->records = $count;
 $i=0;
 
-$SQL = "select idpr, attacked, occupancy_time from possession where idc='$idc'";
+$SQL = "select idpr, attacked, occupancy_time, capital from possession where idc='$idc'";
 $result2 = mysql_query( $SQL,$connect );
 while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) { 
 	$status="";
@@ -38,9 +38,12 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 	if ($row["attacked"]==1){
 	$status="<img src='images/icons/attacked.png'>";
 	}
-	$bank="<img src='images/icons/gold.png'> ".$row2["revenue"];
+	$bank='<img src="images/icons/gold.png"  align="absmiddle"/> '.$row2["revenue"];
 	$name = $row2["name"];
-	$name = "<a href='http://worldoftanks.ru/uc/clanwars/maps/?province=$idpr' target='_blank'>$name</a>";
+	$name = "<a href='http://worldoftanks.ru/uc/clanwars/maps/?province=$idpr' target='_blank'>$name</a> ";
+	if ($row["capital"]==1){
+		$name='<img src="images/icons/capital.png" style="width: 16px; height:16px;" align="absmiddle"/>'." ".$name;
+	}
 	$responce->rows[$i]['cell']=array($type,$status,$name, $row2["arena_name"],date("H:i",$row2["prime_time"]),$bank,$row["occupancy_time"]); //$clandays,$las_onl); 
 	$i++; 
 } 
