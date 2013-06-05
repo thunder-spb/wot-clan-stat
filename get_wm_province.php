@@ -11,7 +11,7 @@ $total_poss = array();
 //счётчики для проверки валиности данных
 $a=0;
 $b=0;
-echo $a;
+//echo $a;
 foreach ($clan_array as $clan_i) {
     // $sql12 = "delete from `btl` where idc='$clan_i'"; 
 	// $qq2 = mysql_query($sql12,$connect);
@@ -31,6 +31,9 @@ foreach ($clan_array as $clan_i) {
 	$databtl = get_page($pageidp);
 	//echo $databtl;
 	$databtl = json_decode($databtl, true);
+	//$pageidp = "community/clans/".$idc."/battles/list/?id=js-battles-table";
+	//$pageidp = $wot_host.'/'.$pageidp;	
+	//$databt2 = get_page($pageidp);
 	//print_r($databtl);
 	$t = time();
 	if ($data["result"]=="success"){
@@ -47,8 +50,8 @@ foreach ($clan_array as $clan_i) {
 		$arena_name = $item["arena_name"];
 		$revenue = $item["revenue"];
 		$capital=$item["capital"];
-		echo "<br> capital ".$capital."<br>";
-		echo $revenue;
+		//echo "<br> capital ".$capital."<br>";
+		//echo $revenue;
 		$type = $item["type"];
 		$attacked = $item["attacked"];
 		$occupancy_time = $item["occupancy_time"];
@@ -109,14 +112,13 @@ foreach ($clan_array as $clan_i) {
 		$btlid=0;
 		// if ($type<>"landing"){
 			// $btlid=$item["id"];}
-		if ($item["time"]<>0){
 			// таблица с текущими битвами клана.
 			$sql = "insert into btl (idb, idc, date, time, type, id_prov,prov, id_prov1,prov1, started, arena, arena1, chips)";
 			$sql .= " values ('$btlid', '$idc', '$btldate', '$btltime', '$type', '$provinces_id','$provinces_name', '$provinces_id1','$provinces_name1','$started', '$btlarena','$btlarena1','$btlchips')";
 			mysql_query($sql, $connect);
 			if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 			echo $provinces_name." id=".$provinces_id."<br>".$started."<br>тип ".$type."<br>время".$btltime."<br>карта ".$btlarena."<br>номер ".$btlid."<br>фишки ".$btlchips."<br>";
-		}
+		
 	  //print_r($item);
 	}
 	}
@@ -139,7 +141,8 @@ foreach ($lost as $lost_prov) {
 function get_page($url) {
 		$ch = curl_init();
 		curl_setopt ($ch, CURLOPT_HEADER, 0);
-                curl_setopt($ch,CURLOPT_HTTPHEADER,array('X-Requested-With: XMLHttpRequest'));
+        curl_setopt($ch,CURLOPT_HTTPHEADER,array('Accept: application/json, text/javascript, text/html, */*',
+												'X-Requested-With: XMLHttpRequest'));
 		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt ($ch, CURLOPT_TIMEOUT, 5);
 		curl_setopt ($ch, CURLOPT_URL, $url);
