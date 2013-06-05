@@ -26,15 +26,14 @@ foreach ($clan_array as $clan_i) {
 	$data = json_decode($data, true);
 	$pageidp = "clans/".$idc."-"."/battles/?type=table";
 	$pageidp = "cw.".$wot_host.'/'.$pageidp;
-	// $pageidp = "community/clans/".$idc."/battles/?type=table";
-	// $pageidp = $wot_host.'/'.$pageidp;
 	$databtl = get_page($pageidp);
-	//echo $databtl;
+	print_r($databtl);
+	echo "<br>-------------------------------------<br>";
 	$databtl = json_decode($databtl, true);
-	//$pageidp = "community/clans/".$idc."/battles/list/?id=js-battles-table";
-	//$pageidp = $wot_host.'/'.$pageidp;	
-	//$databt2 = get_page($pageidp);
-	//print_r($databtl);
+	$pageidp = "community/clans/".$idc."/battles/list/?id=js-battles-table";
+	$pageidp = $wot_host.'/'.$pageidp;	
+	$databt2 = get_page($pageidp);
+	print_r($databt2);
 	$t = time();
 	if ($data["result"]=="success"){
 	$sql12 = "delete from `btl` where idc='$idc'"; 
