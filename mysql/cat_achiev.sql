@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Май 28 2013 г., 23:39
+-- Время создания: Июн 07 2013 г., 21:33
 -- Версия сервера: 5.1.67-log
 -- Версия PHP: 5.3.23-pl0-gentoo
 
@@ -127,25 +127,33 @@ CREATE TABLE IF NOT EXISTS `province` (
   `id` varchar(7) COLLATE utf8_unicode_ci NOT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `arena_id` int(10) NOT NULL,
-  `arena_name` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
   `revenue` int(10) NOT NULL,
   `type` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `periphery` varchar(4) COLLATE utf8_unicode_ci NOT NULL,
+  `landing_url` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `landing_final_battle_time` int(16) NOT NULL,
+  `region` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id_pr`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=9 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=15 ;
 
 --
 -- Дамп данных таблицы `province`
 --
 
-INSERT INTO `province` (`id_pr`, `prime_time`, `id`, `name`, `arena_id`, `arena_name`, `revenue`, `type`) VALUES
-(1, 1369587602, 'TR_05', 'Галатия', 32, 'Южный берег', 960, 'normal'),
-(2, 1369587602, 'TR_02', 'Мизия', 9, 'Рудники', 480, 'normal'),
-(3, 1369587602, 'TR_06', 'Пафлагония', 9, 'Рудники', 1200, 'normal'),
-(4, 1369587602, 'TR_01', 'Фракия', 32, 'Южный берег', 4320, 'gold'),
-(5, 1369591202, 'ES_05', 'Арагон', 12, 'Монастырь', 1200, 'normal'),
-(6, 1369591202, 'ES_03', 'Кастилия - Ла Манча', 5, 'Ласвилль', 1680, 'gold'),
-(7, 1369764002, 'ES_07', 'Кастилия и Леон', 5, 'Ласвилль', 480, 'normal'),
-(8, 1369764003, 'ES_10', 'Балеарские острова', 5, 'Ласвилль', 240, 'start');
+INSERT INTO `province` (`id_pr`, `prime_time`, `id`, `name`, `arena_id`, `revenue`, `type`, `periphery`, `landing_url`, `landing_final_battle_time`, `region`) VALUES
+(1, 1370628002, 'BJ_02', 'Боргу', 24, 72, 'normal', 'RU1', '/clanwars/maps/landing/2700/', 0, 'reg_03'),
+(2, 1370628002, 'GH_01', 'Верхняя Западная', 24, 72, 'normal', 'RU1', '/clanwars/maps/landing/2958/', 0, 'reg_03'),
+(3, 1370628002, 'BF_05', 'Восточная', 15, 72, 'normal', 'RU1', '/clanwars/maps/landing/2694/', 0, 'reg_03'),
+(4, 1370628002, 'NE_02', 'Досо', 24, 48, 'normal', 'RU1', '/clanwars/maps/landing/3203/', 0, 'reg_03'),
+(8, 1370628002, 'NE_01', 'Тиллабери', 15, 48, 'normal', 'RU1', '/clanwars/maps/landing/3202/', 0, 'reg_03'),
+(6, 1370628002, 'ML_17', 'Южный Гао', 24, 72, 'normal', 'RU6', '/clanwars/maps/landing/3140/', 0, 'reg_03'),
+(7, 1370628002, 'NG_09', 'Дельта', 15, 96, 'start', 'RU1', '/clanwars/maps/landing/3223/', 0, 'reg_03'),
+(9, 0, 'ML_18', 'Центральный Гао', 0, 0, '', 'RU6', '/clanwars/maps/landing/3141/', 0, 'reg_03'),
+(10, 0, 'NG_08', 'Ондо', 0, 0, '', 'RU1', '/clanwars/maps/landing/3222/', 0, 'reg_03'),
+(11, 0, 'TG_02', 'Плато', 0, 0, '', 'RU1', '/clanwars/maps/landing/3657/', 0, 'reg_03'),
+(12, 0, 'CI_06', 'Лагюн', 0, 0, '', 'RU1', '/clanwars/maps/landing/2832/', 0, 'reg_03'),
+(13, 0, 'ES_11', 'Португалия', 0, 0, '', 'RU3', '/clanwars/maps/landing/2915/', 0, 'reg_02'),
+(14, 0, 'ES_10', 'Балеарские острова', 0, 0, '', 'RU3', '/clanwars/maps/landing/2914/', 0, 'reg_02');
 
 -- --------------------------------------------------------
 
@@ -163,7 +171,34 @@ CREATE TABLE IF NOT EXISTS `tech` (
 --
 
 INSERT INTO `tech` (`current`) VALUES
-(70);
+(80);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `wm_regions`
+--
+
+CREATE TABLE IF NOT EXISTS `wm_regions` (
+  `id_r` varchar(6) NOT NULL,
+  `name` varchar(30) NOT NULL,
+  `url` varchar(50) NOT NULL,
+  `excl` int(1) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `wm_regions`
+--
+
+INSERT INTO `wm_regions` (`id_r`, `name`, `url`, `excl`) VALUES
+('reg_01', 'Северная Европа', '/clanwars/maps/provinces/regions/1/', 0),
+('reg_02', 'Средиземноморье', '/clanwars/maps/provinces/regions/2/', 0),
+('reg_03', 'Западная Африка', '/clanwars/maps/provinces/regions/3/', 0),
+('reg_04', 'Восточная Африка', '/clanwars/maps/provinces/regions/4/', 0),
+('reg_05', 'Урал и Зауралье', '/clanwars/maps/provinces/regions/5/', 0),
+('reg_06', 'Сибирь и Дальний восток', '/clanwars/maps/provinces/regions/6/', 0),
+('reg_11', 'Южная Африка', '/clanwars/maps/provinces/regions/11/', 0),
+('reg_07', 'Азия', '/clanwars/maps/provinces/regions/7/', 0);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
