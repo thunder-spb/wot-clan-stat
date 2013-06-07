@@ -1223,14 +1223,14 @@ $(function() {
 		datatype: 'json',
 		mtype: "POST",
 		postData: {'filterBy':null},
-		colNames:['Тип','Провинция','Карта','Время','Соперник'],
+		colNames:['Тип','Провинция','Карта','Время','Соперник','Сервер'],
 		colModel :[
 			{name:'type', index:'type', width:150, align:"left"},
 			{name:'name', index:'name', width:200, align:"center"},
 			{name:'map', index:'map', width:200, align:"center"},
 			{name:'time', index:'time', width:100, align:"center"},
-			{name:'enemy', index:'enemy', width:140, align:"left"}
-												
+			{name:'enemy', index:'enemy', width:140, align:"left"},
+			{name:'perphery', index:'priphery', width:140, align:"left"}									
 			],
 		//pager: '#wmProvPager',
 		sortname: 'time',

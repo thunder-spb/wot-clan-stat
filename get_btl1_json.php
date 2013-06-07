@@ -57,10 +57,12 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 		$timem=date("H:i",$row['time'])." +";
 	}
 	if ($row['time']==0){ $timem="--:--";}
-	$SQL2 = "select type from province where id='$idpr'";
+	$SQL2 = "select type, periphery from province where id='$idpr'";
 	$result22 = mysql_query( $SQL2,$connect );
 	$row3=mysql_fetch_array($result22,MYSQL_ASSOC);
+	$periphery="Неизв.";
 	if ($row3<>NULL){
+		$periphery=$row3['periphery'];
 		switch ($row3["type"]) {
 		case "normal":
 			$pr = '<img src="images/province_type_normal.png" style="width: 20px; height:20px;" align="absmiddle"/>'." ".$pr;// alt='Обычная провинция' >";
@@ -111,7 +113,7 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 		$arena=$arena." или ".$arena1;
 	}
 	
-	$responce->rows[$i]['cell']=array("<b>".$provm."</b>","<b>".$pr."</b>", "<b>".$arena."</b>",$timem,$clane); //$clandays,$las_onl); 
+	$responce->rows[$i]['cell']=array("<b>".$provm."</b>","<b>".$pr."</b>", "<b>".$arena."</b>",$timem,$clane,$periphery); //$clandays,$las_onl); 
 	$i++; 
 } 
 //header("Content-type: text/script;charset=utf-8");

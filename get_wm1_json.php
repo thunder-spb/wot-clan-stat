@@ -20,7 +20,7 @@ $result2 = mysql_query( $SQL,$connect );
 while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) { 
 	$status="";
 	$idpr = $row["idpr"];
-	$sql2 = "select prime_time, name, arena_name, revenue, type from province where id='$idpr'";
+	$sql2 = "select a.prime_time, a.name as name,  b.name as arena_name, a.revenue, a.type from province a,arenas b where a.id='$idpr'and a.arena_id=b.id ";
 	$q2 = mysql_query($sql2,$connect);
 	$row2 = mysql_fetch_array($q2,MYSQL_ASSOC);
 	$responce->rows[$i]['id'] = $idpr;
