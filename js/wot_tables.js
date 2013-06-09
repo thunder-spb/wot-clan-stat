@@ -1218,7 +1218,7 @@ $(function() {
 	});
 	var bwm1 = $('#battles1').jqGrid({
 		sortable: false,
-		altRows: false,
+		altRows: true,
 		url:'get_btl1_json.php?idc='+idc,
 		datatype: 'json',
 		mtype: "POST",
@@ -1229,8 +1229,8 @@ $(function() {
 			{name:'name', index:'name', width:200, align:"center"},
 			{name:'map', index:'map', width:200, align:"center"},
 			{name:'time', index:'time', width:100, align:"center"},
-			{name:'enemy', index:'enemy', width:140, align:"left"},
-			{name:'perphery', index:'priphery', width:140, align:"left"}									
+			{name:'enemy', index:'enemy', width:200, align:"left"},
+			{name:'perphery', index:'priphery', width:45, align:"center"}									
 			],
 		//pager: '#wmProvPager',
 		sortname: 'time',

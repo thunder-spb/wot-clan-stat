@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Июн 07 2013 г., 21:33
+-- Время создания: Июн 09 2013 г., 23:29
 -- Версия сервера: 5.1.67-log
 -- Версия PHP: 5.3.23-pl0-gentoo
 
@@ -118,46 +118,6 @@ INSERT INTO `cat_achiev` (`id_ac`, `medal`, `medal_ru`, `img`, `type`) VALUES
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `province`
---
-
-CREATE TABLE IF NOT EXISTS `province` (
-  `id_pr` int(11) NOT NULL AUTO_INCREMENT,
-  `prime_time` double NOT NULL,
-  `id` varchar(7) COLLATE utf8_unicode_ci NOT NULL,
-  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `arena_id` int(10) NOT NULL,
-  `revenue` int(10) NOT NULL,
-  `type` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `periphery` varchar(4) COLLATE utf8_unicode_ci NOT NULL,
-  `landing_url` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `landing_final_battle_time` int(16) NOT NULL,
-  `region` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id_pr`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=15 ;
-
---
--- Дамп данных таблицы `province`
---
-
-INSERT INTO `province` (`id_pr`, `prime_time`, `id`, `name`, `arena_id`, `revenue`, `type`, `periphery`, `landing_url`, `landing_final_battle_time`, `region`) VALUES
-(1, 1370628002, 'BJ_02', 'Боргу', 24, 72, 'normal', 'RU1', '/clanwars/maps/landing/2700/', 0, 'reg_03'),
-(2, 1370628002, 'GH_01', 'Верхняя Западная', 24, 72, 'normal', 'RU1', '/clanwars/maps/landing/2958/', 0, 'reg_03'),
-(3, 1370628002, 'BF_05', 'Восточная', 15, 72, 'normal', 'RU1', '/clanwars/maps/landing/2694/', 0, 'reg_03'),
-(4, 1370628002, 'NE_02', 'Досо', 24, 48, 'normal', 'RU1', '/clanwars/maps/landing/3203/', 0, 'reg_03'),
-(8, 1370628002, 'NE_01', 'Тиллабери', 15, 48, 'normal', 'RU1', '/clanwars/maps/landing/3202/', 0, 'reg_03'),
-(6, 1370628002, 'ML_17', 'Южный Гао', 24, 72, 'normal', 'RU6', '/clanwars/maps/landing/3140/', 0, 'reg_03'),
-(7, 1370628002, 'NG_09', 'Дельта', 15, 96, 'start', 'RU1', '/clanwars/maps/landing/3223/', 0, 'reg_03'),
-(9, 0, 'ML_18', 'Центральный Гао', 0, 0, '', 'RU6', '/clanwars/maps/landing/3141/', 0, 'reg_03'),
-(10, 0, 'NG_08', 'Ондо', 0, 0, '', 'RU1', '/clanwars/maps/landing/3222/', 0, 'reg_03'),
-(11, 0, 'TG_02', 'Плато', 0, 0, '', 'RU1', '/clanwars/maps/landing/3657/', 0, 'reg_03'),
-(12, 0, 'CI_06', 'Лагюн', 0, 0, '', 'RU1', '/clanwars/maps/landing/2832/', 0, 'reg_03'),
-(13, 0, 'ES_11', 'Португалия', 0, 0, '', 'RU3', '/clanwars/maps/landing/2915/', 0, 'reg_02'),
-(14, 0, 'ES_10', 'Балеарские острова', 0, 0, '', 'RU3', '/clanwars/maps/landing/2914/', 0, 'reg_02');
-
--- --------------------------------------------------------
-
---
 -- Структура таблицы `tech`
 --
 
@@ -171,7 +131,7 @@ CREATE TABLE IF NOT EXISTS `tech` (
 --
 
 INSERT INTO `tech` (`current`) VALUES
-(80);
+(360);
 
 -- --------------------------------------------------------
 

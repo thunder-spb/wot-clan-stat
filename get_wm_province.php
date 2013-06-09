@@ -11,33 +11,19 @@ $total_poss = array();
 //счётчики для проверки валиности данных
 $a=0;
 $b=0;
-//echo $a;
+$curr="";
 foreach ($clan_array as $clan_i) {
-    // $sql12 = "delete from `btl` where idc='$clan_i'"; 
-	// $qq2 = mysql_query($sql12,$connect);
-	// if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-	$a=$a+1;
+    $a=$a+1;
 	$idc = $clan_i["clan_id"];
 	$pageidp = "clans/".$idc."-"."/provinces/?type=table";
 	$pageidp = "cw.".$wot_host.'/'.$pageidp;	
-	//$date = date("Y-m-d",strtotime($hosttime));
-	//$time = date("H:i:s",strtotime($hosttime));
 	$data = get_page($pageidp);
 	$data = json_decode($data, true);
 	$pageidp = "clans/".$idc."-"."/battles/?type=table";
 	$pageidp = "cw.".$wot_host.'/'.$pageidp;
 	$databtl = get_page($pageidp);
-	print_r($databtl);
 	echo "<br>-------------------------------------<br>";
 	$databtl = json_decode($databtl, true);
-	//$pageidp = "/clanwars/maps/provinces/467/";
-	//$pageidp = "http://cw.worldoftanks.ru/clanwars/maps/provinces/regions/3/?ct=json";
-//$pageidp = $wot_host.'/'.$pageidp;	
-	// $databt2 = get_page($pageidp);
-	// $data2 = json_decode($databt2, true);
-	echo "<br>-------------------------------------<br>";
-	//$provdata=$data2;//['provinces'];
-	//print_r($provdata);
 	$t = time();
 	if ($data["result"]=="success"){
 	$sql12 = "delete from `btl` where idc='$idc'"; 
@@ -59,35 +45,36 @@ foreach ($clan_array as $clan_i) {
 		}
 		$revenue = $item["revenue"];
 		$capital=$item["capital"];
-		//echo "<br> capital ".$capital."<br>";
-		//echo $revenue;
 		$type = $item["type"];
 		$attacked = $item["attacked"];
 		$occupancy_time = $item["occupancy_time"];
 		$total_poss[] = $id;
-		$prov = mysql_query("select id_pr,periphery, region  from province where id='$id'",$connect);
+		$prov = mysql_query("select id_pr,periphery, region, arena_id  from province where id='$id'",$connect);
 		$result = mysql_fetch_array($prov,MYSQL_ASSOC);
 		$succes=0;
-		if (($result==NULL) or($result['periphery']==NULL) or($result['region']==NULL)) {
-			
-			// провинции нет в таблице province
-			//$sql = "insert into province (prime_time, id, name, arena_id,  revenue, type)";
-			//$sql .= " values ('$prime_time', '$id', '$name', '$arena_id',  '$revenue', '$type')";
-			//mysql_query($sql, $connect);
-			$all = mysql_query("select id_r, url  from wm_regions");
+		if (($result==NULL) or($result['periphery']==NULL) or($result['region']==NULL)or ($result['arena_id']==0)) {
+			if ($result['region']==NULL){
+				$all = mysql_query("select id_r, url  from wm_regions");
+			}else{
+				$region=$result['region'];
+				$all = mysql_query("select id_r, url  from wm_regions where id_r='$region'");
+			}
 			while ($res = mysql_fetch_array($all,MYSQL_ASSOC)) {
-				print_r($res);
-				//$pageidp = "http://cw.worldoftanks.ru/clanwars/maps/provinces/regions/3/?ct=json";
-				$pageidp = "http://cw.worldoftanks.ru".$res['url']."?ct=json";
-				$databt2 = get_page($pageidp);
-				$data2 = json_decode($databt2, true);
+				if ($curr<>$res['id_r']){
+					$curr=$res['id_r'];
+					$pageidp = "http://cw.worldoftanks.ru".$res['url']."?ct=json";
+					$databt2 = get_page($pageidp);
+					$data2 = json_decode($databt2, true);
+				}
 				$provdata =$data2['provinces'][$id];
 				if ($provdata<>NULL){
 					mysql_query("delete from province where id='$id'",$connect);
-					print_r($provdata);
 					$per=$provdata['periphery'];
 					$landing_url=$provdata['landing_url'];
 					$landing_final_battle_time=$provdata['landing_final_battle_time'];
+					$arena=$provdata['mapId'];
+					$arenaar=explode ( "_", $arena );
+					$arena_id=$arenaar[1];
 					$region=$res['id_r'];
 					$sql = "insert into province (prime_time, id, name, arena_id,  revenue, type, periphery,landing_url,landing_final_battle_time,region)";
 					$sql .= " values ('$prime_time', '$id', '$name', '$arena_id',  '$revenue', '$type','$per', '$landing_url','$landing_final_battle_time','$region')";
@@ -124,104 +111,144 @@ foreach ($clan_array as $clan_i) {
 	echo "<br>".$idc." Done ";
 	}
 	if ($databtl["result"]=="success"){
-	// print_r($databtl);
-	foreach($databtl["request_data"]["items"] as $item) {
-		$provinces_name=$item["provinces"][0]["name"];
-		$provinces_id=$id=$item["provinces"][0]["id"];
-		$provinces_name1=$item["provinces"][0]["name"];
-		$provinces_id1=$item["provinces"][0]["id"];
-		$btlarena=$item["arenas"][0];
-		$btlarena1=$item["arenas"][0];
-		$started=$item["started"];
-		$type=$item["type"];
-		$prov = mysql_query("select id_pr,periphery, region  from province where id='$id'",$connect);
-		$result = mysql_fetch_array($prov,MYSQL_ASSOC);
-		$succes=0;
-		if (($result==NULL) or($result['periphery']==NULL) or($result['region']==NULL)) {
-			
-			// провинции нет в таблице province
-			//$sql = "insert into province (prime_time, id, name, arena_id,  revenue, type)";
-			//$sql .= " values ('$prime_time', '$id', '$name', '$arena_id',  '$revenue', '$type')";
-			//mysql_query($sql, $connect);
-			$all = mysql_query("select id_r, url  from wm_regions");
+		foreach($databtl["request_data"]["items"] as $item) {
+			$provinces_name=$item["provinces"][0]["name"];
+			$provinces_id=$id=$item["provinces"][0]["id"];
+			$btlarena=$item["arenas"][0];
+			$started=$item["started"];
+			$type=$item["type"];
+			$prov = mysql_query("select id_pr,periphery, region,arena_id,type  from province where id='$id'",$connect);
+			$result = mysql_fetch_array($prov,MYSQL_ASSOC);
+			$succes=0;
+			//if (($result==NULL) or($result['periphery']==NULL) or($result['region']==NULL)or ($result['arena_id']==0) or ($result['type']==NULL)) {
+			if ($result['region']==NULL){
+				$all = mysql_query("select id_r, url  from wm_regions",$connect);
+			}else{
+				$region=$result['region'];
+				$all = mysql_query("select id_r, url  from wm_regions where id_r='$region'",$connect);
+			}
 			while ($res = mysql_fetch_array($all,MYSQL_ASSOC)) {
-				print_r($res);
-				//$pageidp = "http://cw.worldoftanks.ru/clanwars/maps/provinces/regions/3/?ct=json";
-				$pageidp = "http://cw.worldoftanks.ru".$res['url']."?ct=json";
-				$databt2 = get_page($pageidp);
-				$data2 = json_decode($databt2, true);
+				if ($curr<>$res['id_r']){
+					$curr=$res['id_r'];
+					$pageidp = "http://cw.worldoftanks.ru".$res['url']."?ct=json";
+					$databt2 = get_page($pageidp);
+					$data2 = json_decode($databt2, true);
+				}
 				$provdata =$data2['provinces'][$id];
 				if ($provdata<>NULL){
+					$combats=$provdata['combats'];
 					mysql_query("delete from province where id='$id'",$connect);
-					print_r($provdata);
 					$per=$provdata['periphery'];
 					$landing_url=$provdata['landing_url'];
 					$landing_final_battle_time=$provdata['landing_final_battle_time'];
+					$arena=$provdata['mapId'];
+					$revenue=$provdata['revenue'];
+					$prime = $provdata["prime_time"];
+					$arenaar=explode ( "_", $arena );
+					$arena_id=$arenaar[1];
+					$status=$provdata['status'];
 					$region=$res['id_r'];
-					$sql = "insert into province ( id, name,  periphery,landing_url,landing_final_battle_time,region)";
-					$sql .= " values ('$id', '$provinces_name',  '$per', '$landing_url','$landing_final_battle_time','$region')";
+					$sql = "insert into province ( id, name, type,prime_time, revenue,  periphery,arena_id,landing_url,landing_final_battle_time,region)";
+					$sql .= " values ('$id', '$provinces_name', '$status','$prime', '$revenue','$per', '$arena_id','$landing_url','$landing_final_battle_time','$region')";
 					mysql_query($sql, $connect);
+					$sql12 = "delete from `btl` where id_prov='$id'"; 
+					$qq2 = mysql_query($sql12,$connect);
+					if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+					foreach ($combats as $cmb){
+						$ncombat=key($combats);
+						$combatants=$combats["$ncombat"]['combatants'];
+						foreach ($combatants as $btlclan){
+							$clanb=key($combatants);
+							echo "<br> клан ".$clanb;
+							echo "<br> учавствует в битве N ".$ncombat;
+							echo "<br> за провинцию ".$provinces_name;
+							$type = $combats["$ncombat"]['type'];
+							echo "<br> тип битвы ".$type;
+							echo "<br> на сервере ".$combats["$ncombat"]['peripheryId'];
+							//echo "<br> время ".$time;
+							$started = $combats["$ncombat"]['started'];
+							$bttime = $combats["$ncombat"]['at'];
+							//if ($started==1){
+								$bttime=$combatants["$clanb"]['at'];
+							//}
+							if ($bttime == NULL) {
+								$bttime = $combats["$ncombat"]['at'];
+								$started=0;
+							}
+							
+							$time=strtotime(date("Y-m-d H:i:s",$bttime).$hosttime);
+							$bttime=$time;	
+							$sql = "insert into btl (idb, idc,  time, type, id_prov,prov, started, arena)";
+							$sql .= " values ('$ncombat', '$clanb',  '$bttime', '$type', '$provinces_id','$provinces_name', '$started', '$btlarena')";
+							mysql_query($sql, $connect);
+							if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+							
+							$sql = mysql_query("select * from clan_info where idc='$clanb'",$connect);
+							$result = mysql_fetch_array($sql,MYSQL_ASSOC);
+							if ($result == NULL){
+								$dataclan=$data2['clans'][$clanb];
+								$clanname=$dataclan['name'];
+								$clancolor=$dataclan['color'];
+								$clantag=$dataclan['tag'];
+								$clanurl=$dataclan['url'];
+								$sql = "insert into clan_info ( idc,  name, color, tag, url)";
+								$sql .= " values ('$clanb', '$clanname',  '$clancolor', '$clantag', '$clanurl')";
+								mysql_query($sql, $connect);
+								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+							}
+							
+							next($combatants);
+						}
+						$ncombat=key($combats);
+						next($combats);
+					}
 					$succes=1;
 					break;
 				}
 			}
+			//}
+			// if ($type=='meeting_engagement'){
+				// $provinces_name1=$item["provinces"][1]["name"];
+				// $provinces_id1=$id=$item["provinces"][1]["id"];
+				// $prov = mysql_query("select id_pr,periphery, region  from province where id='$id'",$connect);
+				// $result = mysql_fetch_array($prov,MYSQL_ASSOC);
+				// $succes=0;
+				// if (($result==NULL) or($result['periphery']==NULL) or($result['region']==NULL)) {
+					// $all = mysql_query("select id_r, url  from wm_regions");
+					// while ($res = mysql_fetch_array($all,MYSQL_ASSOC)) {
+						// print_r($res);
+						// $pageidp = "http://cw.worldoftanks.ru".$res['url']."?ct=json";
+						// $databt2 = get_page($pageidp);
+						// $data2 = json_decode($databt2, true);
+						// $provdata =$data2['provinces'][$id];
+						// if ($provdata<>NULL){
+							// mysql_query("delete from province where id='$id'",$connect);
+							// print_r($provdata);
+							// $per=$provdata['periphery'];
+							// $landing_url=$provdata['landing_url'];
+							// $landing_final_battle_time=$provdata['landing_final_battle_time'];
+							// $region=$res['id_r'];
+							// $sql = "insert into province ( id, name,  periphery,landing_url,landing_final_battle_time,region)";
+							// $sql .= " values ('$id', '$provinces_name',  '$per', '$landing_url','$landing_final_battle_time','$region')";
+							// mysql_query($sql, $connect);
+							// $succes=1;
+							// break;
+						// }
+					// }
+				// }
+				// $arenascnt=count($item['arenas']);
+				// if ($arenascnt>1){
+					// $btlarena1=$item["arenas"][1];
+				// }
+			// }
+			$btlchips=$item["chips"];
+			$btlid=0;
+			//$sql = "insert into btl (idb, idc, date, time, type, id_prov,prov, id_prov1,prov1, started, arena, arena1, chips)";
+			//$sql .= " values ('$btlid', '$idc', '$btldate', '$btltime', '$type', '$provinces_id','$provinces_name', '$provinces_id1','$provinces_name1','$started', '$btlarena','$btlarena1','$btlchips')";
+			//mysql_query($sql, $connect);
+			//if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+			echo "-------------------<br>".$provinces_name." id=".$provinces_id."<br>".$started."<br>тип ".$type."<br>карта ".$btlarena."<br>номер ".$btlid."<br>фишки ".$btlchips."<br>";
 		}
-		if ($type=='meeting_engagement'){
-			$provinces_name1=$item["provinces"][1]["name"];
-			$provinces_id1=$id=$item["provinces"][1]["id"];
-			$prov = mysql_query("select id_pr,periphery, region  from province where id='$id'",$connect);
-			$result = mysql_fetch_array($prov,MYSQL_ASSOC);
-			$succes=0;
-			if (($result==NULL) or($result['periphery']==NULL) or($result['region']==NULL)) {
-				
-				// провинции нет в таблице province
-				//$sql = "insert into province (prime_time, id, name, arena_id,  revenue, type)";
-				//$sql .= " values ('$prime_time', '$id', '$name', '$arena_id',  '$revenue', '$type')";
-				//mysql_query($sql, $connect);
-				$all = mysql_query("select id_r, url  from wm_regions");
-				while ($res = mysql_fetch_array($all,MYSQL_ASSOC)) {
-					print_r($res);
-					//$pageidp = "http://cw.worldoftanks.ru/clanwars/maps/provinces/regions/3/?ct=json";
-					$pageidp = "http://cw.worldoftanks.ru".$res['url']."?ct=json";
-					$databt2 = get_page($pageidp);
-					$data2 = json_decode($databt2, true);
-					$provdata =$data2['provinces'][$id];
-					if ($provdata<>NULL){
-						mysql_query("delete from province where id='$id'",$connect);
-						print_r($provdata);
-						$per=$provdata['periphery'];
-						$landing_url=$provdata['landing_url'];
-						$landing_final_battle_time=$provdata['landing_final_battle_time'];
-						$region=$res['id_r'];
-						$sql = "insert into province ( id, name,  periphery,landing_url,landing_final_battle_time,region)";
-						$sql .= " values ('$id', '$provinces_name',  '$per', '$landing_url','$landing_final_battle_time','$region')";
-						mysql_query($sql, $connect);
-						$succes=1;
-						break;
-					}
-				}
-			}
-			$btlarena1=$item["arenas"][1];
-		}
-		$time=strtotime(date("Y-m-d H:i:s",$item["time"]).$hosttime);
-		$btldate=date("Y-m-d",$time);	
-		$btltime=$time;	
-		$btlarena=$item["arenas"][0];
-		$btlchips=$item["chips"];
-		$btlid=0;
-		// if ($type<>"landing"){
-			// $btlid=$item["id"];}
-			// таблица с текущими битвами клана.
-			$sql = "insert into btl (idb, idc, date, time, type, id_prov,prov, id_prov1,prov1, started, arena, arena1, chips)";
-			$sql .= " values ('$btlid', '$idc', '$btldate', '$btltime', '$type', '$provinces_id','$provinces_name', '$provinces_id1','$provinces_name1','$started', '$btlarena','$btlarena1','$btlchips')";
-			mysql_query($sql, $connect);
-			if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-			
-			
-			echo $provinces_name." id=".$provinces_id."<br>".$started."<br>тип ".$type."<br>время".$btltime."<br>карта ".$btlarena."<br>номер ".$btlid."<br>фишки ".$btlchips."<br>";
-		
-	  //print_r($item);
-	}
 	}
 }
 if ($a==$b){

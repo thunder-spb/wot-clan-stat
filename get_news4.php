@@ -49,7 +49,7 @@ for($i=0;$i<$count;$i++) {
 	$name=$row['name'];
 	$idpr=$row['idpr'];
 	$name = "<a href='http://worldoftanks.ru/uc/clanwars/maps/?province=$idpr' target='_blank'>$name</a>";
-	$amessage=$messagetype.$typea.$amessage."<b>".$name."</b>";
+	$amessage=$messagetype.$typea.$amessage.$name;
 	$amessage=$sp5.$amessage.$sp6;
 	$responce->rows[$i]['cell']=array($row['id_e'],$date,$amessage); 
 } 

@@ -184,6 +184,7 @@ foreach ($clan_array as $clan_i) {
              </td>
 		</table>
         <table id="battles1"></table>
+		<div id="battles1pager"></div>
      </div>
 	<div id="tab-7">
 		<table id="techABS2"></table>

@@ -15,44 +15,50 @@ $responce->total = 1;
 $responce->records = $count;
 $i=0;
 
-$SQL = "select id_b,idb, type,time, id_prov, prov, id_prov1, prov1, started, arena, arena1 from btl where idc='$idc' order by time";
+$SQL = "select id_b, idb, type,time, id_prov, prov,  started, arena  from btl where idc='$idc' group by idb order by time";
 $result2 = mysql_query( $SQL,$connect );
 while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) { 
 	$provm=$row['type'];
 	$timem="";
 	$clane="";
-	//$pr=$row['prov'];
+	$idb=$row['idb'];
 	$idpr=$row['id_prov'];
-	$idpr1=$row['id_prov1'];
 	$pr = $row["prov"];
-	$pr1 = $row["prov1"];
 	$arena=$row["arena"];
-	$arena1=$row["arena1"];
 	$pr = "<a href='http://worldoftanks.ru/uc/clanwars/maps/?province=$idpr' target='_blank'>$pr</a>";
-	$pr1 = "<a href='http://worldoftanks.ru/uc/clanwars/maps/?province=$idpr1' target='_blank'>$pr1</a>";
 	if ($row['type']=="landing"){$provm="Высадка";}
 		$SQL2 = "select * from possession where idpr='$idpr'and idc='$idc'";
 		$result22 = mysql_query( $SQL2,$connect );
 		if (mysql_fetch_array($result22,MYSQL_ASSOC)){
 			$provm=$provm." (удерживаем)";
 		}
-	if ($row['type']=="for_province"){$provm="За провинцию";
+	if ($row['type']=="for_province"){
+		$provm="За провинцию";
 		$SQL2 = "select * from possession where idpr='$idpr'and idc='$idc'";
 		$result22 = mysql_query( $SQL2,$connect );
 		if (!mysql_fetch_array($result22,MYSQL_ASSOC)){
-			$provm=$provm." (атакуем)";
+			$provm=$provm." (атака)";
 		}else{
-			$provm=$provm." (защищаемся)";
+			$provm=$provm." (защита)";
 		}
-		$SQL2 = "select idc from possession where idpr='$idpr'and idc<>'$idc'";
+		$SQL2 = "select idb,idc,time from btl where idb='$idb'and idc<>'$idc'";
 		$result22 = mysql_query( $SQL2,$connect );
-		$row3=mysql_fetch_array($result22,MYSQL_ASSOC);
-		if ($row3<>NULL){
-			$clane=$row3['idc'];
+		$clane="";
+		while($row3=mysql_fetch_array($result22,MYSQL_ASSOC)){
+		//if ($row3<>NULL){
+			$clansa=$row3['idc'];
+			$timem=date("H:i",$row3['time']);
+			$SQL2 = "select idc,tag, color, name from clan_info where idc='$clansa'";
+			$claneresult = mysql_query( $SQL2,$connect );
+			$rowclan=mysql_fetch_array($claneresult,MYSQL_ASSOC);
+			//"<span style='color: blue;'><b>"; $sp6="</b></span> "
+			
+			$clane=$clane."<span style='background-color:". $rowclan['color'].";'>"."    "."</span> <b>[".$timem."]</b>[".$rowclan['tag']."]<b> ".$rowclan['name']."</b><br>";
+			//$clane=$clane."f,hf";
 		}
 	}
 	if ($row['started']==1){
-		$timem=date("H:i",$row['time']);
+		$timem="<b>".date("H:i",$row['time'])."</b>";
 	}else{
 		$timem=date("H:i",$row['time'])." +";
 	}
@@ -75,47 +81,50 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 			break;
 		}
 	}
-	// $SQL2 = "select type from province where id='$idpr1'";
-	// $result22 = mysql_query( $SQL2,$connect );
-	// $row3=mysql_fetch_array($result22,MYSQL_ASSOC);
-	// if ($row3<>NULL){
-		// switch ($row3["type"]) {
-		// case "normal":
-			// $pr1 = '<img src="images/province_type_normal.png" style="width: 20px; height:20px;" align="absmiddle"/>'." ".$pr1;// alt='Обычная провинция' >";
-			// break;
-		// case "gold":
-			// $pr1 = '<img src="images/province_type_gold.png" style="width: 20px; height:20px;" align="absmiddle"/>'." ".$pr1; //alt='Ключевая провинция' >";
-			// break;
-		// case "start":
-			// $pr1 = '<img src="images/province_type_start.png" style="width: 20px; height:20px;" align="absmiddle"/>'." ".$pr1;// alt='Стартовая провинция' >";
-			// break;
-		// }
-	// }
 	if ($row['type']=="meeting_engagement"){
-		$SQL2 = "select type from province where id='$idpr1'";
-		$result22 = mysql_query( $SQL2,$connect );
-		$row3=mysql_fetch_array($result22,MYSQL_ASSOC);
-		if ($row3<>NULL){
-			switch ($row3["type"]) {
-			case "normal":
-				$pr1 = '<img src="images/province_type_normal.png" style="width: 20px; height:20px;" align="absmiddle"/>'." ".$pr1;// alt='Обычная провинция' >";
-				break;
-			case "gold":
-				$pr1 = '<img src="images/province_type_gold.png" style="width: 20px; height:20px;" align="absmiddle"/>'." ".$pr1; //alt='Ключевая провинция' >";
-				break;
-			case "start":
-				$pr1 = '<img src="images/province_type_start.png" style="width: 20px; height:20px;" align="absmiddle"/>'." ".$pr1;// alt='Стартовая провинция' >";
-				break;
+		$SQL = "select idb, idc,prov, id_prov,arena from btl where idb='$idb'and idc<>'$idc' and id_prov<>'$idpr'";
+		$result22 = mysql_query( $SQL,$connect );
+		$row100=mysql_fetch_array($result22,MYSQL_ASSOC);
+		$provid=$row100['id_prov'];
+		$provname=$row100['prov'];
+		$periphery="---";
+		$clansa=$row100['idc'];
+			$clane="";
+			$SQL2 = "select idc,tag, color, name from clan_info where idc='$clansa'";
+			$claneresult = mysql_query( $SQL2,$connect );
+			$rowclan=mysql_fetch_array($claneresult,MYSQL_ASSOC);
+			//"<span style='color: blue;'><b>"; $sp6="</b></span> "
+			
+			$clane=$clane."<span style='background-color:". $rowclan['color'].";'>"."    "."</span> "."[".$rowclan['tag']."]<b> ".$rowclan['name']."</b><br>";
+		if ($row100<>NULL){
+			$SQL2 = "select type from province where id='$provid'";
+			$result22 = mysql_query( $SQL2,$connect );
+			$row3=mysql_fetch_array($result22,MYSQL_ASSOC);
+			$pr1=$provname;
+			if ($row3<>NULL){
+				switch ($row3["type"]) {
+					case "normal":
+						$pr1 = '<img src="images/province_type_normal.png" style="width: 20px; height:20px;" align="absmiddle"/>'." ".$pr1;// alt='Обычная провинция' >";
+						break;
+					case "gold":
+						$pr1 = '<img src="images/province_type_gold.png" style="width: 20px; height:20px;" align="absmiddle"/>'." ".$pr1; //alt='Ключевая провинция' >";
+						break;
+					case "start":
+						$pr1 = '<img src="images/province_type_start.png" style="width: 20px; height:20px;" align="absmiddle"/>'." ".$pr1;// alt='Стартовая провинция' >";
+						break;
+				}
 			}
 		}
 		$provm="Встречный бой";
 		$pr=$pr.'<img src="images/icons/vs.png" align="absmiddle">'.$pr1;
-		$arena=$arena." или ".$arena1;
+		$arena1=$row100['arena'];
+		 if ($arena<>$arena1){
+			 $arena=$arena." или ".$arena1;
+		 }
 	}
 	
 	$responce->rows[$i]['cell']=array("<b>".$provm."</b>","<b>".$pr."</b>", "<b>".$arena."</b>",$timem,$clane,$periphery); //$clandays,$las_onl); 
 	$i++; 
 } 
-//header("Content-type: text/script;charset=utf-8");
 echo json_encode($responce);
 ?>
