@@ -70,8 +70,12 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 			if ($rowclan['allians']==1){
 				$clann="<a href='wotstat.php?idc=$clansa#tab-6' target='_blank'>$clanname</a>";
 			}}
+			$timema="";
+			if ($row['started']==1){
+				$timema="<b>[".$timem."]</b>";
+			}
 			//$pr = "<a href='http://worldoftanks.ru/uc/clanwars/maps/?province=$idpr' target='_blank'>$pr</a>";
-			$clane=$clane."<span style='background-color:". $rowclan['color'].";'>"."    "."</span> <b>[".$timem."]</b> [".$rowclan['tag']."]".$stra."<b> ".$clann."</b><br>";
+			$clane=$clane."<span style='background-color:". $rowclan['color'].";'>"."    "."</span>".$timema." [".$rowclan['tag']."]".$stra."<b> ".$clann."</b><br>";
 			//$clane=$clane."f,hf";
 		}
 	}
