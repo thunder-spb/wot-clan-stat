@@ -14,7 +14,9 @@ $responce->page = 1;
 $responce->total = 1;
 $responce->records = $count;
 $i=0;
-
+$SQL2 = "select skill  from clan_info where idc='$idc'";
+$claneresult1 = mysql_query( $SQL2,$connect );
+$rowclan1=mysql_fetch_array($claneresult1,MYSQL_ASSOC);
 $SQL = "select id_b, idb, type,time, id_prov, prov,  started, arena  from btl where idc='$idc' group by idb order by time";
 $result2 = mysql_query( $SQL,$connect );
 while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) { 
@@ -55,15 +57,13 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 			//"<span style='color: blue;'><b>"; $sp6="</b></span> "
 			$clanname=$clann=$rowclan['name'];
 			$actclane=$rowclan['actdate'];
-			$SQL2 = "select skill  from clan_info where idc='$idc'";
-			$claneresult1 = mysql_query( $SQL2,$connect );
-			$rowclan1=mysql_fetch_array($claneresult1,MYSQL_ASSOC);
+			
 			$skillb=$rowclan['skill'];
 			$skilla=$rowclan1['skill'];
 			$stra="";
 			if ($skillb<>0 and $skilla<>0){
 				$chans=round(($skilla/($skilla+$skillb))*100,0);
-				$stra=" сила-".$rowclan['rate'] ." | шанс-".$chans."% |";
+				$stra="| сила-".$rowclan['rate'] ." | шанс-".$chans."% |";
 			}
 			if ($t<$actclane){
 			$clann=	"<a href='clanstat.php?idc=$clansa#tab-6' target='_blank'>$clanname</a>";
@@ -111,13 +111,20 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 			// $SQL2 = "select idc,tag, color, name from clan_info where idc='$clansa'";
 			// $claneresult = mysql_query( $SQL2,$connect );
 			// $rowclan=mysql_fetch_array($claneresult,MYSQL_ASSOC);
-			$SQL2 = "select idc,tag, color, name, allians, actdate from clan_info where idc='$clansa'";
+			$SQL2 = "select idc,tag, color, name, allians, actdate,skill,rate from clan_info where idc='$clansa'";
 			$claneresult = mysql_query( $SQL2,$connect );
 			$rowclan=mysql_fetch_array($claneresult,MYSQL_ASSOC);
 			//"<span style='color: blue;'><b>"; $sp6="</b></span> http://5.19.254.43/stat/clanstat.php?idc=65317#tab-6"
 			$clanname=$clann=$rowclan['name'];
 			$actclane=$rowclan['actdate'];
 			$t=time()-700000;
+			$skillb=$rowclan['skill'];
+			$skilla=$rowclan1['skill'];
+			$stra="";
+			if ($skillb<>0 and $skilla<>0){
+				$chans=round(($skilla/($skilla+$skillb))*100,0);
+				$stra="| сила-".$rowclan['rate'] ." | шанс-".$chans."% |";
+			}
 			if ($t<$actclane){
 			$clann=	"<a href='clanstat.php?idc=$clansa#tab-6' target='_blank'>$clanname</a>";
 			if ($rowclan['allians']==1){
@@ -125,7 +132,7 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 			}}
 			//"<span style='color: blue;'><b>"; $sp6="</b></span> "
 			
-			$clane=$clane."<span style='background-color:". $rowclan['color'].";'>"."    "."</span> "."[".$rowclan['tag']."]<b> ".$clann."</b><br>";
+			$clane=$clane."<span style='background-color:". $rowclan['color'].";'>"."    "."</span> "."[".$rowclan['tag']."]".$stra."<b> ".$clann."</b><br>";
 		if ($row100<>NULL){
 			$SQL2 = "select type from province where id='$provid'";
 			$result22 = mysql_query( $SQL2,$connect );
