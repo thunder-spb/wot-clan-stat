@@ -48,12 +48,17 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 		//if ($row3<>NULL){
 			$clansa=$row3['idc'];
 			$timem=date("H:i",$row3['time']);
-			$SQL2 = "select idc,tag, color, name from clan_info where idc='$clansa'";
+			$SQL2 = "select idc,tag, color, name, allians from clan_info where idc='$clansa'";
 			$claneresult = mysql_query( $SQL2,$connect );
 			$rowclan=mysql_fetch_array($claneresult,MYSQL_ASSOC);
 			//"<span style='color: blue;'><b>"; $sp6="</b></span> "
-			
-			$clane=$clane."<span style='background-color:". $rowclan['color'].";'>"."    "."</span> <b>[".$timem."]</b>[".$rowclan['tag']."]<b> ".$rowclan['name']."</b><br>";
+			$clanname=$rowclan['name'];
+			$clann=	"<a href='clanstat.php?idc=$clansa#tab-6' target='_blank'>$clanname</a>";
+			if ($rowclan['allians']==1){
+				$clann="<a href='wotstat.php?idc=$clansa#tab-6' target='_blank'>$clanname</a>";
+			}
+			//$pr = "<a href='http://worldoftanks.ru/uc/clanwars/maps/?province=$idpr' target='_blank'>$pr</a>";
+			$clane=$clane."<span style='background-color:". $rowclan['color'].";'>"."    "."</span> <b>[".$timem."]</b>[".$rowclan['tag']."]<b> ".$clann."</b><br>";
 			//$clane=$clane."f,hf";
 		}
 	}
@@ -71,13 +76,13 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 		$periphery=$row3['periphery'];
 		switch ($row3["type"]) {
 		case "normal":
-			$pr = '<img src="images/province_type_normal.png" style="width: 20px; height:20px;" align="absmiddle"/>'." ".$pr;// alt='Обычная провинция' >";
+			$pr = '<img src="images/province_type_normal.png" style="width: 16px; height:16px;" align="absmiddle"/>'." ".$pr;// alt='Обычная провинция' >";
 			break;
 		case "gold":
-			$pr = '<img src="images/province_type_gold.png" style="width: 20px; height:20px;" align="absmiddle"/>'." ".$pr; //alt='Ключевая провинция' >";
+			$pr = '<img src="images/province_type_gold.png" style="width: 16px; height:16px;" align="absmiddle"/>'." ".$pr; //alt='Ключевая провинция' >";
 			break;
 		case "start":
-			$pr = '<img src="images/province_type_start.png" style="width: 20px; height:20px;" align="absmiddle"/>'." ".$pr;// alt='Стартовая провинция' >";
+			$pr = '<img src="images/province_type_start.png" style="width: 16px; height:16px;" align="absmiddle"/>'." ".$pr;// alt='Стартовая провинция' >";
 			break;
 		}
 	}
@@ -90,12 +95,21 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 		$periphery="---";
 		$clansa=$row100['idc'];
 			$clane="";
-			$SQL2 = "select idc,tag, color, name from clan_info where idc='$clansa'";
+			// $SQL2 = "select idc,tag, color, name from clan_info where idc='$clansa'";
+			// $claneresult = mysql_query( $SQL2,$connect );
+			// $rowclan=mysql_fetch_array($claneresult,MYSQL_ASSOC);
+			$SQL2 = "select idc,tag, color, name, allians from clan_info where idc='$clansa'";
 			$claneresult = mysql_query( $SQL2,$connect );
 			$rowclan=mysql_fetch_array($claneresult,MYSQL_ASSOC);
+			//"<span style='color: blue;'><b>"; $sp6="</b></span> http://5.19.254.43/stat/clanstat.php?idc=65317#tab-6"
+			$clanname=$rowclan['name'];
+			$clann=	"<a href='clanstat.php?idc=$clansa#tab-6' target='_blank'>$clanname</a>";
+			if ($rowclan['allians']==1){
+				$clann="<a href='wotstat.php?idc=$clansa#tab-6' target='_blank'>$clanname</a>";
+			}
 			//"<span style='color: blue;'><b>"; $sp6="</b></span> "
 			
-			$clane=$clane."<span style='background-color:". $rowclan['color'].";'>"."    "."</span> "."[".$rowclan['tag']."]<b> ".$rowclan['name']."</b><br>";
+			$clane=$clane."<span style='background-color:". $rowclan['color'].";'>"."    "."</span> "."[".$rowclan['tag']."]<b> ".$clann."</b><br>";
 		if ($row100<>NULL){
 			$SQL2 = "select type from province where id='$provid'";
 			$result22 = mysql_query( $SQL2,$connect );
@@ -104,13 +118,13 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 			if ($row3<>NULL){
 				switch ($row3["type"]) {
 					case "normal":
-						$pr1 = '<img src="images/province_type_normal.png" style="width: 20px; height:20px;" align="absmiddle"/>'." ".$pr1;// alt='Обычная провинция' >";
+						$pr1 = '<img src="images/province_type_normal.png" style="width: 16px; height:16px;" align="absmiddle"/>'." ".$pr1;// alt='Обычная провинция' >";
 						break;
 					case "gold":
-						$pr1 = '<img src="images/province_type_gold.png" style="width: 20px; height:20px;" align="absmiddle"/>'." ".$pr1; //alt='Ключевая провинция' >";
+						$pr1 = '<img src="images/province_type_gold.png" style="width: 16px; height:16px;" align="absmiddle"/>'." ".$pr1; //alt='Ключевая провинция' >";
 						break;
 					case "start":
-						$pr1 = '<img src="images/province_type_start.png" style="width: 20px; height:20px;" align="absmiddle"/>'." ".$pr1;// alt='Стартовая провинция' >";
+						$pr1 = '<img src="images/province_type_start.png" style="width: 16px; height:16px;" align="absmiddle"/>'." ".$pr1;// alt='Стартовая провинция' >";
 						break;
 				}
 			}

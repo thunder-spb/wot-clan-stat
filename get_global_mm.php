@@ -38,8 +38,25 @@ $sql = "select count(*) as cntt from cat_tanks";
 $q2 = mysql_query($sql,$connect);
 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $row = mysql_fetch_array($q2);
-$cntT = $row['cntt']; 
-	foreach ($ida as $id) {
+$cntT = $row['cntt'];
+$t = time()-700000;
+$clanlist = mysql_query("select idc from clan_info where actdate>'$t'",$connect);
+$clancnt=array();
+foreach ($clan_array as $clan_i) {
+	//$idc1=$clan_i["clan_id"];
+	$clancnt[]=$clan_i["clan_id"];
+}
+while ($clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC)) {
+	$clancnt[]=$clanrow["idc"];
+}
+echo "-------------------<br>";
+print_r ($clancnt);
+echo "<br>-----------------<br>";
+$clancnt=array_unique($clancnt);
+echo "-------------------<br>";
+print_r ($clancnt);
+echo "<br>-----------------<br>";
+foreach ($ida as $id) {
 		$sql = "select * from clan where idp='$id'";
 		$q = mysql_query($sql, $connect);
 		if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
@@ -55,11 +72,33 @@ $cntT = $row['cntt'];
 			$freq=0;
 			$inclan=0;//проверка на изменения списка альянса
 			$clantag1="";
-			foreach ($clan_array as $clan_i) {
-					$idct = $clan_i["clan_id"];
-					if ( $idct == $idc){
-						$inclan=1;//клан в альянсе-всё в порядке
-						$clantag1 = $clan_i["clan_tag"];
+			// $t = time()-700000;
+			// $clanlist = mysql_query("select idc from clan_info where actdate>'$t'",$connect);
+			// $clancnt=array();
+			// foreach ($clan_array as $clan_i) {
+				// //$idc1=$clan_i["clan_id"];
+				// $clancnt[]=$clan_i["clan_id"];
+			// }
+			// while ($clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC)) {
+				// $clancnt[]=$clanrow["idc"];
+			// }
+			 // echo "-------------------<br>";
+			 // print_r ($clancnt);
+			 // echo "<br>-----------------<br>";
+			 // $clancnt=array_unique($clancnt);
+			 // echo "-------------------<br>";
+			 // print_r ($clancnt);
+			 // echo "<br>-----------------<br>";
+			 reset($clancnt);
+			foreach ($clancnt as $idct) {
+				// $idct = $clan_i["clan_id"];
+				if ( $idct == $idc){
+					$inclan=1;//клан в альянсе-всё в порядке
+					$clantgs = mysql_query("select tag, allians from clan_info where idc='$idc'",$connect);
+					if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+					$clnt= mysql_fetch_array($clantgs);
+					$clantag1=$clnt['tag'];
+					$allians=$clnt['allians'];
 					break;
 				}
 			}
@@ -252,7 +291,10 @@ $cntT = $row['cntt'];
 								// $q = mysql_query($sql, $connect);
 								// if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 							}else{
-									if ($target<$req_freq){
+								if ($target<$req_freq){
+									if ($allians==0){
+										$target=$target+1;
+									}	
 									$target=$target+1;
 								}
 							}
@@ -267,69 +309,71 @@ $cntT = $row['cntt'];
 								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 							
 							// опись медалей и достижений
-							$sql = "select count(*) as cnt from cat_achiev";
-							$q2 = mysql_query($sql,$connect);
-							if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-							$row = mysql_fetch_array($q2);
-							$cnt = $row['cnt']; 
-							$sql = "select * from cat_achiev";
-							$result = mysql_query($sql,$connect);
-							if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-							for($i2=0;$i2<$cnt;$i2++) { 
-								$row = mysql_fetch_array($result,MYSQL_ASSOC);
-								$mdl=$row['medal'];
-								$mdl_ru=$row['medal_ru'];
-								$mdl_id=$row['id_ac'];
-								
-								$type=$row['type'];
-								$type_ach=3;
-								$mdlamount=0;
-								if ($type==5) {
-									if ($mdl=="tankExpertsUsa"){if ($data['data']['achievements']['tankExperts']['usa']=='true'){$mdlamount=1;};}
-									if ($mdl=="tankExpertsFrance"){if ($data['data']['achievements']['tankExperts']['france']=='true'){$mdlamount=1;};}
-									if ($mdl=="tankExpertsUssr"){if ($data['data']['achievements']['tankExperts']['ussr']=='true'){$mdlamount=1;};}
-									if ($mdl=="tankExpertsGermany"){if ($data['data']['achievements']['tankExperts']['germany']=='true'){$mdlamount=1;};}
-									if ($mdl=="tankExpertsChina"){if ($data['data']['achievements']['tankExperts']['china']=='true'){$mdlamount=1;};}
-									if ($mdl=="tankExpertsUK"){if ($data['data']['achievements']['tankExperts']['uk']=='true'){$mdlamount=1;};}
-									if ($mdl=="mechanicEngineersUSA"){if ($data['data']['achievements']['mechanicEngineers']['usa']=='true'){$mdlamount=1;};}
-									if ($mdl=="mechanicEngineersFrance"){if ($data['data']['achievements']['mechanicEngineers']['france']=='true'){$mdlamount=1;};}
-									if ($mdl=="mechanicEngineersUssr"){if ($data['data']['achievements']['mechanicEngineers']['ussr']=='true'){$mdlamount=1;};}
-									if ($mdl=="mechanicEngineersGermany"){if ($data['data']['achievements']['mechanicEngineers']['germany']=='true'){$mdlamount=1;};}
-									if ($mdl=="mechanicEngineersChina"){if ($data['data']['achievements']['mechanicEngineers']['china']=='true'){$mdlamount=1;};}
-									if ($mdl=="mechanicEngineersUK"){if ($data['data']['achievements']['mechanicEngineers']['uk']=='true'){$mdlamount=1;};}
-									if ($mdl=="mechanicEngineer"){if ($data['data']['achievements']['mechanicEngineer']=='true'){$mdlamount=1;};}
-									if ($mdl=="tankExpert"){$mdlamount=$data['data']['achievements'][$mdl];}
-								} else {
-									$mdlamount=$data['data']['achievements'][$mdl];
-								}
-								if (($type==4) or ($type==6)){
-								$type_ach=0;
-								}
-								$SQL33="SELECT amount from player_ach where idp='$id' and ida='$mdl_id'";
-								$qt33 = mysql_query($SQL33, $connect);
+							if ($allians==1){
+								$sql = "select count(*) as cnt from cat_achiev";
+								$q2 = mysql_query($sql,$connect);
 								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-								$qqtt33 = mysql_fetch_array($qt33);
-								$a_co=$qqtt33['amount'];
-								if ($a_co==NULL){
-									$sql11 = "INSERT INTO player_ach (idp, ida, amount)";
-									$sql11.= " VALUES ('$id', '$mdl_id', '$mdlamount')";
-								}
-								else {
-									$sql11 = "UPDATE player_ach SET `amount`='$mdlamount' where `idp`='$id' and `ida`='$mdl_id'";
-								}
-								$q11 = mysql_query($sql11, $connect);
-								if ($a_co<>$mdlamount){
-									if(($newtankist!=1) and ($mdlamount<>NULL)){
-										$message='<'.$mdl_ru.'> '.$mdlamount.' у '.$pname;
-										echo "<br>\n ".$mdl." ".$mdlamount;
-										if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-										$sql5 = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
-										$sql5.= " VALUES ('$type_ach','$id', '$idc', '$message', NULL, '$date', '$time')";
-										$q5 = mysql_query($sql5, $connect);
-										if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+								$row = mysql_fetch_array($q2);
+								$cnt = $row['cnt']; 
+								$sql = "select * from cat_achiev";
+								$result = mysql_query($sql,$connect);
+								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+								for($i2=0;$i2<$cnt;$i2++) { 
+									$row = mysql_fetch_array($result,MYSQL_ASSOC);
+									$mdl=$row['medal'];
+									$mdl_ru=$row['medal_ru'];
+									$mdl_id=$row['id_ac'];
+									
+									$type=$row['type'];
+									$type_ach=3;
+									$mdlamount=0;
+									if ($type==5) {
+										if ($mdl=="tankExpertsUsa"){if ($data['data']['achievements']['tankExperts']['usa']=='true'){$mdlamount=1;};}
+										if ($mdl=="tankExpertsFrance"){if ($data['data']['achievements']['tankExperts']['france']=='true'){$mdlamount=1;};}
+										if ($mdl=="tankExpertsUssr"){if ($data['data']['achievements']['tankExperts']['ussr']=='true'){$mdlamount=1;};}
+										if ($mdl=="tankExpertsGermany"){if ($data['data']['achievements']['tankExperts']['germany']=='true'){$mdlamount=1;};}
+										if ($mdl=="tankExpertsChina"){if ($data['data']['achievements']['tankExperts']['china']=='true'){$mdlamount=1;};}
+										if ($mdl=="tankExpertsUK"){if ($data['data']['achievements']['tankExperts']['uk']=='true'){$mdlamount=1;};}
+										if ($mdl=="mechanicEngineersUSA"){if ($data['data']['achievements']['mechanicEngineers']['usa']=='true'){$mdlamount=1;};}
+										if ($mdl=="mechanicEngineersFrance"){if ($data['data']['achievements']['mechanicEngineers']['france']=='true'){$mdlamount=1;};}
+										if ($mdl=="mechanicEngineersUssr"){if ($data['data']['achievements']['mechanicEngineers']['ussr']=='true'){$mdlamount=1;};}
+										if ($mdl=="mechanicEngineersGermany"){if ($data['data']['achievements']['mechanicEngineers']['germany']=='true'){$mdlamount=1;};}
+										if ($mdl=="mechanicEngineersChina"){if ($data['data']['achievements']['mechanicEngineers']['china']=='true'){$mdlamount=1;};}
+										if ($mdl=="mechanicEngineersUK"){if ($data['data']['achievements']['mechanicEngineers']['uk']=='true'){$mdlamount=1;};}
+										if ($mdl=="mechanicEngineer"){if ($data['data']['achievements']['mechanicEngineer']=='true'){$mdlamount=1;};}
+										if ($mdl=="tankExpert"){$mdlamount=$data['data']['achievements'][$mdl];}
+									} else {
+										$mdlamount=$data['data']['achievements'][$mdl];
 									}
+									if (($type==4) or ($type==6)){
+									$type_ach=0;
+									}
+									$SQL33="SELECT amount from player_ach where idp='$id' and ida='$mdl_id'";
+									$qt33 = mysql_query($SQL33, $connect);
+									if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+									$qqtt33 = mysql_fetch_array($qt33);
+									$a_co=$qqtt33['amount'];
+									if ($a_co==NULL){
+										$sql11 = "INSERT INTO player_ach (idp, ida, amount)";
+										$sql11.= " VALUES ('$id', '$mdl_id', '$mdlamount')";
+									}
+									else {
+										$sql11 = "UPDATE player_ach SET `amount`='$mdlamount' where `idp`='$id' and `ida`='$mdl_id'";
+									}
+									$q11 = mysql_query($sql11, $connect);
+									if ($a_co<>$mdlamount){
+										if(($newtankist!=1) and ($mdlamount<>NULL)){
+											$message='<'.$mdl_ru.'> '.$mdlamount.' у '.$pname;
+											echo "<br>\n ".$mdl." ".$mdlamount;
+											if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+											$sql5 = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
+											$sql5.= " VALUES ('$type_ach','$id', '$idc', '$message', NULL, '$date', '$time')";
+											$q5 = mysql_query($sql5, $connect);
+											if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+										}
+									}
+									
 								}
-								
 							}
 							// работа со списком техники
 							$date2=date("Y-m-d",strtotime(' -'.$timetolife.' day '.$hosttime));
@@ -529,7 +573,11 @@ $cntT = $row['cntt'];
 				}
 			}
 		}
+		
 	$freq=$freq+1;
+	// if ($allans==0){
+		// $freq=$freq+1;
+	// }
 	$sql="UPDATE `clan` SET `freq`='$freq',`target`='$target' WHERE `idp`='$id'";
 	mysql_query($sql, $connect);
 	if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";

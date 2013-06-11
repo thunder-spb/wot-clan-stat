@@ -1,10 +1,12 @@
 <?php
 //Владения на ГК
 include('settings.kak');
+$capital=0;
 $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Ошибка подключения к БД");
 $setnames = mysql_query( 'SET NAMES utf8' );
 $idc = $_GET['idc'];
+$capital = $_GET['capital'];
 $sql="SELECT count(*) as cnt from `possession` where idc='$idc'";
 $res = mysql_query($sql,$connect);
 $row = mysql_fetch_array($res,MYSQL_ASSOC); 
@@ -41,7 +43,7 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 	$bank='<img src="images/icons/gold.png"  align="absmiddle"/> '.$row2["revenue"];
 	$name = $row2["name"];
 	$name = "<a href='http://worldoftanks.ru/uc/clanwars/maps/?province=$idpr' target='_blank'>$name</a> ";
-	if ($row["capital"]==1){
+	if (($row["capital"]==1)and($capital==1)){
 		$name='<img src="images/icons/capital.png" style="width: 16px; height:16px;" align="absmiddle"/>'." ".$name;
 	}
 	$responce->rows[$i]['cell']=array($type,$status,$name, $row2["arena_name"],date("H:i",$row2["prime_time"]),$bank,$row["occupancy_time"]); //$clandays,$las_onl); 

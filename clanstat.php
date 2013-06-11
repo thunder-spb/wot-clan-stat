@@ -15,18 +15,15 @@ if (array_key_exists("idc",$_GET)) {
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>
 <?php  
-foreach ($clan_array as $clan_i) {
-	$idc_temp = $clan_i["clan_id"];
-	if ($idc == $idc_temp) {
-		echo $clan_i["clan_tag"];
-	}
-}
 $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Ошибка подключения к БД");
 $setnames = mysql_query( 'SET NAMES utf8' );
-$clanlist = mysql_query("select tag, name, rate, firepower, skill, position from clan_info where idc='$idc'",$connect);
+$clanlist = mysql_query("select tag, name, rate, firepower, skill,color, position from clan_info where idc='$idc'",$connect);
 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC);
+echo $clanrow['tag'];
+//echo $idc;
+//}
 ?>
 </title>
 
@@ -55,7 +52,7 @@ html, body {
 
 <script type="text/javascript" src="js/jqgrid/js/i18n/grid.locale-ru.js"></script>
 <script type="text/javascript" src="js/jquery.jqGrid.min.js"></script>
-<script type="text/javascript" src="js/wot_tables.js"></script>
+<script type="text/javascript" src="js/clanstat.js"></script>
 <script type="text/javascript">
 //	jQuery.jgrid.no_legacy_api = true;
 </script>
@@ -63,45 +60,26 @@ html, body {
 <body>
  <a href="https://github.com/thunder-spb/wot-clan-stat">Скачать статистику себе c github'a</a>
 <header>
-	<h1><?php 
-	if ($clanrow<>NULL){
+	<h1><?php  
+
 		echo $clanrow["tag"];
 		echo '  -   ';
 		echo $clanrow["name"];
-		//echo "<br>";
+		//echo "<span style='background-color:". $rowclan['color'].";'>"."    "."</span>";
 		echo " | место № - ". $clanrow["position"]." | сила - ".$clanrow["rate"]. " | огн. мощь - ".$clanrow["firepower"]." | скилл - ".$clanrow["skill"];
-	}else{
-		foreach ($clan_array as $clan_i) {
-			$idc_temp = $clan_i["clan_id"];
-			if ($idc == $idc_temp) {
-				echo $clan_i["clan_tag"];
-				echo '  -   ';
-				echo $clan_i["clan_name"];
-			}
-		}
-	}
+	
+
+//echo $clan_i['tag'];
 ?></h1>
 </header>
-<nav> 
-    <ul>
-<?php
-           foreach ($clan_array as $clan_i) {
-			echo "<li><a href=\"wotstat.php?idc=".$clan_i["clan_id"]."\">".$clan_i["clan_tag"]."</a></li>";
-		}
-?>	
-    </ul>
-</nav>
-
 <table><tr><td valign="top">
 <div class="tables">
 <div id="tabs">
 	<ul>
 	    <li><a href="#tab-1">Клан</a></li>
-		<li><a href="#tab-2">Бойцы</a></li>
 		<li><a href="#tab-3">Техника</a></li>
 		<li><a href="#tab-6">ГК</a></li>
 		<li><a href="#tab-7">Техника 2</a></li>
-		<li><a href="#tab-8">Графики</a></li>
 	</ul>
 	
 	<div id="tab-1">
@@ -109,61 +87,13 @@ html, body {
                 <table id="news1"></table>
 				<div id="n1pager"></div>
                 </td>
-				<td valign="top"> 
-				<table id="news2"></table>
-				<div id="n2pager"></div>
-                 </td>
-                 <td valign="top">  
+				<td valign="top">  
 				 <table id="news3"></table>
 				 <div id="n3pager"></div>
                  </td>
                </table>
 		<table id="all"></table>
 		
-	</div>
-	<div id="tab-2">
-		
-		<table>
-			<tr valign="top">
-				<td>
-					<div class="grid" id="pl">
-					<table id="players_table"></table>
-					
-					</div>
-				</td>
-				<td>
-                    <div id="name" style="padding: 10px 0 0 10px"></div>
-					<table><tr>
-						<td valign="top">
-							<table id="pl_summary_table81"></table>
-							<div id="pl_summary_pager81"></div>
-						</td>
-						<td valign="top">
-							<table id="pl_summary_table82"></table>
-							<div id="pl_summary_pager82"></div>
-						</td>
-					</tr></table>
-					<table id="pl_summary_table2"></table>
-					<table id="pl_summary_table"></table>
-					<table id="pl_summary_table7"></table>
-					<div id="pl_summary_pager7"></div>
-					Примечание: * - неверные данные с сервера
-					<table id="pl_summary_table6"></table>
-					<table id="pl_summary_table5"></table>
-					<div id="pl_summary_pager5"></div>
-					<table id="pl_summary_table3"></table>
-					<div id="pl_summary_pager3"></div>
-					<table><tr>
-						<td valign="top">
-							<table id="pl_summary_table41"></table>
-						</td>
-						<td valign="top">
-							<table id="pl_summary_table42"></table>
-						</td>
-					</tr></table>
-				</td>
-			</tr>
-		</table>
 	</div>
 	<div id="tab-3">		
 		<table id="techABS"></table>
@@ -204,24 +134,7 @@ html, body {
 		<table id="techABS2"></table>
 		<table id="techCHAMP2"></table>
 	</div>
-       <div id="tab-8">
-                  <table>
-                          <tr valign="top">
-                                <td>
-                                      <table id="players_table_2"></table>
-                                 </td>
-                                 <td>
-                                        <table><tr> 
-                                       <td><div id="chart1"></div></td>
-                                       <td><div id="chart2"></div></td>
-                                       </tr><tr>
-                                       <td><div id="chart3"></div></td>
-                                       <td><div id="chart4"></div></td>
-                                        </tr></table>
-                                 </td>
-                           </tr>
-               </table>
-      </div>
+       
 </div>
 </div>
 

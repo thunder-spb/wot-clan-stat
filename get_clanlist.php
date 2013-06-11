@@ -7,10 +7,36 @@ $db = mysql_select_db($dbname, $connect) or die("Ошибка подключен
 $setnames = mysql_query( 'SET NAMES utf8' );
 header('Content-Type: text/html; charset=UTF-8'); 
 //$clan_array[] = array("clan_id" => "12638", "clan_tag" => "[SMPLC]",  "clan_name" => "Sample clan");
-
+$t = time()-700000;
+$clanlist = mysql_query("select idc from clan_info where actdate>'$t'",$connect);
+$clancnt=array();
 foreach ($clan_array as $clan_i) {
-	$idc = $clan_i["clan_id"];
-	$clantag = $clan_i["clan_tag"];
+		$idc=$clan_i["clan_id"];
+		$clancnt[]=$clan_i["clan_id"];
+}
+while ($clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC)) {
+	$clancnt[]=$clanrow["idc"];
+ }
+$pageidc = "http://ivanerr.ru/lt/export.php?byclanid";		
+//$pageidc = $wot_host.'/'.$pageidc;
+$dataiv = get_page($pageidc);
+$dataiv = json_decode($dataiv, true);
+foreach ($clancnt as $idc) {
+	//обновляем данные по ivanerr
+	if ($dataiv["$idc"]<>NULL){
+	 //echo "<br>".$dataiv["$idc"]['totalrate']." Rating</br>";
+	 $totalrate=$dataiv["$idc"]['totalrate'];
+	 $firepower=$dataiv["$idc"]['firepower'];
+	 $skill=$dataiv["$idc"]['skill'];
+	 $position=$dataiv["$idc"]['position'];
+	 $sql = "UPDATE `clan_info` SET `rate`='$totalrate', firepower='$firepower', skill='$skill',  position='$position' WHERE `idc`='$idc'";
+	 $q = mysql_query($sql, $connect);
+	}
+	//$idc = $clan_i["clan_id"];
+	$clanlist = mysql_query("select tag, allians from clan_info where idc='$idc'",$connect);
+	mysql_fetch_array($clanlist,MYSQL_ASSOC);
+	$clantag = $clanlist["tag"];
+	$allians=$clanlist["allians"];
 	$pageidc = "community/clans/".$idc."/api/1.1/?source_token=WG-WoT_Assistant-test";		
 	$pageidc = $wot_host.'/'.$pageidc;
 	$date = date("Y-m-d",strtotime($hosttime));
@@ -20,6 +46,8 @@ foreach ($clan_array as $clan_i) {
 
 	$data = get_page($pageidc);
 	$data = json_decode($data, true);
+	
+	//print_r($dataiv);
 	if ($data['status'] == 'ok') {
 		// тут добавить сбор инфы о клане //
 		for($i=0;$i<count($data['data']['members']);$i++){
@@ -37,22 +65,25 @@ foreach ($clan_array as $clan_i) {
 				if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 				$qqt = mysql_fetch_array($q);
 				if($qqt['id_c'] != NULL) {
-					$message=$data['data']['members'][$i]['account_name']." перешел в ".$clantag;
-					$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
-					$sql.= " VALUES (2,'$idp', '$idc', '$message', NULL, '$date', '$time')";
-					$q = mysql_query($sql, $connect);
-					if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-
+					if ($allianse==1){
+						$message=$data['data']['members'][$i]['account_name']." перешел в ".$clantag;
+						$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
+						$sql.= " VALUES (2,'$idp', '$idc', '$message', NULL, '$date', '$time')";
+						$q = mysql_query($sql, $connect);
+						if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+					}
 					$sql = "UPDATE `clan` SET `idc`='$idc' WHERE `idp`='$idp'";
 					$q = mysql_query($sql, $connect);
 					if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 			
 				} else {
-					$message="Приветствуем ".$data['data']['members'][$i]['account_name'].' в '.$clantag;
-					$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
-					$sql.= " VALUES (2,'$idp', '$idc', '$message', NULL, '$date', '$time')";
-					$q = mysql_query($sql, $connect);
-					if (mysql_errno() <> 0) echo "MyQL Error ".mysql_errno().": ".mysql_error()."\n";
+					if ($allians==1){
+						$message="Приветствуем ".$data['data']['members'][$i]['account_name'].' в '.$clantag;
+						$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
+						$sql.= " VALUES (2,'$idp', '$idc', '$message', NULL, '$date', '$time')";
+						$q = mysql_query($sql, $connect);
+						if (mysql_errno() <> 0) echo "MyQL Error ".mysql_errno().": ".mysql_error()."\n";
+					}
 					#=================== Insert into clan tables ==============#
 					$created_at=date("Y-m-d",$data['data']['members'][$i]['created_at']); //дата вступления в клан
 					//$role=$data['data']['members'][$i]['role'];
