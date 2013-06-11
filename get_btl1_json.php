@@ -49,19 +49,29 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 		//if ($row3<>NULL){
 			$clansa=$row3['idc'];
 			$timem=date("H:i",$row3['time']);
-			$SQL2 = "select idc,tag, color, name, allians, actdate  from clan_info where idc='$clansa'";
+			$SQL2 = "select idc,tag, color, name, allians, actdate,skill,rate  from clan_info where idc='$clansa'";
 			$claneresult = mysql_query( $SQL2,$connect );
 			$rowclan=mysql_fetch_array($claneresult,MYSQL_ASSOC);
 			//"<span style='color: blue;'><b>"; $sp6="</b></span> "
 			$clanname=$clann=$rowclan['name'];
 			$actclane=$rowclan['actdate'];
+			$SQL2 = "select skill  from clan_info where idc='$idc'";
+			$claneresult1 = mysql_query( $SQL2,$connect );
+			$rowclan1=mysql_fetch_array($claneresult1,MYSQL_ASSOC);
+			$skillb=$rowclan['skill'];
+			$skilla=$rowclan1['skill'];
+			$stra="";
+			if ($skillb<>0 and $skilla<>0){
+				$chans=round(($skilla/($skilla+$skillb))*100,0);
+				$stra=" сила-".$rowclan['rate'] ." | шанс-".$chans."% |";
+			}
 			if ($t<$actclane){
 			$clann=	"<a href='clanstat.php?idc=$clansa#tab-6' target='_blank'>$clanname</a>";
 			if ($rowclan['allians']==1){
 				$clann="<a href='wotstat.php?idc=$clansa#tab-6' target='_blank'>$clanname</a>";
 			}}
 			//$pr = "<a href='http://worldoftanks.ru/uc/clanwars/maps/?province=$idpr' target='_blank'>$pr</a>";
-			$clane=$clane."<span style='background-color:". $rowclan['color'].";'>"."    "."</span> <b>[".$timem."]</b>[".$rowclan['tag']."]<b> ".$clann."</b><br>";
+			$clane=$clane."<span style='background-color:". $rowclan['color'].";'>"."    "."</span> <b>[".$timem."]</b> [".$rowclan['tag']."]".$stra."<b> ".$clann."</b><br>";
 			//$clane=$clane."f,hf";
 		}
 	}

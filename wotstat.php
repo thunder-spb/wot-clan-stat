@@ -69,7 +69,7 @@ html, body {
 		echo '  -   ';
 		echo $clanrow["name"];
 		//echo "<br>";
-		echo " | место № - ". $clanrow["position"]." | сила - ".$clanrow["rate"]. " | огн. мощь - ".$clanrow["firepower"]." | скилл - ".$clanrow["skill"];
+		echo " | место № ". $clanrow["position"]." | сила - ".$clanrow["rate"]. " | огн. мощь - ".$clanrow["firepower"]." | скилл - ".$clanrow["skill"];
 	}else{
 		foreach ($clan_array as $clan_i) {
 			$idc_temp = $clan_i["clan_id"];

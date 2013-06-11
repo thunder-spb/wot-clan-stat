@@ -66,7 +66,7 @@ html, body {
 		echo '  -   ';
 		echo $clanrow["name"];
 		//echo "<span style='background-color:". $rowclan['color'].";'>"."    "."</span>";
-		echo " | место № - ". $clanrow["position"]." | сила - ".$clanrow["rate"]. " | огн. мощь - ".$clanrow["firepower"]." | скилл - ".$clanrow["skill"];
+		echo " | место № ". $clanrow["position"]." | сила - ".$clanrow["rate"]. " | огн. мощь - ".$clanrow["firepower"]." | скилл - ".$clanrow["skill"];
 	
 
 //echo $clan_i['tag'];
