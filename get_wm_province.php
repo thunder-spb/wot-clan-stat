@@ -12,6 +12,7 @@ $total_poss = array();
 $a=0;
 $b=0;
 $curr="";
+$nlanding=500000;
 $t = time()-700000;
 $clanlist = mysql_query("select idc from clan_info where actdate>'$t'",$connect);
 $clancnt=array();
@@ -167,6 +168,7 @@ foreach ($clancnt as $idc) {
 		$sql12 = "delete from `btl` where idc='$idc'"; 
 		$qq2 = mysql_query($sql12,$connect);
 		if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+		
 		foreach($databtl["request_data"]["items"] as $item) {
 			$provinces_name=$item["provinces"][0]["name"];
 			$provinces_id=$id=$item["provinces"][0]["id"];
@@ -278,9 +280,10 @@ foreach ($clancnt as $idc) {
 					}else{
 						// с высадками вообще всё просто.
 						$sql = "insert into btl (idb, idc,  time, type, id_prov,prov, started, arena)";
-						$sql .= " values ('0', '$idc',  '$landing_final_battle_time', 'landing', '$provinces_id','$provinces_name', '$landing_started', '$btlarena')";
+						$sql .= " values ('$nlanding', '$idc',  '$landing_final_battle_time', 'landing', '$provinces_id','$provinces_name', '$landing_started', '$btlarena')";
 						mysql_query($sql, $connect);
 						if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+						$nlanding=$nlanding+1;
 					}
 					$succes=1;
 					break;
