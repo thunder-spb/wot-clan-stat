@@ -26,7 +26,8 @@ while ($clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC)) {
  }
  
  $clancnt=array_unique($clancnt);
- 
+$sql = mysql_query("select allians from clan_info where idc='$idc'",$connect);
+$resultt = mysql_fetch_array($sql,MYSQL_ASSOC); 
 foreach ($clancnt as $idc) {
     $a=$a+1;
 	$pageidp = "clans/".$idc."-"."/provinces/?type=table";
@@ -106,13 +107,19 @@ foreach ($clancnt as $idc) {
 			if (!mysql_fetch_array($poss,MYSQL_ASSOC)) {
 				//новая провинция
 				$poss1 = mysql_query("select idc from possession where idpr='$id'",$connect);
-				if (mysql_fetch_array($poss1,MYSQL_ASSOC)) {
-					//провинция получена от союзника
-					$idc_old = $poss1["idc"];
+				if ($poss1=mysql_fetch_array($poss1,MYSQL_ASSOC)) {
+					//провинция получена от клана в списке
+					$idc_old = $poss1['idc'];
+					$sql = mysql_query("select allians from clan_info where idc='$idc'",$connect);
+					$resultold = mysql_fetch_array($sql,MYSQL_ASSOC); 
 					mysql_query("update possession set idc='$idc', capital='$capital' where idpr='$id'",$connect);
-					
-					mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '2', '$t', '$idc')",$connect);
-					mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '3', '$t', '$idc_old')",$connect);
+					if (($resultt['allians']==1)and($resultold['allians']==1)){
+						mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '2', '$t', '$idc')",$connect);
+						mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '3', '$t', '$idc_old')",$connect);
+					}else{
+						mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '1', '$t', '$idc')",$connect);
+						mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '0', '$t', '$idc_old')",$connect);
+					}
 				} else {
 					//провинция захвачена у врага
 					mysql_query("insert into possession (idc, idpr, attacked, occupancy_time, capital) values ('$idc','$id','$attacked','$occupancy_time','$capital')",$connect);
@@ -127,10 +134,7 @@ foreach ($clancnt as $idc) {
 	}
 	// обрабатываем список боёв
 	if ($databtl["result"]=="success"){
-		$sql = mysql_query("select allians from clan_info where idc='$idc'",$connect);
-		$resultt = mysql_fetch_array($sql,MYSQL_ASSOC);
 		foreach($databtl["request_data"]["items"] as $item) {
-			
 			$provinces_name=$item["provinces"][0]["name"];
 			$provinces_id=$id=$item["provinces"][0]["id"];
 			$btlarena=$item["arenas"][0];
