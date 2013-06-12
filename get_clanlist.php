@@ -17,6 +17,7 @@ foreach ($clan_array as $clan_i) {
 while ($clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC)) {
 	$clancnt[]=$clanrow["idc"];
  }
+$clancnt=array_unique($clancnt);
 $pageidc = "http://ivanerr.ru/lt/export.php?byclanid";		
 //$pageidc = $wot_host.'/'.$pageidc;
 $dataiv = get_page($pageidc);
@@ -34,9 +35,23 @@ foreach ($clancnt as $idc) {
 	}
 	//$idc = $clan_i["clan_id"];
 	$clanlist = mysql_query("select tag, allians from clan_info where idc='$idc'",$connect);
-	mysql_fetch_array($clanlist,MYSQL_ASSOC);
+	$clanlist=mysql_fetch_array($clanlist,MYSQL_ASSOC);
 	$clantag = $clanlist["tag"];
 	$allians=$clanlist["allians"];
+	if ($clantag==NULL){
+		foreach ($clan_array as $clan_i) {
+			$idct = $clan_i["clan_id"];
+			if ( $idct == $idc){
+				$clantag = $clan_i["clan_tag"];
+				$allians=1;
+				break;
+			}	
+		}
+	}	
+	echo $clantag;
+	echo "<br>";
+	echo "allians-".$allians;
+	echo "<br>";
 	$pageidc = "community/clans/".$idc."/api/1.1/?source_token=WG-WoT_Assistant-test";		
 	$pageidc = $wot_host.'/'.$pageidc;
 	$date = date("Y-m-d",strtotime($hosttime));
@@ -49,6 +64,7 @@ foreach ($clancnt as $idc) {
 	
 	//print_r($dataiv);
 	if ($data['status'] == 'ok') {
+		echo "успешно загрузили данные...<br>";
 		// тут добавить сбор инфы о клане //
 		for($i=0;$i<count($data['data']['members']);$i++){
 			//проверка на "нового игрока в клане"
@@ -65,7 +81,7 @@ foreach ($clancnt as $idc) {
 				if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 				$qqt = mysql_fetch_array($q);
 				if($qqt['id_c'] != NULL) {
-					if ($allianse==1){
+					if ($allians==1){
 						$message=$data['data']['members'][$i]['account_name']." перешел в ".$clantag;
 						$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
 						$sql.= " VALUES (2,'$idp', '$idc', '$message', NULL, '$date', '$time')";

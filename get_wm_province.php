@@ -26,9 +26,10 @@ while ($clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC)) {
  }
  
  $clancnt=array_unique($clancnt);
-$sql = mysql_query("select allians from clan_info where idc='$idc'",$connect);
-$resultt = mysql_fetch_array($sql,MYSQL_ASSOC); 
+
 foreach ($clancnt as $idc) {
+	$sql = mysql_query("select allians from clan_info where idc='$idc'",$connect);
+	$resultt = mysql_fetch_array($sql,MYSQL_ASSOC); 
     $a=$a+1;
 	$pageidp = "clans/".$idc."-"."/provinces/?type=table";
 	$pageidp = "cw.".$wot_host.'/'.$pageidp;	
@@ -37,54 +38,75 @@ foreach ($clancnt as $idc) {
 	$pageidp = "clans/".$idc."-"."/battles/?type=table";
 	$pageidp = "cw.".$wot_host.'/'.$pageidp;
 	$databtl = get_page($pageidp);
-	echo "<br>-------------------------------------<br>";
+	echo "<br>-------------обрабатываем клан ".$idc."<br>";
+	echo "в альянсе ".$resultt['allians']."<br>";
 	$databtl = json_decode($databtl, true);
 	$t = time();
+	echo "Подгружаем данные по провинциям...<br>";
 	if ($data["result"]=="success"){
-		$sql12 = "delete from `btl` where idc='$idc'"; 
-		$qq2 = mysql_query($sql12,$connect);
-		if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 		$b=$b+1;
+		echo "Успешно<br>";
+		$total_count=$data["request_data"]['total_count'];
+		echo "У клана ".$total_count." провинций <br>";
+		if (($total_count==0) and ($resultt['allians']==0)){
+			if ($resultt['allians']<>NULL){
+				echo "чистка данных...<br>";
+				mysql_query("delete from btl where idc='$idc'",$connect);
+				mysql_query("delete from possession where idc='$idc'",$connect);
+				mysql_query("delete from wm_event where idc='$idc'",$connect);
+				mysql_query("delete from clan_info where idc='$idc'",$connect);
+				continue;
+			}	
+		}
 		foreach($data["request_data"]["items"] as $item) {
 			$prime_time = $item["prime_time"];
 			$id = $item["id"];
-			echo $id."   ";
+			echo "клану принадлежит провинция   ".$id."<br>";
 			$name = $item["name"];
+			echo "___Name: ".$name."<br>";
 			$arena_id = $item["arena_id"];
 			$arena_name = $item["arena_name"];
+			echo "___Map: ".$arena_name."<br>";
 			$arenadb = mysql_query("select * from arenas where id='$arena_id'",$connect);
 			if (!mysql_fetch_array($arenadb,MYSQL_ASSOC)) {
+				echo "   OOOPS! New map... add this to db<br>";
 				$sql = "insert into arenas (id, name)";
 				$sql .= " values ('$arena_id', '$arena_name')";
 				mysql_query($sql, $connect);
 			}
 			$revenue = $item["revenue"];
+			echo "___revenue: ".$revenue."<br>";
 			$capital=$item["capital"];
 			$type = $item["type"];
+			echo "___type: ".$type."<br>";
 			$attacked = $item["attacked"];
 			$occupancy_time = $item["occupancy_time"];
 			$total_poss[] = $id;
 			$prov = mysql_query("select id_pr,periphery, region, arena_id  from province where id='$id'",$connect);
 			$result = mysql_fetch_array($prov,MYSQL_ASSOC);
 			$succes=0;
+			//Новая провинция-подгружаем из ГК
 			if (($result==NULL) or($result['periphery']==NULL) or($result['region']==NULL)or ($result['arena_id']==0)) {
 				if ($result['region']==NULL){
-					$all = mysql_query("select id_r, url  from wm_regions");
+					$all = mysql_query("select id_r, url  from wm_regions",$connect);
 				}else{
 					$region=$result['region'];
-					$all = mysql_query("select id_r, url  from wm_regions where id_r='$region'");
+					$all = mysql_query("select id_r, url  from wm_regions where id_r='$region'",$connect);
 				}
+				echo ".........................<br>";
 				while ($res = mysql_fetch_array($all,MYSQL_ASSOC)) {
 					if ($curr<>$res['id_r']){
 						$curr=$res['id_r'];
+						echo "<br>Подгружаем данные из ГК...";
 						$pageidp = "http://cw.worldoftanks.ru".$res['url']."?ct=json";
 						$databt2 = get_page($pageidp);
 						$data2 = json_decode($databt2, true);
 					}
 					$provdata =$data2['provinces'][$id];
 					if ($provdata<>NULL){
+						echo "<br> OK...";
 						mysql_query("delete from province where id='$id'",$connect);
-						print_r($provdata);
+						//print_r($provdata);
 						$per=$provdata['periphery'];
 						$landing_url=$provdata['landing_url'];
 						$landing_final_battle_time=$provdata['landing_final_battle_time'];
@@ -104,29 +126,37 @@ foreach ($clancnt as $idc) {
 			}
 			mysql_query("update province set revenue='$revenue', prime_time='$prime_time', name='$name', arena_id='$arena_id', type='$type' where id='$id'",$connect);
 			$poss = mysql_query("select id_pos from possession where idpr='$id' and idc='$idc'",$connect);
+			echo "Updating province data...<br>";
 			if (!mysql_fetch_array($poss,MYSQL_ASSOC)) {
 				//новая провинция
+				echo "New possession<br>";
 				$poss1 = mysql_query("select idc from possession where idpr='$id'",$connect);
 				if ($poss1=mysql_fetch_array($poss1,MYSQL_ASSOC)) {
 					//провинция получена от клана в списке
 					$idc_old = $poss1['idc'];
-					$sql = mysql_query("select allians from clan_info where idc='$idc'",$connect);
+					$sql = mysql_query("select allians from clan_info where idc='$idc_old'",$connect);
 					$resultold = mysql_fetch_array($sql,MYSQL_ASSOC); 
+					echo  "old clan ".$idc_old."<br> in allians ".$resultold['allians']."<br>";
 					mysql_query("update possession set idc='$idc', capital='$capital' where idpr='$id'",$connect);
 					if (($resultt['allians']==1)and($resultold['allians']==1)){
+						echo "передача провинции внутри альянса<br>";
 						mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '2', '$t', '$idc')",$connect);
 						mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '3', '$t', '$idc_old')",$connect);
 					}else{
+						echo "захват провинции<br>";
 						mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '1', '$t', '$idc')",$connect);
 						mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '0', '$t', '$idc_old')",$connect);
 					}
 				} else {
-					//провинция захвачена у врага
+					//провинция захвачена у клана не из списка  clan_info или новые данные.
+					echo "добавляем данные <br>";
 					mysql_query("insert into possession (idc, idpr, attacked, occupancy_time, capital) values ('$idc','$id','$attacked','$occupancy_time','$capital')",$connect);
-					mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '1', '$t', '$idc')",$connect);
+					//mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '1', '$t', '$idc')",$connect);
 				}
 			} else {
+			
 				//клан уже владеет провинцией
+				echo "Просто обновление<br>";
 				mysql_query("update possession set attacked='$attacked', occupancy_time='$occupancy_time', capital='$capital' where idpr='$id'",$connect);
 			}
 		}
@@ -134,6 +164,9 @@ foreach ($clancnt as $idc) {
 	}
 	// обрабатываем список боёв
 	if ($databtl["result"]=="success"){
+		$sql12 = "delete from `btl` where idc='$idc'"; 
+		$qq2 = mysql_query($sql12,$connect);
+		if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 		foreach($databtl["request_data"]["items"] as $item) {
 			$provinces_name=$item["provinces"][0]["name"];
 			$provinces_id=$id=$item["provinces"][0]["id"];
@@ -153,10 +186,12 @@ foreach ($clancnt as $idc) {
 			//для каждого боя делаем подробную выборку по участвующим проинциям из ГК
 			while ($res = mysql_fetch_array($all,MYSQL_ASSOC)) {
 				if ($curr<>$res['id_r']){
+					echo "<br>Подгружаем данные из ГК...";
 					$curr=$res['id_r'];
 					$pageidp = "http://cw.worldoftanks.ru".$res['url']."?ct=json";
 					$databt2 = get_page($pageidp);
 					$data2 = json_decode($databt2, true);
+					echo "<br> регион ".$curr;
 				}
 				$provdata =$data2['provinces'][$id];
 				if ($provdata<>NULL){

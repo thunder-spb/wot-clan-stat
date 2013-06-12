@@ -49,13 +49,8 @@ foreach ($clan_array as $clan_i) {
 while ($clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC)) {
 	$clancnt[]=$clanrow["idc"];
 }
-echo "-------------------<br>";
-print_r ($clancnt);
-echo "<br>-----------------<br>";
 $clancnt=array_unique($clancnt);
-echo "-------------------<br>";
-print_r ($clancnt);
-echo "<br>-----------------<br>";
+
 foreach ($ida as $id) {
 		$sql = "select * from clan where idp='$id'";
 		$q = mysql_query($sql, $connect);
@@ -72,24 +67,7 @@ foreach ($ida as $id) {
 			$freq=0;
 			$inclan=0;//проверка на изменения списка альянса
 			$clantag1="";
-			// $t = time()-700000;
-			// $clanlist = mysql_query("select idc from clan_info where actdate>'$t'",$connect);
-			// $clancnt=array();
-			// foreach ($clan_array as $clan_i) {
-				// //$idc1=$clan_i["clan_id"];
-				// $clancnt[]=$clan_i["clan_id"];
-			// }
-			// while ($clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC)) {
-				// $clancnt[]=$clanrow["idc"];
-			// }
-			 // echo "-------------------<br>";
-			 // print_r ($clancnt);
-			 // echo "<br>-----------------<br>";
-			 // $clancnt=array_unique($clancnt);
-			 // echo "-------------------<br>";
-			 // print_r ($clancnt);
-			 // echo "<br>-----------------<br>";
-			 reset($clancnt);
+			reset($clancnt);
 			foreach ($clancnt as $idct) {
 				// $idct = $clan_i["clan_id"];
 				if ( $idct == $idc){
@@ -97,10 +75,23 @@ foreach ($ida as $id) {
 					$clantgs = mysql_query("select tag, allians from clan_info where idc='$idc'",$connect);
 					if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 					$clnt= mysql_fetch_array($clantgs);
-					$clantag1=$clnt['tag'];
-					$allians=$clnt['allians'];
+					if ($clnt['tag']<>NULL){
+						$clantag1=$clnt['tag'];
+						$allians=$clnt['allians'];
+					}else{
+						foreach ($clan_array as $clan_i) {
+							$idct = $clan_i["clan_id"];
+							if ( $idct == $idc){
+								$inclan=1;//клан в альянсе-всё в порядке
+								$clantag1 = $clan_i["clan_tag"];
+								$allians=1;
+								break;
+							}	
+						}
+					}
 					break;
 				}
+				
 			}
 			echo "<br>---------------------------------<br>\n\nchecking $id from $clantag1 \n";
 			$pageidp = "community/accounts/".$id."/api/1.9/?source_token=WG-WoT_Assistant-test";		
