@@ -38,9 +38,9 @@ $max_player_request=10; // количество одновременных за�
 3. Setting up cron. It's easy. We need to run 3 script to update our database.
 
 ```shell
-55 * * * *  wget -O - -q http://YOUR.SITE.NAME/get_clanlist.php >/dev/null 2>&1
+20 * * * *  wget -O - -q http://YOUR.SITE.NAME/get_clanlist.php >/dev/null 2>&1
 * * * * *   wget -O - -q http://YOUR.SITE.NAME/get_global_mm.php >/dev/null 2>&1
-*/20 * * * *  wget -O - -q http://YOUR.SITE.NAME/get_wm_province.php >/dev/null 2>&1
+* * * * *  wget -O - -q http://YOUR.SITE.NAME/get_wm_province.php >/dev/null 2>&1
 ```
   Add these lines to your cron tab
 	
