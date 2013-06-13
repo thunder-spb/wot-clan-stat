@@ -7,6 +7,17 @@ $db = mysql_select_db($dbname, $connect) or die("Ошибка подключен
 $setnames = mysql_query( 'SET NAMES utf8' );
 header('Content-Type: text/html; charset=UTF-8'); 
 //$clan_array[] = array("clan_id" => "12638", "clan_tag" => "[SMPLC]",  "clan_name" => "Sample clan");
+$actwmdatesql = mysql_query("select lasthourwm from tech",$connect);
+$actwmdate=mysql_fetch_array($actwmdatesql,MYSQL_ASSOC);
+if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+$hour=date("H",strtotime($hosttime));
+if ($actwmdate['lasthourwm']<>NULL){
+	//echo "<br> активный ход <br>".$hour;
+	//echo "<br>последний успешный ход".$actwmdate['lasthourwm'];
+	if ($actwmdate['lasthourwm']==$hour){
+		//die ();
+	}
+}
 $t = time()-700000;
 $clanlist = mysql_query("select idc from clan_info where actdate>'$t'",$connect);
 $clancnt=array();
@@ -17,6 +28,7 @@ foreach ($clan_array as $clan_i) {
 while ($clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC)) {
 	$clancnt[]=$clanrow["idc"];
  }
+ if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $clancnt=array_unique($clancnt);
 $pageidc = "http://ivanerr.ru/lt/export.php?byclanid";		
 //$pageidc = $wot_host.'/'.$pageidc;
@@ -32,9 +44,11 @@ foreach ($clancnt as $idc) {
 	 $position=$dataiv["$idc"]['position'];
 	 $sql = "UPDATE `clan_info` SET `rate`='$totalrate', firepower='$firepower', skill='$skill',  position='$position' WHERE `idc`='$idc'";
 	 $q = mysql_query($sql, $connect);
+	 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 	}
 	//$idc = $clan_i["clan_id"];
 	$clanlist = mysql_query("select tag, allians from clan_info where idc='$idc'",$connect);
+	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 	$clanlist=mysql_fetch_array($clanlist,MYSQL_ASSOC);
 	$clantag = $clanlist["tag"];
 	$allians=$clanlist["allians"];
@@ -108,6 +122,7 @@ foreach ($clancnt as $idc) {
 					$sql .=" values('$idp', '$idc', '$created_at','recruit')";
 					//echo $sql.'<br>';
 					mysql_query($sql, $connect);
+					if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 				}
 			}
 		}

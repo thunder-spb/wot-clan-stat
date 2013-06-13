@@ -10,11 +10,17 @@ $t=time();
 $actwmdatesql = mysql_query("select lasthourwm from tech",$connect);
 $actwmdate=mysql_fetch_array($actwmdatesql,MYSQL_ASSOC);
 $hour=date("H",strtotime($hosttime));
+// Проверяем на актуальность и обеспечиваем 2 прохода.
+$hour=$hour*2+1;
 if ($actwmdate['lasthourwm']<>NULL){
 	//echo "<br> активный ход <br>".$hour;
 	//echo "<br>последний успешный ход".$actwmdate['lasthourwm'];
 	if ($actwmdate['lasthourwm']==$hour){
 		die ();
+	}
+	$e=$hour-$actwmdate['lasthourwm'];
+	if ($e==2){
+		$hour=$hour-1;
 	}
 }
 $total_poss = array();
@@ -185,9 +191,9 @@ foreach ($clancnt as $idc) {
 	}
 	// обрабатываем список боёв
 	if ($databtl["result"]=="success"){
-		// $sql12 = "delete from `btl` where idc='$idc'"; 
-		// $qq2 = mysql_query($sql12,$connect);
-		// if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."";
+		 $sql12 = "delete from `btl` where idc='$idc'"; 
+		 $qq2 = mysql_query($sql12,$connect);
+		 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."";
 		
 		foreach($databtl["request_data"]["items"] as $item) {
 			$provinces_name=$item["provinces"][0]["name"];
