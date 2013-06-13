@@ -123,6 +123,7 @@ INSERT INTO `cat_achiev` (`id_ac`, `medal`, `medal_ru`, `img`, `type`) VALUES
 
 CREATE TABLE IF NOT EXISTS `tech` (
   `current` int(11) NOT NULL DEFAULT '0',
+  `lasthourwm int(2) NOT NULL,
   PRIMARY KEY (`current`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -130,8 +131,8 @@ CREATE TABLE IF NOT EXISTS `tech` (
 -- Дамп данных таблицы `tech`
 --
 
-INSERT INTO `tech` (`current`) VALUES
-(760);
+INSERT INTO `tech` (`current`,`lasthourwm`) VALUES
+(760,1);
 
 -- --------------------------------------------------------
 
