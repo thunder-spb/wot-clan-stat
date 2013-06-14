@@ -157,7 +157,7 @@ $(function() {
 	var tnews4 = $("#news4").jqGrid({
 		sortable: false,
 		altRows: true,
-		rowNum:10,
+		rowNum:100,
 		url:'get_news4.php?idc='+idc,
 		datatype: 'json',
 		mtype: "GET",
@@ -168,10 +168,10 @@ $(function() {
 			{name:'date', index:'date', width:60, align:"center",sortable:false},
 			{name:'message', index:'message', width:355, align:"left",sortable:false},
 			],
-		rowTotal: 10,
+		rowTotal: 120,
 		rowList:[10],
 		//sortname: 'role',
-		viewrecords: true,
+		viewrecords: false,
 		//sortorder: 'desc',
 		width: 460,
 		height: 200,
@@ -179,7 +179,7 @@ $(function() {
 		caption: 'События ГК',
 		rownumbers: false,
 		rownumWidth: 100,
-		pager: '#n4pager'
+		//pager: '#n4pager'
 		//onSelectRow: stickTogetherDMB,
 				
 	});

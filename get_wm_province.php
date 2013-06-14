@@ -44,6 +44,7 @@ while ($clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC)) {
  
 $clancnt=array_unique($clancnt);
 foreach ($clancnt as $idc) {
+	$total_poss = array();
 	$sql = mysql_query("select allians from clan_info where idc='$idc'",$connect);
 	$resultt = mysql_fetch_array($sql,MYSQL_ASSOC); 
     $a=$a+1;
@@ -74,6 +75,11 @@ foreach ($clancnt as $idc) {
 				continue;
 			}	
 		}
+		$total_poss_old = array();
+		$all = mysql_query("select idpr from possession where idc='$idc'");
+		while ($res = mysql_fetch_array($all,MYSQL_ASSOC)) {
+			$total_poss_old[] = $res["idpr"];
+		}
 		foreach($data["request_data"]["items"] as $item) {
 			$prime_time = $item["prime_time"];
 			$id = $item["id"];
@@ -102,7 +108,7 @@ foreach ($clancnt as $idc) {
 			$result = mysql_fetch_array($prov,MYSQL_ASSOC);
 			$succes=1;
 			//Новая провинция-подгружаем из ГК
-			if (($result==NULL) or($result['periphery']==NULL)or($result['neighbours']==NULL) or($result['region']==NULL)or ($result['arena_id']==0)) {
+			//if (($result==NULL) or($result['periphery']==NULL)or($result['neighbours']==NULL) or($result['region']==NULL)or ($result['arena_id']==0)) {
 				if ($result['region']==NULL){
 					$all = mysql_query("select id_r, url  from wm_regions",$connect);
 				}else{
@@ -136,6 +142,8 @@ foreach ($clancnt as $idc) {
 						$arenaar=explode ( "_", $arena );
 						$arena_id=$arenaar[1];
 						$region=$res['id_r'];
+						$mutiny=$provdata['mutiny'];
+						$mutinye=$provdata['mutiny_expected'];
 						$sql = "insert into province (prime_time, neighbours, id, name, arena_id,  revenue, type, periphery,landing_url,landing_final_battle_time,region)";
 						$sql .= " values ('$prime_time','$neighbours', '$id', '$name', '$arena_id',  '$revenue', '$type','$per', '$landing_url','$landing_final_battle_time','$region')";
 						mysql_query($sql, $connect);
@@ -145,14 +153,15 @@ foreach ($clancnt as $idc) {
 				}
 
 				
-			}
+			//}
 			if ($succes<>1){
 				die("<br>Не удалось загрузить данные из ГК");
 			}
-			mysql_query("update province set revenue='$revenue', prime_time='$prime_time', name='$name', arena_id='$arena_id', type='$type' where id='$id'",$connect);
-			$poss = mysql_query("select id_pos from possession where idpr='$id' and idc='$idc'",$connect);
+			mysql_query("update province set  revenue='$revenue', prime_time='$prime_time', name='$name', arena_id='$arena_id', type='$type' where id='$id'",$connect);
+			$poss = mysql_query("select id_pos, mutiny from possession where idpr='$id' and idc='$idc'",$connect);
 			echo "Updating province data...<br>";
-			if (!mysql_fetch_array($poss,MYSQL_ASSOC)) {
+			$sel=mysql_fetch_array($poss,MYSQL_ASSOC);
+			if ($sel==NULL) {
 				//новая провинция
 				echo "New possession<br>";
 				$poss1 = mysql_query("select idc from possession where idpr='$id'",$connect);
@@ -162,7 +171,7 @@ foreach ($clancnt as $idc) {
 					$sql = mysql_query("select allians from clan_info where idc='$idc_old'",$connect);
 					$resultold = mysql_fetch_array($sql,MYSQL_ASSOC); 
 					echo  "old clan ".$idc_old."<br> in allians ".$resultold['allians']."<br>";
-					mysql_query("update possession set idc='$idc', capital='$capital' where idpr='$id'",$connect);
+					mysql_query("update possession set idc='$idc',mutiny='$mutiny', capital='$capital' where idpr='$id'",$connect);
 					if (($resultt['allians']==1)and($resultold['allians']==1)){
 						echo "передача провинции внутри альянса<br>";
 						mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '2', '$t', '$idc')",$connect);
@@ -179,10 +188,14 @@ foreach ($clancnt as $idc) {
 					//mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '1', '$t', '$idc')",$connect);
 				}
 			} else {
-			
+				
+				if (($mutiny==1) and ($sel['mutiny']==0)){
+					echo "МЯТЕЖ!!!! <br>";
+					mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '4', '$t', '$idc')",$connect);
+				}
 				//клан уже владеет провинцией
 				echo "Просто обновление<br>";
-				mysql_query("update possession set attacked='$attacked', occupancy_time='$occupancy_time', capital='$capital' where idpr='$id'",$connect);
+				mysql_query("update possession set mutiny='$mutiny', attacked='$attacked', occupancy_time='$occupancy_time', capital='$capital' where idpr='$id'",$connect);
 			}
 		}
 		echo "<br>".$idc." Done ";
@@ -334,22 +347,28 @@ foreach ($clancnt as $idc) {
 	}else{
 		die ("<br>Не удалось загрузить список боёв из данных о клане");
 	}
+	// $total_poss_old = array();
+		// $all = mysql_query("select idpr from possession where idc=");
+		// while ($res = mysql_fetch_array($all,MYSQL_ASSOC)) {
+			// $total_poss_old[] = $res["idpr"];
+		// }
+		$lost = array_diff($total_poss_old,$total_poss);
+		echo "<br>старые владения";
+		print_r($total_poss_old);
+		echo "<br>New";
+		print_r($total_poss);
+		echo "<br>Разница";
+		print_r($lost);
+		foreach ($lost as $lost_prov) {
+			$qidc = mysql_query("select idc from possession where idpr='$lost_prov'");
+			$res = mysql_fetch_array($qidc,MYSQL_ASSOC);
+			$idc_lost = $res["idc"];
+			mysql_query("insert into wm_event (idpr, type, time, idc) values ('$lost_prov', '0', '$t', '$idc_lost')",$connect);
+			mysql_query("delete from possession where idpr='$lost_prov'",$connect);
+		}
+		unset($total_poss);
+		unset($total_poss_old);
 	
-}
-if ($a==$b){
-	$total_poss_old = array();
-	$all = mysql_query("select idpr from possession");
-	while ($res = mysql_fetch_array($all,MYSQL_ASSOC)) {
-		$total_poss_old[] = $res["idpr"];
-	}
-	$lost = array_diff($total_poss_old,$total_poss);
-	foreach ($lost as $lost_prov) {
-		$qidc = mysql_query("select idc from possession where idpr='$lost_prov'");
-		$res = mysql_fetch_array($qidc,MYSQL_ASSOC);
-		$idc_lost = $res["idc"];
-		mysql_query("insert into wm_event (idpr, type, time, idc) values ('$lost_prov', '0', '$t', '$idc_lost')",$connect);
-		mysql_query("delete from possession where idpr='$lost_prov'",$connect);
-	}
 }
 mysql_query("update tech set lasthourwm='$hour'",$connect);
 function get_page($url) {

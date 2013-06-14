@@ -641,8 +641,8 @@ $(function() {
 		rowNum: 100,
 		//hiddengrid:true,
 		caption: 'Владения на ГК',
-		rownumbers: false,
-		rownumWidth: 40,
+		rownumbers: true,
+		rownumWidth: 20,
 		grouping: false,
 		toolbar: false,
 		scroll: false
@@ -673,8 +673,8 @@ $(function() {
 		rowNum: 100,
 		//hiddengrid:true,
 		caption: 'Запланированные битвы',
-		rownumbers: false,
-		rownumWidth: 40,
+		rownumbers: true,
+		rownumWidth: 20,
 		grouping: false,
 		toolbar: false,
 		scroll: false
