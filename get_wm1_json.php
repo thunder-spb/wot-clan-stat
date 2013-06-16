@@ -28,13 +28,13 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 	$responce->rows[$i]['id'] = $idpr;
 	switch ($row2["type"]) {
 		case "normal":
-			$type = "<img src='images/province_type_normal.png'>";// alt='Обычная провинция' >";
+			$type = '<img src="images/province_type_normal.png" style="width: 16px; height:16px;" align="absmiddle"/>';// alt='Обычная провинция' >";
 			break;
 		case "gold":
-			$type = "<img src='images/province_type_gold.png'>"; //alt='Ключевая провинция' >";
+			$type = '<img src="images/province_type_gold.png" style="width: 16px; height:16px;" align="absmiddle"/>'; //alt='Ключевая провинция' >";
 			break;
 		case "start":
-			$type = "<img src='images/province_type_start.png'>";// alt='Стартовая провинция' >";
+			$type = '<img src="images/province_type_start.png" style="width: 16px; height:16px;" align="absmiddle"/>';// alt='Стартовая провинция' >";
 			break;
 	}
 	if ($row["attacked"]==1){

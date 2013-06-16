@@ -137,7 +137,11 @@ foreach ($clancnt as $idc) {
 						$neighbours=implode(";",array_keys($neighbours));
 						
 						echo $neighbours."<br>";
-						$landing_final_battle_time=$provdata['landing_final_battle_time'];
+						$landing_final_battle_time=0;
+						if (array_key_exists('landing_final_battle_time', $provdata)) {
+							$landing_final_battle_time=$provdata['landing_final_battle_time'];
+						}
+						// $landing_final_battle_time=$provdata['landing_final_battle_time'];
 						$arena=$provdata['mapId'];
 						$arenaar=explode ( "_", $arena );
 						$arena_id=$arenaar[1];
