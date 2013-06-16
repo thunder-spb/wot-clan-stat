@@ -247,7 +247,10 @@ foreach ($clancnt as $idc) {
 					//print_r($combats);
 					$per=$provdata['periphery'];
 					$landing_url=$provdata['landing_url'];
-					$landing_final_battle_time=$provdata['landing_final_battle_time'];
+					$landing_final_battle_time=0;
+					if (array_key_exists('landing_final_battle_time', $provdata)) {
+						$landing_final_battle_time=$provdata['landing_final_battle_time'];
+					}
 					$arena=$provdata['mapId'];
 					$revenue=$provdata['revenue'];
 					$prime = $provdata["prime_time"];
