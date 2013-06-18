@@ -517,6 +517,7 @@ foreach ($ida as $id) {
 						if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 						$databefore = mysql_fetch_array($q);
 						$battlesdelta=$battles_count-$databefore['battles_count'];
+						$winsdelta=$wins-$databefore['wins'];
 						$rating30=0;
 						$wn630=0;
 						$win30=0;
@@ -535,7 +536,7 @@ foreach ($ida as $id) {
 									+(log($captdelta/$battlesdelta+1,1.732))*150);
 							echo "<br> Рейтинг30 ".$rating30; 	
 							
-							$win30=round($wins30t*100/$battlesdelta,2);
+							$win30=round($winsdelta*100/$battlesdelta,2);
 							
 							$wn630=round((1240-1040/pow(min($level_avg,6), 0.164))*$fragsdelta/$battlesdelta
 								   +$damagedelta/$battlesdelta*530/(184*exp(0.24*$level_avg)+130)
@@ -553,6 +554,7 @@ foreach ($ida as $id) {
 								   //+(6-min($level_avg,6))*-60);
 							echo "<br> Рейтинг wn730 ".$wn730;
 							echo "<br> % побед ".$win30;
+							echo "<br> разница побед".$winsdelta;
 							// $sql="UPDATE `player` SET `in_clan`='1', `name`='$pname', `rating30`='$rating30',`wn630`='$wn630', `win30`= '$win30' WHERE `idp`='$id'";
 						 // mysql_query($sql, $connect);
 						 // if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
