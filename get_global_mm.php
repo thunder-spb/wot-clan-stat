@@ -408,7 +408,7 @@ foreach ($ida as $id) {
 									$qqtt = mysql_fetch_array($qt);
 									$type=0;
 									if ($level==10){
-									$type=1;
+										$type=1;
 									}
 									if ($level==9){$type=2;}
 									$idt=$qqtt['id_t'];
@@ -437,8 +437,8 @@ foreach ($ida as $id) {
 									$qqtt2 = mysql_fetch_array($qt2);
 									if((($qqtt2['cnt2']==NULL) or ($qqtt2['cnt2']==0)) and ($newtankist!=1) and ($cntT>0)){
 										$type=0;
-										if ($level==10  or ($level==8 and $class=='SPG')){$type=1;}
-										if ($level==9  or ($level==7 and $class=='SPG')){$type=2;}
+										if ($level==10){$type=1;}
+										if ($level==9){$type=2;}
 										$sqlt = "INSERT INTO event_tank (idp,type,idc, idt,  date, time)";
 										$sqlt.= " VALUES ('$id','$type','$idc', '$idt',  '$date', '$time')";
 										$qt = mysql_query($sqlt, $connect);
