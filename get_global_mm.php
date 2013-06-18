@@ -376,7 +376,7 @@ foreach ($ida as $id) {
 								$tname=$data['data']['vehicles'][$i]['name'];
 								$nation=$data['data']['vehicles'][$i]['nation']; 
 								$level=$data['data']['vehicles'][$i]['level'];
-								$sqlt = "select id_t from cat_tanks where name='$tname' and nation='$nation' and level='$level'";
+								$sqlt = "select id_t from cat_tanks where name='$tname' and nation='$nation'";
 								$qt = mysql_query($sqlt, $connect);
 								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 								$qqtt = mysql_fetch_array($qt);
@@ -407,10 +407,10 @@ foreach ($ida as $id) {
 									if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 									$qqtt = mysql_fetch_array($qt);
 									$type=0;
-									if ($level==10  or ($level==8 and $class=='SPG')){
+									if ($level==10){
 									$type=1;
 									}
-									if ($level==9  or ($level==7 and $class=='SPG')){$type=2;}
+									if ($level==9){$type=2;}
 									$idt=$qqtt['id_t'];
 									if ($cntT>0){
 										$sqlt = "INSERT INTO event_tank (idp,type, idc, idt,  date, time)";

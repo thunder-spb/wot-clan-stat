@@ -8,11 +8,11 @@ $db = mysql_select_db($dbname, $connect) or die("Ошибка подключения к БД");
 $setnames = mysql_query( 'SET NAMES utf8' );
 header('Content-Type: text/html; charset=UTF-8');
 
-$result = mysql_query("SELECT count(*) as cnt FROM `cat_tanks` where level=10 or (level=8 and class='SPG')");
+$result = mysql_query("SELECT count(*) as cnt FROM `cat_tanks` where level=10");
 $row = mysql_fetch_array($result,MYSQL_ASSOC); 
 $count_t = $row['cnt']; 
 //$message="<table  border='1' width='900px'>";
-$sql="SELECT * FROM `cat_tanks` where level=10  or (level=8 and class='SPG') ORDER BY level desc,class,nation";
+$sql="SELECT * FROM `cat_tanks` where level=10  ORDER BY level desc,class,nation";
 $result = mysql_query( $sql,$connect ) or die("Couldn t execute query.".mysql_error()); 
 
 	$data->page       = 1;
