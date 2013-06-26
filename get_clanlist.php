@@ -30,22 +30,43 @@ while ($clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC)) {
  }
  if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $clancnt=array_unique($clancnt);
-$pageidc = "http://ivanerr.ru/lt/export.php?byclanid";		
-//$pageidc = $wot_host.'/'.$pageidc;
-$dataiv = get_page($pageidc);
-$dataiv = json_decode($dataiv, true);
+$iv = mysql_query("select lastiv from tech",$connect);
+$ivdb=mysql_fetch_array($iv,MYSQL_ASSOC);
+$iv=$ivdb['lastiv'];
+$dataiv=array();
+if ($iv<$t){
+	$pageidc = "http://ivanerr.ru/lt/export.php?byclanid";		
+	//$pageidc = $wot_host.'/'.$pageidc;
+	$dataiv = get_page($pageidc);
+	$dataiv = json_decode($dataiv, true);
+	// if ($dataiv["$idc"]<>NULL){
+		// foreach ($dataiv["$idc"] as $claniv) {
+			 // $totalrate=$claniv['totalrate'];
+			 // $firepower=$claniv['firepower'];
+			 // $skill=$claniv['skill'];
+			 // $position=$claniv['position'];
+			 // $sql = "UPDATE `clan_info` SET `rate`='$totalrate', firepower='$firepower', skill='$skill',  position='$position' WHERE `idc`='$idc'";
+			 // $q = mysql_query($sql, $connect);
+			 // if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+		// }
+		
+	// }
+	$t1=time();
+	mysql_query("update tech set lastiv='$t1'",$connect);
+	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+}
 foreach ($clancnt as $idc) {
 	//обновляем данные по ivanerr
-	if ($dataiv["$idc"]<>NULL){
-	 //echo "<br>".$dataiv["$idc"]['totalrate']." Rating</br>";
-	 $totalrate=$dataiv["$idc"]['totalrate'];
-	 $firepower=$dataiv["$idc"]['firepower'];
-	 $skill=$dataiv["$idc"]['skill'];
-	 $position=$dataiv["$idc"]['position'];
-	 $sql = "UPDATE `clan_info` SET `rate`='$totalrate', firepower='$firepower', skill='$skill',  position='$position' WHERE `idc`='$idc'";
-	 $q = mysql_query($sql, $connect);
-	 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-	}
+	if (array_key_exists($idc, $dataiv)) {
+	  //echo "<br>".$dataiv["$idc"]['totalrate']." Rating</br>";
+	  $totalrate=$dataiv["$idc"]['totalrate'];
+	  $firepower=$dataiv["$idc"]['firepower'];
+	  $skill=$dataiv["$idc"]['skill'];
+	  $position=$dataiv["$idc"]['position'];
+	  $sql = "UPDATE `clan_info` SET `rate`='$totalrate', firepower='$firepower', skill='$skill',  position='$position' WHERE `idc`='$idc'";
+	  $q = mysql_query($sql, $connect);
+	  if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+	 }
 	//$idc = $clan_i["clan_id"];
 	$clanlist = mysql_query("select tag, allians from clan_info where idc='$idc'",$connect);
 	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";

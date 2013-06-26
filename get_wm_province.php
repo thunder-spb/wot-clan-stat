@@ -56,7 +56,7 @@ foreach ($clancnt as $idc) {
 	$pageidp = "cw.".$wot_host.'/'.$pageidp;
 	$databtl = get_page($pageidp);
 	echo "<br>-------------обрабатываем клан ".$idc."<br>";
-	echo "в альянсе ".$resultt['allians']."<br>";
+//	echo "в альянсе ".$resultt['allians']."<br>";
 	$databtl = json_decode($databtl, true);
 	$t = time();
 	echo "Подгружаем данные по провинциям...<br>";
@@ -85,10 +85,10 @@ foreach ($clancnt as $idc) {
 			$id = $item["id"];
 			echo "клану принадлежит провинция   ".$id."<br>";
 			$name = $item["name"];
-			echo "___Name: ".$name."<br>";
+		//	echo "___Name: ".$name."<br>";
 			$arena_id = $item["arena_id"];
 			$arena_name = $item["arena_name"];
-			echo "___Map: ".$arena_name."<br>";
+		//	echo "___Map: ".$arena_name."<br>";
 			$arenadb = mysql_query("select * from arenas where id='$arena_id'",$connect);
 			if (!mysql_fetch_array($arenadb,MYSQL_ASSOC)) {
 				echo "   OOOPS! New map... add this to db<br>";
@@ -116,43 +116,46 @@ foreach ($clancnt as $idc) {
 					$all = mysql_query("select id_r, url  from wm_regions where id_r='$region'",$connect);
 				}
 				$succes=0;
-				echo ".........................<br>";
+				//echo ".........................<br>";
 				while ($res = mysql_fetch_array($all,MYSQL_ASSOC)) {
 					if ($curr<>$res['id_r']){
 						$curr=$res['id_r'];
-						echo "<br>Подгружаем данные из ГК...";
+						echo "<br>Подгружаем данные из ГК... регион-".$curr;
 						$pageidp = "http://cw.worldoftanks.ru".$res['url']."?ct=json";
 						$databt2 = get_page($pageidp);
 						$data2 = json_decode($databt2, true);
 					}
-					$provdata =$data2['provinces'][$id];
-					if ($provdata<>NULL){
-						echo "<br> OK...";
-						mysql_query("delete from province where id='$id'",$connect);
-						//print_r($provdata);
-						$per=$provdata['periphery'];
-						$landing_url=$provdata['landing_url'];
-						$neighbours=$provdata['neighbours'];
-						echo "<br> neighbours... ";
-						$neighbours=implode(";",array_keys($neighbours));
-						
-						echo $neighbours."<br>";
-						$landing_final_battle_time=0;
-						if (array_key_exists('landing_final_battle_time', $provdata)) {
-							$landing_final_battle_time=$provdata['landing_final_battle_time'];
+					if ($data2['provinces']<>null){
+						if (array_key_exists($id, $data2['provinces'])) {
+							$provdata =$data2['provinces'][$id];
+							//if ($provdata<>NULL){
+							echo "<br><b> OK !</b>";
+							mysql_query("delete from province where id='$id'",$connect);
+							//print_r($provdata);
+							$per=$provdata['periphery'];
+							$landing_url=$provdata['landing_url'];
+							$neighbours=$provdata['neighbours'];
+				//			echo "<br> neighbours... ";
+							$neighbours=implode(";",array_keys($neighbours));
+							
+							echo $neighbours."<br>";
+							$landing_final_battle_time=0;
+							if (array_key_exists('landing_final_battle_time', $provdata)) {
+								$landing_final_battle_time=$provdata['landing_final_battle_time'];
+							}
+							// $landing_final_battle_time=$provdata['landing_final_battle_time'];
+							$arena=$provdata['mapId'];
+							$arenaar=explode ( "_", $arena );
+							$arena_id=$arenaar[1];
+							$region=$res['id_r'];
+							$mutiny=$provdata['mutiny'];
+							$mutinye=$provdata['mutiny_expected'];
+							$sql = "insert into province (prime_time, neighbours, id, name, arena_id,  revenue, type, periphery,landing_url,landing_final_battle_time,region)";
+							$sql .= " values ('$prime_time','$neighbours', '$id', '$name', '$arena_id',  '$revenue', '$type','$per', '$landing_url','$landing_final_battle_time','$region')";
+							mysql_query($sql, $connect);
+							$succes=1;
+							break;
 						}
-						// $landing_final_battle_time=$provdata['landing_final_battle_time'];
-						$arena=$provdata['mapId'];
-						$arenaar=explode ( "_", $arena );
-						$arena_id=$arenaar[1];
-						$region=$res['id_r'];
-						$mutiny=$provdata['mutiny'];
-						$mutinye=$provdata['mutiny_expected'];
-						$sql = "insert into province (prime_time, neighbours, id, name, arena_id,  revenue, type, periphery,landing_url,landing_final_battle_time,region)";
-						$sql .= " values ('$prime_time','$neighbours', '$id', '$name', '$arena_id',  '$revenue', '$type','$per', '$landing_url','$landing_final_battle_time','$region')";
-						mysql_query($sql, $connect);
-						$succes=1;
-						break;
 					}
 				}
 
@@ -189,7 +192,7 @@ foreach ($clancnt as $idc) {
 					//провинция захвачена у клана не из списка  clan_info или новые данные.
 					echo "добавляем данные <br>";
 					mysql_query("insert into possession (idc, idpr, attacked, occupancy_time, capital) values ('$idc','$id','$attacked','$occupancy_time','$capital')",$connect);
-					//mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '1', '$t', '$idc')",$connect);
+					mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '1', '$t', '$idc')",$connect);
 				}
 			} else {
 				
@@ -238,8 +241,10 @@ foreach ($clancnt as $idc) {
 					$data2 = json_decode($databt2, true);
 					echo "<br> регион ".$curr;
 				}
-				$provdata =$data2['provinces'][$id];
-				if ($provdata<>NULL){
+				
+				if (array_key_exists($id, $data2['provinces'])) {
+					$provdata =$data2['provinces'][$id];
+					//if ($provdata<>NULL){
 					$status=$provdata['status'];
 					$combats=$provdata['combats'];
 					mysql_query("delete from province where id='$id'",$connect);
@@ -271,18 +276,18 @@ foreach ($clancnt as $idc) {
 					if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."";
 					if ($status<>"start"){
 						foreach ($combats as $cmb){
-							echo "<br>";
+						//	echo "<br>";
 							//print_r($cmb);
 							$ncombat=key($combats);
 							$combatants=$combats["$ncombat"]['combatants'];
 							foreach ($combatants as $btlclan){
 								$clanb=key($combatants);
-								echo "<br> клан ".$clanb;
-								echo "<br> учавствует в битве N ".$ncombat;
-								echo "<br> за провинцию ".$provinces_name;
+//echo "<br> клан ".$clanb;
+							//	echo "<br> учавствует в битве N ".$ncombat;
+							//cho "<br> за провинцию ".$provinces_name;
 								$type = $combats["$ncombat"]['type'];
-								echo "<br> тип битвы ".$type;
-								echo "<br> на сервере ".$combats["$ncombat"]['peripheryId'];
+							//	echo "<br> тип битвы ".$type;
+							//	echo "<br> на сервере ".$combats["$ncombat"]['peripheryId'];
 								//echo "<br> время ".$time;
 								$started = $combats["$ncombat"]['started'];
 								$bttime = $combats["$ncombat"]['at'];
@@ -317,6 +322,8 @@ foreach ($clancnt as $idc) {
 									$sql .= " values ('$clanb', '$clanname',  '$clancolor', '$clantag', '$clanurl','$t',0)";
 									mysql_query($sql, $connect);
 									if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."";
+									mysql_query("update tech set lastiv=0",$connect);
+									if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 								}else{
 									if ($resultt['allians']==1){
 										$t=time();
@@ -360,12 +367,12 @@ foreach ($clancnt as $idc) {
 			// $total_poss_old[] = $res["idpr"];
 		// }
 		$lost = array_diff($total_poss_old,$total_poss);
-		echo "<br>старые владения";
-		print_r($total_poss_old);
-		echo "<br>New";
-		print_r($total_poss);
-		echo "<br>Разница";
-		print_r($lost);
+		//echo "<br>старые владения";
+		//print_r($total_poss_old);
+		//echo "<br>New";
+		//print_r($total_poss);
+		//echo "<br>Разница";
+		//print_r($lost);
 		foreach ($lost as $lost_prov) {
 			$qidc = mysql_query("select idc from possession where idpr='$lost_prov'");
 			$res = mysql_fetch_array($qidc,MYSQL_ASSOC);

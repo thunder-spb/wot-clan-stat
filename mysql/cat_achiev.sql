@@ -2,10 +2,10 @@
 -- version 3.5.8
 -- http://www.phpmyadmin.net
 --
--- Хост: localhost
--- Время создания: Июн 11 2013 г., 18:26
--- Версия сервера: 5.1.67-log
--- Версия PHP: 5.3.23-pl0-gentoo
+-- Host: localhost
+-- Generation Time: Jun 26, 2013 at 04:26 PM
+-- Server version: 5.1.67-log
+-- PHP Version: 5.3.23-pl0-gentoo
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,15 +17,16 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- База данных: `stat`
+-- Database: `stat`
 --
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `cat_achiev`
+-- Table structure for table `cat_achiev`
 --
 
+DROP TABLE IF EXISTS `cat_achiev`;
 CREATE TABLE IF NOT EXISTS `cat_achiev` (
   `id_ac` int(11) NOT NULL AUTO_INCREMENT,
   `medal` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
@@ -36,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `cat_achiev` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=79 ;
 
 --
--- Дамп данных таблицы `cat_achiev`
+-- Dumping data for table `cat_achiev`
 --
 
 INSERT INTO `cat_achiev` (`id_ac`, `medal`, `medal_ru`, `img`, `type`) VALUES
@@ -118,28 +119,31 @@ INSERT INTO `cat_achiev` (`id_ac`, `medal`, `medal_ru`, `img`, `type`) VALUES
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `tech`
+-- Table structure for table `tech`
 --
 
+DROP TABLE IF EXISTS `tech`;
 CREATE TABLE IF NOT EXISTS `tech` (
   `current` int(11) NOT NULL DEFAULT '0',
   `lasthourwm` int(2) NOT NULL,
+  `lastiv` int(11) NOT NULL,
   PRIMARY KEY (`current`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Дамп данных таблицы `tech`
+-- Dumping data for table `tech`
 --
 
-INSERT INTO `tech` (`current`,`lasthourwm`) VALUES
-(760,1);
+INSERT INTO `tech` (`current`, `lasthourwm`, `lastiv`) VALUES
+(1360, 33, 0);
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `wm_regions`
+-- Table structure for table `wm_regions`
 --
 
+DROP TABLE IF EXISTS `wm_regions`;
 CREATE TABLE IF NOT EXISTS `wm_regions` (
   `id_r` varchar(6) NOT NULL,
   `name` varchar(30) NOT NULL,
@@ -148,7 +152,7 @@ CREATE TABLE IF NOT EXISTS `wm_regions` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Дамп данных таблицы `wm_regions`
+-- Dumping data for table `wm_regions`
 --
 
 INSERT INTO `wm_regions` (`id_r`, `name`, `url`, `excl`) VALUES
