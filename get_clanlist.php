@@ -37,37 +37,34 @@ $dataiv=array();
 if ($iv<$t){
 	$pageidc = "http://ivanerr.ru/lt/export.php?byclanid";		
 	//$pageidc = $wot_host.'/'.$pageidc;
-	$dataiv = get_page($pageidc);
-	$dataiv = json_decode($dataiv, true);
-	// if ($dataiv["$idc"]<>NULL){
-		// foreach ($dataiv["$idc"] as $claniv) {
-			 // $totalrate=$claniv['totalrate'];
-			 // $firepower=$claniv['firepower'];
-			 // $skill=$claniv['skill'];
-			 // $position=$claniv['position'];
-			 // $sql = "UPDATE `clan_info` SET `rate`='$totalrate', firepower='$firepower', skill='$skill',  position='$position' WHERE `idc`='$idc'";
-			 // $q = mysql_query($sql, $connect);
-			 // if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-		// }
-		
-	// }
+	$dataiv1 = get_page($pageidc);
+	$dataiv = json_decode($dataiv1, true);
+}
+$sql = "select `idc` from clan_info where 1";
+$q1 = mysql_query($sql, $connect);
+if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+$cnt=0;
+while ($clani=mysql_fetch_array($q1,MYSQL_ASSOC)) {
+	$iidc=$clani['idc'];
+	//echo $iidc." Клан для иванерра".PHP_EOL;
+	if (array_key_exists($iidc, $dataiv)) {
+		  //echo PHP_EOL.$dataiv["$iidc"]['totalrate']." Rating ".PHP_EOL;
+		  $cnt+=1;
+		  $totalrate=$dataiv["$iidc"]['totalrate'];
+		  $firepower=$dataiv["$iidc"]['firepower'];
+		  $skill=$dataiv["$iidc"]['skill'];
+		  $position=$dataiv["$iidc"]['position'];
+		  $sql = "UPDATE `clan_info` SET `rate`='$totalrate', firepower='$firepower', skill='$skill',  position='$position' WHERE `idc`='$iidc'";
+		  $q = mysql_query($sql, $connect);
+		  if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+	}
+}
+if ($cnt<>0){
 	$t1=time();
 	mysql_query("update tech set lastiv='$t1'",$connect);
 	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 }
 foreach ($clancnt as $idc) {
-	//обновляем данные по ivanerr
-	if (array_key_exists($idc, $dataiv)) {
-	  //echo "<br>".$dataiv["$idc"]['totalrate']." Rating</br>";
-	  $totalrate=$dataiv["$idc"]['totalrate'];
-	  $firepower=$dataiv["$idc"]['firepower'];
-	  $skill=$dataiv["$idc"]['skill'];
-	  $position=$dataiv["$idc"]['position'];
-	  $sql = "UPDATE `clan_info` SET `rate`='$totalrate', firepower='$firepower', skill='$skill',  position='$position' WHERE `idc`='$idc'";
-	  $q = mysql_query($sql, $connect);
-	  if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-	 }
-	//$idc = $clan_i["clan_id"];
 	$clanlist = mysql_query("select tag, allians from clan_info where idc='$idc'",$connect);
 	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 	$clanlist=mysql_fetch_array($clanlist,MYSQL_ASSOC);
@@ -155,7 +152,7 @@ function get_page($url) {
 		curl_setopt ($ch, CURLOPT_HEADER, 0);
                 //curl_setopt ($ch, CURLOPT_HTTPHEADER, array('Accept-Language: ru_ru,ru'));
 		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt ($ch, CURLOPT_TIMEOUT, 5);
+		curl_setopt ($ch, CURLOPT_TIMEOUT, 20);
 		curl_setopt ($ch, CURLOPT_URL, $url);
 		curl_setopt ($ch, CURLOPT_HTTPGET, true);
 		$data = curl_exec($ch);
