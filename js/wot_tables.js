@@ -14,46 +14,7 @@ function gup( name )
 }
 var plotgraph = 0;
 $(function() {
-/*	tabs = function(options) {
-		
-		var defaults = {  
-			selector: '.tabs',
-			selectedClass: 'selected'
-		};  
-		
-		if(typeof options == 'string') defaults.selector = options;
-		var options = $.extend(defaults, options); 
-	
-		return $(options.selector).each(function(){
-									
-			var obj = this;	
-			var targets = Array();
-	
-			function show(i){
-				$.each(targets,function(index,value){
-					$(value).hide();
-				})
-				$(targets[i]).fadeIn('fast');
-				$(obj).children().removeClass(options.selectedClass);
-				selected = $(obj).children().get(i);
-				$(selected).addClass(options.selectedClass);
-			};
-	
-			$('a',this).each(function(i){	
-				targets.push($(this).attr('href'));
-				$(this).click(function(e){
-					e.preventDefault();
-					show(i);
-				});
-			});
-			
-			show(0);
-	
-		});			
-	} 
-	// initialize the function
-	// as a parameter we are sending a selector. For this particular script we must select the unordeblue (or ordeblue) list item element 
-	tabs('nav ul');*/
+
 
 	var idc = current_clan_id;
 	if (idc == "") idc = "102"
@@ -86,8 +47,6 @@ $(function() {
 		scroll: true,
 		rowList:[10],
 		viewrecords: true,
-		//sortname: 'id_ec',
-		//sortorder: 'desc',
 		width: 410,
 		height: 200,
 		caption: 'Личный состав',
@@ -253,7 +212,7 @@ $(function() {
 		postData: {'filterBy':null},
 		colNames:['i','ID','Ник','Звание','В клане','Offline'],
 		colModel :[
-			{name:'id_', index:'id_', width:-1, align:"center"},
+			{name:'id_', index:'id_', width:-1, align:"center",hidden:true},
 			{name:'idp', index:'idp', width:30, align:"center"},
 			{name:'name', index:'name', width:48, align:"left"},
 			{name:'role_localised', index:'role', width:62, align:"left"},
@@ -1373,7 +1332,7 @@ var tplayers = $("#players_table_2").jqGrid({
 		postData: {'filterBy':null},
 		colNames:['i','ID','Ник','Звание','В клане','Offline'],
 		colModel :[
-			{name:'id_', index:'id_', width:-1, align:"center"},
+			{name:'id_', index:'id_', width:-1, align:"center",hidden:true},
 			{name:'idp', index:'idp', width:30, align:"center"},
 			{name:'name', index:'name', width:48, align:"left"},
 			{name:'role_localised', index:'role', width:32, align:"left"},
