@@ -47,21 +47,15 @@ foreach ($clancnt as $idc) {
 	$sql = mysql_query("select allians from clan_info where idc='$idc'",$connect);
 	$resultt = mysql_fetch_array($sql,MYSQL_ASSOC); 
     $a=$a+1;
-	// $pageidp = "clans/".$idc."-"."/provinces/?type=table";
-	// $pageidp = "http://cw.".$wot_host.'/'.$pageidp;	
-	 $pageidp = "community/clans/".$idc."-/provinces/list/?offset=0&limit=1000&order_by=name&search=&echo=1&id=js-provinces-table";
-	 $pageidp = $wot_host.'/'.$pageidp;	
+	$pageidp = "clans/".$idc."-"."/provinces/?type=table";
+	$pageidp = "cw.".$wot_host.'/'.$pageidp;	
 	$data = get_page($pageidp);
-	//print_r($pageidp);
 	$data = json_decode($data, true);
-	
-	//$pageidp = "clans/".$idc."-"."/battles/?type=table";
-	$pageidp = "community/clans/".$idc."-/battles/list/?offset=0&limit=1000&order_by=name&search=&echo=1&id=js-provinces-table";
-	$pageidp = $wot_host.'/'.$pageidp;
+	$pageidp = "clans/".$idc."-"."/battles/?type=table";
+	$pageidp = "cw.".$wot_host.'/'.$pageidp;
 	$databtl = get_page($pageidp);
 	echo PHP_EOL."-------------обрабатываем клан ".$idc.PHP_EOL;
 	$databtl = json_decode($databtl, true);
-	print_r($databtl);
 	$t = time();
 	echo "Подгружаем данные по провинциям...".PHP_EOL;
 	if ($data["result"]=="success"){
@@ -76,7 +70,6 @@ foreach ($clancnt as $idc) {
 				mysql_query("delete from possession where idc='$idc'",$connect);
 				mysql_query("delete from wm_event where idc='$idc'",$connect);
 				mysql_query("update clan_info set actdate=0 where idc='$idc'",$connect);
-				mysql_query("delete from event_clan where idc='$idc'",$connect);
 				continue;
 			}	
 		}
@@ -90,21 +83,21 @@ foreach ($clancnt as $idc) {
 			$id = $item["id"];
 			echo "клану принадлежит провинция   ".$id.PHP_EOL;
 			$name = $item["name"];
-			//$arena_id = $item["arena_id"];
+			$arena_id = $item["arena_id"];
 			$arena_name = $item["arena_name"];
-			// $arenadb = mysql_query("select * from arenas where id='$arena_id'",$connect);
-			// if (!mysql_fetch_array($arenadb,MYSQL_ASSOC)) {
-				// echo "   OOOPS! New map... add this to db".PHP_EOL;
-				// $sql = "insert into arenas (id, name)";
-				// $sql .= " values ('$arena_id', '$arena_name')";
-				// mysql_query($sql, $connect);
-			// }
+			$arenadb = mysql_query("select * from arenas where id='$arena_id'",$connect);
+			if (!mysql_fetch_array($arenadb,MYSQL_ASSOC)) {
+				echo "   OOOPS! New map... add this to db".PHP_EOL;
+				$sql = "insert into arenas (id, name)";
+				$sql .= " values ('$arena_id', '$arena_name')";
+				mysql_query($sql, $connect);
+			}
 			$revenue = $item["revenue"];
 		//	echo "___revenue: ".$revenue.PHP_EOL;
-			// $capital=$item["capital"];
+			$capital=$item["capital"];
 			$type = $item["type"];
 		//	echo "___type: ".$type.PHP_EOL;
-		//	$attacked = $item["attacked"];
+			$attacked = $item["attacked"];
 			$occupancy_time = $item["occupancy_time"];
 			$total_poss[] = $id;
 			$prov = mysql_query("select id_pr,periphery, region,neighbours, arena_id  from province where id='$id'",$connect);
@@ -125,6 +118,7 @@ foreach ($clancnt as $idc) {
 							$pageidp = "http://cw.worldoftanks.ru".$res['url']."?ct=json";
 							$databt2 = get_page($pageidp);
 							$allgk[$curr] = json_decode($databt2, true);
+							//$allgk[$curr]=$data2;
 						}else{
 							echo PHP_EOL."Данные из ГК уже подгружены ранее, регион-".$curr.PHP_EOL;
 						}
@@ -177,7 +171,7 @@ foreach ($clancnt as $idc) {
 					$sql = mysql_query("select allians from clan_info where idc='$idc_old'",$connect);
 					$resultold = mysql_fetch_array($sql,MYSQL_ASSOC); 
 					echo  "old clan ".$idc_old." in allians ".$resultold['allians'].PHP_EOL;
-					mysql_query("update possession set idc='$idc',mutiny='$mutiny' where idpr='$id'",$connect);
+					mysql_query("update possession set idc='$idc',mutiny='$mutiny', capital='$capital' where idpr='$id'",$connect);
 					if (($resultt['allians']==1)and($resultold['allians']==1)){
 						echo "передача провинции внутри альянса".PHP_EOL;
 						mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '2', '$t', '$idc')",$connect);
@@ -190,7 +184,7 @@ foreach ($clancnt as $idc) {
 				} else {
 					//провинция захвачена у клана не из списка  clan_info или новые данные.
 					echo "добавляем данные".PHP_EOL;
-					mysql_query("insert into possession (idc, idpr, occupancy_time) values ('$idc','$id','$occupancy_time')",$connect);
+					mysql_query("insert into possession (idc, idpr, attacked, occupancy_time, capital) values ('$idc','$id','$attacked','$occupancy_time','$capital')",$connect);
 					mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '1', '$t', '$idc')",$connect);
 				}
 			} else {
@@ -200,7 +194,7 @@ foreach ($clancnt as $idc) {
 					mysql_query("insert into wm_event (idpr, type, time, idc) values ('$id', '4', '$t', '$idc')",$connect);
 				}
 				//клан уже владеет провинцией
-				mysql_query("update possession set mutiny='$mutiny',  occupancy_time='$occupancy_time' where idpr='$id'",$connect);
+				mysql_query("update possession set mutiny='$mutiny', attacked='$attacked', occupancy_time='$occupancy_time', capital='$capital' where idpr='$id'",$connect);
 			}
 		}
 		
@@ -372,7 +366,7 @@ function get_page($url) {
         curl_setopt($ch,CURLOPT_HTTPHEADER,array('Accept: application/json, text/javascript, text/html, */*',
 												'X-Requested-With: XMLHttpRequest'));
 		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt ($ch, CURLOPT_TIMEOUT, 15);
+		curl_setopt ($ch, CURLOPT_TIMEOUT, 10);
 		curl_setopt ($ch, CURLOPT_URL, $url);
 		curl_setopt ($ch, CURLOPT_HTTPGET, true);
 		$data = curl_exec($ch);
