@@ -9,24 +9,31 @@ header('Content-Type: text/html; charset=UTF-8');
 $t=time();
 $actwmdatesql = mysql_query("select lasthourwm from tech",$connect);
 $actwmdate=mysql_fetch_array($actwmdatesql,MYSQL_ASSOC);
-$hour=date("H",strtotime($hosttime));
+//$hour=date("H",strtotime($hosttime));
 // Проверяем на актуальность и обеспечиваем 2 прохода.
-$hour=$hour*2+1;
+$curr="reg_01";
+$allgk =array();
+echo PHP_EOL."Подгружаем данные из ГК... регион-".$curr.PHP_EOL;
+$pageidp = "http://cw.worldoftanks.ru/clanwars/maps/provinces/regions/1/?ct=json";
+$databt2 = get_page($pageidp);
+$allgk[$curr] = json_decode($databt2, true);
+$gkturn=$allgk[$curr]['turn']['id'];
+echo "текущий ход на ГК ".$gkturn;
+$gkturn=$gkturn*2+1;
 if ($actwmdate['lasthourwm']<>NULL){
-	if ($actwmdate['lasthourwm']==$hour){
+	if ($actwmdate['lasthourwm']==$gkturn){
 		die ();
 	}
-	$e=$hour-$actwmdate['lasthourwm'];
+	$e=$gkturn-$actwmdate['lasthourwm'];
 	if ($e==2){
-		$hour=$hour-1;
+		$gkturn=$gkturn-1;
 	}
 }
 $total_poss = array();
-$allgk =array();
 //счётчики для проверки валиности данных
 $a=0;
 $b=0;
-$curr="";
+//$curr="";
 $nlanding=500000;
 $t = time()-700000;
 $clanlist = mysql_query("select idc from clan_info where actdate>'$t'",$connect);
@@ -118,7 +125,6 @@ foreach ($clancnt as $idc) {
 							$pageidp = "http://cw.worldoftanks.ru".$res['url']."?ct=json";
 							$databt2 = get_page($pageidp);
 							$allgk[$curr] = json_decode($databt2, true);
-							//$allgk[$curr]=$data2;
 						}else{
 							echo PHP_EOL."Данные из ГК уже подгружены ранее, регион-".$curr.PHP_EOL;
 						}
@@ -359,7 +365,7 @@ foreach ($clancnt as $idc) {
 		unset($total_poss_old);
 	
 }
-mysql_query("update tech set lasthourwm='$hour'",$connect);
+mysql_query("update tech set lasthourwm='$gkturn'",$connect);
 function get_page($url) {
 		$ch = curl_init();
 		curl_setopt ($ch, CURLOPT_HEADER, 0);

@@ -125,7 +125,7 @@ INSERT INTO `cat_achiev` (`id_ac`, `medal`, `medal_ru`, `img`, `type`) VALUES
 DROP TABLE IF EXISTS `tech`;
 CREATE TABLE IF NOT EXISTS `tech` (
   `current` int(11) NOT NULL DEFAULT '0',
-  `lasthourwm` int(2) NOT NULL,
+  `lasthourwm` int(11) NOT NULL,
   `lastiv` int(11) NOT NULL,
   PRIMARY KEY (`current`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
