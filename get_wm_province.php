@@ -18,16 +18,20 @@ $pageidp = "http://cw.worldoftanks.ru/clanwars/maps/provinces/regions/1/?ct=json
 $databt2 = get_page($pageidp);
 $allgk[$curr] = json_decode($databt2, true);
 $gkturn=$allgk[$curr]['turn']['id'];
-echo "текущий ход на ГК ".$gkturn;
-$gkturn=$gkturn*2+1;
-if ($actwmdate['lasthourwm']<>NULL){
-	if ($actwmdate['lasthourwm']==$gkturn){
-		die ();
+if ($gkturn<>NULL){
+	echo "текущий ход на ГК ".$gkturn;
+	$gkturn=$gkturn*2+1;
+	if ($actwmdate['lasthourwm']<>NULL){
+		if ($actwmdate['lasthourwm']==$gkturn){
+			die ();
+		}
+		$e=$gkturn-$actwmdate['lasthourwm'];
+		if ($e==2){
+			$gkturn=$gkturn-1;
+		}
 	}
-	$e=$gkturn-$actwmdate['lasthourwm'];
-	if ($e==2){
-		$gkturn=$gkturn-1;
-	}
+}else{
+	die("Не удалось загрузить данные из ГК");
 }
 $total_poss = array();
 //счётчики для проверки валиности данных
