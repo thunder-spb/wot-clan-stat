@@ -51,13 +51,13 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 		//if ($row3<>NULL){
 			$clansa=$row3['idc'];
 			$timem=date("H:i",$row3['time']);
-			$SQL2 = "select idc,tag, color, name, allians, actdate,skill,rate  from clan_info where idc='$clansa'";
+			$SQL2 = "select idc,tag, color, name, allians, actdate,skill,rate,smallimg  from clan_info where idc='$clansa'";
 			$claneresult = mysql_query( $SQL2,$connect );
 			$rowclan=mysql_fetch_array($claneresult,MYSQL_ASSOC);
 			//"<span style='color: blue;'><b>"; $sp6="</b></span> "
 			$clanname=$clann=$rowclan['name'];
 			$actclane=$rowclan['actdate'];
-			
+			$simg=$rowclan['smallimg'];
 			$skillb=$rowclan['skill'];
 			$skilla=$rowclan1['skill'];
 			$stra="";
@@ -75,7 +75,7 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 				$timema="<b>[".$timem."]</b>";
 			}
 			//$pr = "<a href='http://worldoftanks.ru/uc/clanwars/maps/?province=$idpr' target='_blank'>$pr</a>";
-			$clane=$clane."<span style='background-color:". $rowclan['color'].";'>"."    "."</span>".$timema." [".$rowclan['tag']."]".$stra."<b> ".$clann."</b><br>";
+			$clane=$clane."<span style='background-color:". $rowclan['color'].";'>"."    "."</span> ".'<img src="'.$simg.'" style="width: 20px; height:20px;" align="absmiddle"/>'.$timema." [".$rowclan['tag']."]".$stra."<b> ".$clann."</b><br>";
 			//$clane=$clane."f,hf";
 		}
 	}

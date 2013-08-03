@@ -18,7 +18,7 @@ if (array_key_exists("idc",$_GET)) {
 $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Ошибка подключения к БД");
 $setnames = mysql_query( 'SET NAMES utf8' );
-$clanlist = mysql_query("select tag, name, rate, firepower, skill,color, position from clan_info where idc='$idc'",$connect);
+$clanlist = mysql_query("select tag, name, rate, firepower, skill,color, position,smallimg from clan_info where idc='$idc'",$connect);
 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC);
 echo $clanrow['tag'];
@@ -26,7 +26,9 @@ echo $clanrow['tag'];
 //}
 ?>
 </title>
-
+<?php
+echo '<link rel="icon" type="image/png" href="'.$clanrow['smallimg'].'" />';
+?>
 <link type="text/css" href="css/blitzer/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" media="screen" href="css/ui.jqgrid.css" />
 <link rel="stylesheet" type="text/css" media="screen" href="css/screen.css" />
@@ -61,8 +63,8 @@ html, body {
  <a href="https://github.com/thunder-spb/wot-clan-stat">Скачать статистику себе c github'a</a>
 <header>
 	<h1><?php  
-
-		echo $clanrow["tag"];
+		echo '<img src="'.$clanrow['smallimg'].'" style="width: 24px; height:24px;" align="absmiddle"/>';
+		echo " ".$clanrow["tag"];
 		echo '  -   ';
 		echo $clanrow["name"];
 		//echo "<span style='background-color:". $rowclan['color'].";'>"."    "."</span>";

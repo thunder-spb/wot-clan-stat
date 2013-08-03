@@ -98,6 +98,10 @@ foreach ($clancnt as $idc) {
 	if ($data['status'] == 'ok') {
 		echo "успешно загрузили данные...<br>";
 		// тут добавить сбор инфы о клане //
+		$smallimg=$data['data']['emblems']['small'];
+		$sql = "UPDATE `clan_info` SET `smallimg`='$smallimg' WHERE `idc`='$idc'";
+		$q = mysql_query($sql, $connect);
+		if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 		for($i=0;$i<count($data['data']['members']);$i++){
 			//проверка на "нового игрока в клане"
 			$t=date("Y-m-d",($data['data']['members'][$i]['created_at']));
