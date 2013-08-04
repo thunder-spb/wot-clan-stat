@@ -19,10 +19,11 @@ $databt2 = get_page($pageidp);
 $allgk[$curr] = json_decode($databt2, true);
 $gkturn=$allgk[$curr]['turn']['id'];
 if ($gkturn<>NULL){
-	echo "текущий ход на ГК ".$gkturn;
+	echo "текущий ход на ГК ".$gkturn.PHP_EOL;
 	$gkturn=$gkturn*2+1;
 	if ($actwmdate['lasthourwm']<>NULL){
 		if ($actwmdate['lasthourwm']==$gkturn){
+			echo "----------------------------".PHP_EOL."уже обработан".PHP_EOL."----------------------------".PHP_EOL;
 			die ();
 		}
 		$e=$gkturn-$actwmdate['lasthourwm'];
@@ -34,12 +35,28 @@ if ($gkturn<>NULL){
 	die("Не удалось загрузить данные из ГК");
 }
 $total_poss = array();
-//счётчики для проверки валиности данных
+//счётчики для проверки валидности данных
 $a=0;
 $b=0;
 //$curr="";
 $nlanding=500000;
 $t = time()-700000;
+$clanlist = mysql_query("select idc from clan_info where actdate<'$t' and actdate<>0 and allians=0",$connect);
+while ($clandel=mysql_fetch_array($clanlist,MYSQL_ASSOC)) {
+	$idc=$clandel['idc'];
+	$q= time();
+	echo"Чистка данных".PHP_EOL;
+	mysql_query("delete from btl where idc='$idc'",$connect);
+	mysql_query("delete from possession where idc='$idc'",$connect);
+	mysql_query("delete from wm_event where idc='$idc'",$connect);
+	mysql_query("delete from event_clan where idc='$idc'",$connect);			
+	mysql_query("update clan_info set actdate=0 where idc='$idc'",$connect);
+	mysql_query("update clan set target=1 where idc='$idc'",$connect);	
+	$q=time()-$q;
+	echo "Затрачено времени - ".$q." секунд".PHP_EOL;
+}
+
+
 $clanlist = mysql_query("select idc from clan_info where actdate>'$t'",$connect);
 $clancnt=array();
 mysql_query("update clan_info set allians='0' ",$connect);
@@ -54,6 +71,7 @@ while ($clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC)) {
  
 $clancnt=array_unique($clancnt);
 foreach ($clancnt as $idc) {
+	$noprov=0;
 	$total_poss = array();
 	$sql = mysql_query("select allians from clan_info where idc='$idc'",$connect);
 	$resultt = mysql_fetch_array($sql,MYSQL_ASSOC); 
@@ -76,12 +94,13 @@ foreach ($clancnt as $idc) {
 		echo "У клана ".$total_count." провинций".PHP_EOL;
 		if (($total_count==0) and ($resultt['allians']==0)){
 			if ($resultt['allians']<>NULL){
-				echo "чистка данных...".PHP_EOL;
-				mysql_query("delete from btl where idc='$idc'",$connect);
-				mysql_query("delete from possession where idc='$idc'",$connect);
-				mysql_query("delete from wm_event where idc='$idc'",$connect);
-				mysql_query("update clan_info set actdate=0 where idc='$idc'",$connect);
-				continue;
+				echo "Клан потерял все провинции...".PHP_EOL;
+				$noprov=1;
+				// mysql_query("delete from btl where idc='$idc'",$connect);
+				// mysql_query("delete from possession where idc='$idc'",$connect);
+				// mysql_query("delete from wm_event where idc='$idc'",$connect);
+				// mysql_query("update clan_info set actdate=0 where idc='$idc'",$connect);
+				// continue;
 			}	
 		}
 		$total_poss_old = array();
@@ -213,10 +232,20 @@ foreach ($clancnt as $idc) {
 	}
 	// обрабатываем список боёв
 	if ($databtl["result"]=="success"){
+		echo "Всего боёв ".$databtl["request_data"]["total_count"].PHP_EOL;
 		 $sql12 = "delete from `btl` where idc='$idc'"; 
 		 $qq2 = mysql_query($sql12,$connect);
 		 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."";
-		
+		if (($noprov==1) and ($databtl["request_data"]["total_count"]==0)) {
+			echo "нет пров, нет боёв, нет мультиков".PHP_EOL;
+			mysql_query("delete from btl where idc='$idc'",$connect);
+			mysql_query("delete from possession where idc='$idc'",$connect);
+			mysql_query("delete from wm_event where idc='$idc'",$connect);
+			mysql_query("delete from event_clan where idc='$idc'",$connect);			
+			mysql_query("update clan_info set actdate=0 where idc='$idc'",$connect);
+			mysql_query("update clan set target=1 where idc='$idc'",$connect);
+			continue;
+		}
 		foreach($databtl["request_data"]["items"] as $item) {
 			$provinces_name=$item["provinces"][0]["name"];
 			$provinces_id=$id=$item["provinces"][0]["id"];
@@ -355,18 +384,16 @@ foreach ($clancnt as $idc) {
 	}else{
 		die (PHP_EOL."Не удалось загрузить список боёв из данных о клане");
 	}
-	
-		$lost = array_diff($total_poss_old,$total_poss);
-		
-		foreach ($lost as $lost_prov) {
-			$qidc = mysql_query("select idc from possession where idpr='$lost_prov'");
-			$res = mysql_fetch_array($qidc,MYSQL_ASSOC);
-			$idc_lost = $res["idc"];
-			mysql_query("insert into wm_event (idpr, type, time, idc) values ('$lost_prov', '0', '$t', '$idc_lost')",$connect);
-			mysql_query("delete from possession where idpr='$lost_prov'",$connect);
-		}
-		unset($total_poss);
-		unset($total_poss_old);
+	$lost = array_diff($total_poss_old,$total_poss);
+	foreach ($lost as $lost_prov) {
+		$qidc = mysql_query("select idc from possession where idpr='$lost_prov'");
+		$res = mysql_fetch_array($qidc,MYSQL_ASSOC);
+		$idc_lost = $res["idc"];
+		mysql_query("insert into wm_event (idpr, type, time, idc) values ('$lost_prov', '0', '$t', '$idc_lost')",$connect);
+		mysql_query("delete from possession where idpr='$lost_prov'",$connect);
+	}
+	unset($total_poss);
+	unset($total_poss_old);
 	
 }
 mysql_query("update tech set lasthourwm='$gkturn'",$connect);

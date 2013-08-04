@@ -115,11 +115,13 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 			// $SQL2 = "select idc,tag, color, name from clan_info where idc='$clansa'";
 			// $claneresult = mysql_query( $SQL2,$connect );
 			// $rowclan=mysql_fetch_array($claneresult,MYSQL_ASSOC);
-			$SQL2 = "select idc,tag, color, name, allians, actdate,skill,rate from clan_info where idc='$clansa'";
+			$SQL2 = "select idc,tag, color, name, allians, actdate,skill,rate,smallimg from clan_info where idc='$clansa'";
 			$claneresult = mysql_query( $SQL2,$connect );
+			
 			$rowclan=mysql_fetch_array($claneresult,MYSQL_ASSOC);
 			//"<span style='color: blue;'><b>"; $sp6="</b></span> http://5.19.254.43/stat/clanstat.php?idc=65317#tab-6"
 			$clanname=$clann=$rowclan['name'];
+			$simg=$rowclan['smallimg'];
 			$actclane=$rowclan['actdate'];
 			$t=time()-700000;
 			$skillb=$rowclan['skill'];
@@ -136,7 +138,7 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 			}}
 			//"<span style='color: blue;'><b>"; $sp6="</b></span> "
 			
-			$clane=$clane."<span style='background-color:". $rowclan['color'].";'>"."    "."</span> "."[".$rowclan['tag']."]".$stra."<b> ".$clann."</b><br>";
+			$clane=$clane.'<span style="background-color:'. $rowclan['color'].';">'.'    '.'</span> '.'<img src="'.$simg.'" style="width: 20px; height:20px;" align="absmiddle"/>'.'['.$rowclan['tag'].']'.$stra.'<b> '.$clann.'</b><br>';
 		if ($row100<>NULL){
 			$SQL2 = "select type from province where id='$provid'";
 			$result22 = mysql_query( $SQL2,$connect );
