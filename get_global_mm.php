@@ -412,7 +412,7 @@ foreach ($ida as $id) {
 									}
 									if ($level==9){$type=2;}
 									$idt=$qqtt['id_t'];
-									if ($cntT>0){
+									if (($cntT>0)and ($newtankist!=1)){
 										$sqlt = "INSERT INTO event_tank (idp,type, idc, idt,  date, time)";
 										$sqlt.= " VALUES ('$id','$type', '$idc','$idt',  '$date', '$time')";
 										$qt = mysql_query($sqlt, $connect);

@@ -92,7 +92,7 @@ $(function() {
 		postData: {'filterBy':null},
 		colNames:['Id','Дата','Тип','Ур.','Сообщение'],
 		colModel :[
-			{name:'id_et', index:'id_et', width:-2, align:"center",sortable:false},
+			{name:'id_et', index:'id_et', width:-2, align:"center",hidden:true,sortable:false},
 			{name:'date', index:'date', width:60, align:"center",sortable:false},
 			{name:'classt', index:'classt', width:20, align:"center",sortable:false},
 			{name:'levelt', index:'levelt', width:20, align:"center",sortable:false},
@@ -149,7 +149,6 @@ $(function() {
 	var tall = $("#all").jqGrid({
 		sortable: true,
 		altRows: true,
-		rowNum:200,
 		url:'ui_main_json.php?sidx=2&sord=asc&idc='+idc,
 		datatype: 'json',
 		mtype: "POST",
@@ -179,19 +178,15 @@ $(function() {
 			
 			{name:'damage_dealt', index:'damage_dealt', width:30, align:"center"}
                 ],
-		pager: '#allpager',
-		rowTotal: 100,
-		rowList:[100],
+		rowNum:100,
+		scroll: false,
 		sortname: 'name',
 		viewrecords: true,
-		//loadonce: true,
 		sortorder: 'desc',
 		width: 1250,
-		height: 450,
-		scroll:true,
+		height: 'auto',
 		caption: 'Общий обзор клана',
-		rownumbers: false,
-		rownumWidth: 20,
+		
 		
 		onSortCol: function(name,index,sortorder)
 		{	$("#all").jqGrid('setGridParam',{url:"ui_main_json.php?idc="+idc+"&sidx="+(index+1)+"&sord="+sortorder}).trigger("reloadGrid");
@@ -219,18 +214,13 @@ $(function() {
 			{name:'mem_since', index:'mem_since', width:24, align:"center"},
 			{name:'off', index:'off', width:24, align:"center"}
 			],
-		pager: '#playerspager',
-		rowTotal: 100,
-		rowList:[100],
 		sortname: 'name',
 		viewrecords: true,
 		sortorder: 'desc',
 		width: 323,
-		height: 750,
-		scroll: true,
+		height: 'auto',
+		scroll: false,
 		caption: 'Бойцы клана',
-		rownumbers: false,
-		rownumWidth: 20,
 		onSelectRow: stickTogether,
 		onSortCol: function(name,index,sortorder)
 		{	
@@ -312,7 +302,7 @@ $(function() {
 		postData: {'filterBy':null},
 		colNames:['Id','Дата','Тип','Ур.','Сообщение'],
 		colModel :[
-			{name:'id_et', index:'id_et', width:-1, align:"center",sortable:false},
+			{name:'id_et', index:'id_et', width:-1, align:"center",hidden:true,sortable:false},
 			{name:'date', index:'date', width:50, align:"center",sortable:false},
 			{name:'classt', index:'classt', width:20, align:"center",sortable:false},
 			{name:'levelt', index:'levelt', width:20, align:"center",sortable:false},
@@ -371,7 +361,6 @@ $(function() {
 		sortorder: 'desc',
 		width: 915,
 		height: "100%",
-		hiddengrid:true,
 		caption: 'Общая статистика по танкам',
 		rownumbers: false,
 		rownumWidth: 40,
@@ -452,7 +441,6 @@ $(function() {
 		sortorder: 'desc',
 		width: 450,
 		height: "100%",
-		hiddengrid:true,
 		caption: 'Статистика по типам танков',
 		rownumbers: false,
 		rownumWidth: 40,
@@ -520,7 +508,6 @@ $(function() {
 		sortorder: 'desc',
 		width: 450,
 		height: "100%",
-		hiddengrid:true,
 		caption: 'Статистика по танкам разных стран',
 		rownumbers: false,
 		rownumWidth: 40,
@@ -565,15 +552,14 @@ $(function() {
 		datatype: 'json',
 		mtype: "POST",
 		postData: {'filterBy':null},
-		hiddengrid:true,
 		colNames:['Танк', 'Боёв / Побед (Всего боёв)','%% (за период/ всего)','Дата','Время'],
 		colModel :[
 			//{name:'cls', index:'cls', width:-1, align:"center"},
-			{name:'localized_name', index:'localized_name', width:27, align:"center"},		
-			{name:'battle_count', index:'battle_count', width:37, align:"center"},
-			{name:'proc', index:'proc', width:27, align:"center"},
-			{name:'date', index:'date', width:20, align:"center"},
-			{name:'time', index:'time', width:30, align:"center"}			
+			{name:'localized_name', index:'localized_name', width:150, align:"center"},		
+			{name:'battle_count', index:'battle_count', width:300, align:"center"},
+			{name:'proc', index:'proc', width:300, align:"center"},
+			{name:'date', index:'date', width:300, align:"center"},
+			{name:'time', index:'time', width:600, align:"center"}			
 			],
 		pager: '#pl_summary_pager6',
 		rowNum: 2000,
@@ -581,12 +567,11 @@ $(function() {
 		sortname: 'date',
 		viewrecords: true,
 		sortorder: 'desc',
-		width: 915,
+		width: 1010,
+		shrinkToFit: true,
 		height: "100%",
 		hiddengrid:true,
 		caption: 'Развернутая статистика по боям за 30дней',
-		rownumbers: false,
-		rownumWidth: 40,
 		grouping: true,
 		groupingView : {
 			groupField : ['date'],
@@ -622,7 +607,6 @@ $(function() {
 		sortorder: 'desc',
 		width: 915,
 		height: "100%",
-		hiddengrid:true,
 		caption: 'Общая статистика по боям за 30дней',
 		rownumbers: false,
 		rownumWidth: 40,

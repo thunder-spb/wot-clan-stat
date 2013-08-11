@@ -1,4 +1,5 @@
-<?php
+﻿<?php 
+
 require_once('settings.kak');  
 
 if (array_key_exists("idc",$_GET)) {
@@ -44,7 +45,7 @@ html, body {
 }
 body {
 	background-image: url(bg-body.jpg);
-	background-repeat: no-repeat;
+	
 }
     </style>
 
@@ -174,25 +175,25 @@ body {
 	</div>
 	<div id="tab-3">		
 		<table id="techABS"></table>
-		<div id="techABSpager"></div>
+		<div id="techABSpager"></div>	
 		<br>
 		<table id="techCHM"></table>
-		<div id="techCHMpager"></div>
+		<div id="techCHMpager"></div>	
 		<br>
 		<table id="techHT"></table>
-		<div id="techHTpager"></div>
+		<div id="techHTpager"></div>	
 		<br>
 		<table id="techMT"></table>
-		<div id="techMTpager"></div>
+		<div id="techMTpager"></div>	
 		<br>
 		<table id="techLT"></table>
-		<div id="techLTpager"></div>
+		<div id="techLTpager"></div>	
 		<br>
 		<table id="techSAU"></table>
 		<div id="techSAUpager"></div>
 		<br>
 		<table id="techAT"></table>
-		<div id="techATpager"></div>
+		<div id="techATpager"></div>				
 	</div>
 	<div id="tab-6">
 		<table>
