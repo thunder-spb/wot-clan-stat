@@ -581,7 +581,7 @@ function get_page($url) {
 			//array('Accept-Language: ru-ru,ru'
 	curl_setopt ($ch, CURLOPT_HEADER, 0);
 	curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt ($ch, CURLOPT_TIMEOUT, 5);
+	curl_setopt ($ch, CURLOPT_TIMEOUT, 15);
 	curl_setopt ($ch, CURLOPT_URL, $url);
 	curl_setopt ($ch, CURLOPT_HTTPGET, true);
 	$data = curl_exec($ch);

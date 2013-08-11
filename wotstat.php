@@ -1,5 +1,4 @@
-﻿<?php 
-
+<?php
 require_once('settings.kak');  
 
 if (array_key_exists("idc",$_GET)) {
@@ -12,7 +11,7 @@ if (array_key_exists("idc",$_GET)) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>
 <?php  
 foreach ($clan_array as $clan_i) {
@@ -43,7 +42,11 @@ html, body {
 	padding: 0;
 	font-size: 80%;
 }
-</style>
+body {
+	background-image: url(bg-body.jpg);
+	background-repeat: no-repeat;
+}
+    </style>
 
 <script type="text/javascript">
 	var current_clan_id = <?php echo $idc ?>;
@@ -64,7 +67,7 @@ html, body {
 </script>
 </head>
 <body>
- <a href="https://github.com/thunder-spb/wot-clan-stat">Скачать статистику себе c github'a</a>
+
 <header>
 	<h1><?php 
 	if ($clanrow<>NULL){
@@ -96,7 +99,7 @@ html, body {
     </ul>
 </nav>
 
-<table><tr><td valign="top">
+<table align="center"><tr><td valign="top">
 <div class="tables">
 <div id="tabs">
 	<ul>
@@ -171,25 +174,25 @@ html, body {
 	</div>
 	<div id="tab-3">		
 		<table id="techABS"></table>
-		<div id="techABSpager"></div>	
+		<div id="techABSpager"></div>
 		<br>
 		<table id="techCHM"></table>
-		<div id="techCHMpager"></div>	
+		<div id="techCHMpager"></div>
 		<br>
 		<table id="techHT"></table>
-		<div id="techHTpager"></div>	
+		<div id="techHTpager"></div>
 		<br>
 		<table id="techMT"></table>
-		<div id="techMTpager"></div>	
+		<div id="techMTpager"></div>
 		<br>
 		<table id="techLT"></table>
-		<div id="techLTpager"></div>	
+		<div id="techLTpager"></div>
 		<br>
 		<table id="techSAU"></table>
 		<div id="techSAUpager"></div>
 		<br>
 		<table id="techAT"></table>
-		<div id="techATpager"></div>				
+		<div id="techATpager"></div>
 	</div>
 	<div id="tab-6">
 		<table>
@@ -235,5 +238,6 @@ html, body {
 </tr>
 
 </table>
+
 </body>
 </html>

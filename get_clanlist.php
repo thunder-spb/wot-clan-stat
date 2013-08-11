@@ -20,6 +20,7 @@ if ($actwmdate['lasthourwm']<>NULL){
 }
 $t = time()-700000;
 $clanlist = mysql_query("select idc from clan_info where actdate>'$t'",$connect);
+if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $clancnt=array();
 foreach ($clan_array as $clan_i) {
 		$idc=$clan_i["clan_id"];
@@ -30,6 +31,7 @@ while ($clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC)) {
  }
  if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $clancnt=array_unique($clancnt);
+
 $iv = mysql_query("select lastiv from tech",$connect);
 $ivdb=mysql_fetch_array($iv,MYSQL_ASSOC);
 $iv=$ivdb['lastiv'];
@@ -40,6 +42,7 @@ if ($iv<$t){
 	$dataiv1 = get_page($pageidc);
 	$dataiv = json_decode($dataiv1, true);
 }
+//print_r ($dataiv);
 $sql = "select `idc` from clan_info where 1";
 $q1 = mysql_query($sql, $connect);
 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
@@ -86,15 +89,16 @@ foreach ($clancnt as $idc) {
 	echo "<br>";
 	$pageidc = "community/clans/".$idc."/api/1.1/?source_token=WG-WoT_Assistant-test";		
 	$pageidc = $wot_host.'/'.$pageidc;
+	print_r($pageidc);
 	$date = date("Y-m-d",strtotime($hosttime));
 	$time = date("H:i:s",strtotime($hosttime));
 	//$date = date("Y-m-d");
 	//$time = date("H:i:s");
 
 	$data = get_page($pageidc);
+	print_r($data);
 	$data = json_decode($data, true);
-	
-	//print_r($dataiv);
+	print_r($data);
 	if ($data['status'] == 'ok') {
 		echo "успешно загрузили данные...<br>";
 		// тут добавить сбор инфы о клане //
@@ -156,7 +160,7 @@ function get_page($url) {
 		curl_setopt ($ch, CURLOPT_HEADER, 0);
                 //curl_setopt ($ch, CURLOPT_HTTPHEADER, array('Accept-Language: ru_ru,ru'));
 		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt ($ch, CURLOPT_TIMEOUT, 20);
+		curl_setopt ($ch, CURLOPT_TIMEOUT, 200);
 		curl_setopt ($ch, CURLOPT_URL, $url);
 		curl_setopt ($ch, CURLOPT_HTTPGET, true);
 		$data = curl_exec($ch);

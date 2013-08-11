@@ -403,7 +403,7 @@ function get_page($url) {
         curl_setopt($ch,CURLOPT_HTTPHEADER,array('Accept: application/json, text/javascript, text/html, */*',
 												'X-Requested-With: XMLHttpRequest'));
 		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt ($ch, CURLOPT_TIMEOUT, 10);
+		curl_setopt ($ch, CURLOPT_TIMEOUT, 40);
 		curl_setopt ($ch, CURLOPT_URL, $url);
 		curl_setopt ($ch, CURLOPT_HTTPGET, true);
 		$data = curl_exec($ch);
