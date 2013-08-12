@@ -110,6 +110,7 @@ CREATE TABLE IF NOT EXISTS `clan_info` (
   `position` int(11) NOT NULL,
   `igrokovkv` int(3) NOT NULL,
   `fishek` int(3) NOT NULL,
+  `smallimg` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id _cl`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=77 ;
 

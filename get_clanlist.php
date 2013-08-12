@@ -89,16 +89,13 @@ foreach ($clancnt as $idc) {
 	echo "<br>";
 	$pageidc = "community/clans/".$idc."/api/1.1/?source_token=WG-WoT_Assistant-test";		
 	$pageidc = $wot_host.'/'.$pageidc;
-	print_r($pageidc);
 	$date = date("Y-m-d",strtotime($hosttime));
 	$time = date("H:i:s",strtotime($hosttime));
 	//$date = date("Y-m-d");
 	//$time = date("H:i:s");
 
 	$data = get_page($pageidc);
-	print_r($data);
 	$data = json_decode($data, true);
-	print_r($data);
 	if ($data['status'] == 'ok') {
 		echo "успешно загрузили данные...<br>";
 		// тут добавить сбор инфы о клане //
