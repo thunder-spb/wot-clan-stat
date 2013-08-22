@@ -38,7 +38,7 @@ $(function() {
 		postData: {'filterBy':null},
 		colNames:['Id','Дата','Событие'],
 		colModel :[
-			{name:'id_ec', index:'id_ec', width:-2, align:"center",sortable:false},
+			{name:'id_ec', index:'id_ec', width:-2, align:"center",hidden:true,sortable:false},
 			{name:'date', index:'date', width:60, align:"center",sortable:false},
 			{name:'message', index:'message', width:240, align:"left",sortable:false},
 			],
@@ -62,7 +62,7 @@ $(function() {
 		postData: {'filterBy':null},
 		colNames:['Id','Дата','Сообщение'],
 		colModel :[
-			{name:'id_et', index:'id_et', width:-2, align:"center",sortable:false},
+			{name:'id_et', index:'id_et', width:-2, align:"center",hidden:true,sortable:false},
 			{name:'date', index:'date', width:60, align:"center",sortable:false},
 			{name:'message', index:'message', width:190, align:"left",sortable:false},
 			],
@@ -123,7 +123,7 @@ $(function() {
 		postData: {'filterBy':null},
 		colNames:['Id','Дата','Сообщение'],
 		colModel :[
-			{name:'id_e', index:'id_e', width:-2, align:"center",sortable:false},
+			{name:'id_e', index:'id_e', width:-2, align:"center",hidden:true,sortable:false},
 			{name:'date', index:'date', width:60, align:"center",sortable:false},
 			{name:'message', index:'message', width:355, align:"left",sortable:false},
 			],
@@ -279,7 +279,7 @@ $(function() {
 		postData: {'filterBy':null},
 		colNames:['Id','Дата','Событие'],
 		colModel :[
-			{name:'id_ec', index:'id_ec', width:30, align:"center",sortable:false},
+			{name:'id_ec', index:'id_ec', width:30, align:"center", hidden:true, sortable:false},
 			{name:'date', index:'date', width:70, align:"center",sortable:false},
 			{name:'message', index:'message', width:305, align:"left",sortable:false},
 			],

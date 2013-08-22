@@ -35,7 +35,7 @@ $(function() {
 		postData: {'filterBy':null},
 		colNames:['Id','Дата','Событие'],
 		colModel :[
-			{name:'id_ec', index:'id_ec', width:-2, align:"center",sortable:false},
+			{name:'id_ec', index:'id_ec', width:-2, align:"center",hidden:true,sortable:false},
 			{name:'date', index:'date', width:60, align:"center",sortable:false},
 			{name:'message', index:'message', width:240, align:"left",sortable:false},
 			],
@@ -63,7 +63,7 @@ $(function() {
 		postData: {'filterBy':null},
 		colNames:['Id','Дата','Тип','Ур.','Сообщение'],
 		colModel :[
-			{name:'id_et', index:'id_et', width:-2, align:"center",sortable:false},
+			{name:'id_et', index:'id_et', width:-2, align:"center",hidden:true,sortable:false},
 			{name:'date', index:'date', width:60, align:"center",sortable:false},
 			{name:'classt', index:'classt', width:20, align:"center",sortable:false},
 			{name:'levelt', index:'levelt', width:20, align:"center",sortable:false},
@@ -94,7 +94,7 @@ $(function() {
 		postData: {'filterBy':null},
 		colNames:['Id','Дата','Сообщение'],
 		colModel :[
-			{name:'id_e', index:'id_e', width:-2, align:"center",sortable:false},
+			{name:'id_e', index:'id_e', width:-2, align:"center",hidden:true,sortable:false},
 			{name:'date', index:'date', width:60, align:"center",sortable:false},
 			{name:'message', index:'message', width:355, align:"left",sortable:false},
 			],
@@ -151,19 +151,13 @@ $(function() {
 			{name:'damage_dealt', index:'damage_dealt', width:30, align:"center"}
                 ],
 		pager: '#allpager',
-		rowTotal: 100,
-		rowList:[100],
 		sortname: 'name',
 		viewrecords: true,
 		//loadonce: true,
 		sortorder: 'desc',
 		width: 1250,
-		height: 450,
-		scroll:true,
+		height: '100%',
 		caption: 'Общий обзор клана',
-		rownumbers: false,
-		rownumWidth: 20,
-		
 		onSortCol: function(name,index,sortorder)
 		{	$("#all").jqGrid('setGridParam',{url:"ui_main_json.php?idc="+idc+"&sidx="+(index+1)+"&sord="+sortorder}).trigger("reloadGrid");
 			var col=$('#all').jqGrid('getGridParam','colNames');

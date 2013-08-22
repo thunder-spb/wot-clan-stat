@@ -32,7 +32,7 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 		$SQL2 = "select * from possession where idpr='$idpr'and idc='$idc'";
 		$result22 = mysql_query( $SQL2,$connect );
 		if (mysql_fetch_array($result22,MYSQL_ASSOC)){
-			$provm=$provm." (удерживаем)";
+			$provm=$provm." (удержание)";
 		}
 	if ($row['type']=="for_province"){
 		$provm="За провинцию";

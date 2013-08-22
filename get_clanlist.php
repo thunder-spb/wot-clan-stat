@@ -103,6 +103,12 @@ foreach ($clancnt as $idc) {
 		$sql = "UPDATE `clan_info` SET `smallimg`='$smallimg' WHERE `idc`='$idc'";
 		$q = mysql_query($sql, $connect);
 		if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+		$sql = "select count(*) as cntpl from clan where idc='$idc'";
+		$q = mysql_query($sql, $connect);
+		if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+		$cntpl = mysql_fetch_array($q);
+		$cntpl=$cntpl['cntpl'];
+		echo "Бойцов в клане - ".$cntpl.PHP_EOL."<br>";
 		for($i=0;$i<count($data['data']['members']);$i++){
 			//проверка на "нового игрока в клане"
 			$t=date("Y-m-d",($data['data']['members'][$i]['created_at']));
@@ -130,7 +136,7 @@ foreach ($clancnt as $idc) {
 					if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 			
 				} else {
-					if ($allians==1){
+					if ($cntpl<>0) {
 						$message="Приветствуем ".$data['data']['members'][$i]['account_name'].' в '.$clantag;
 						$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
 						$sql.= " VALUES (2,'$idp', '$idc', '$message', NULL, '$date', '$time')";

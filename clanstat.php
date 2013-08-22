@@ -39,6 +39,7 @@ html, body {
 	padding: 0;
 	font-size: 80%;
 }
+
 </style>
 
 <script type="text/javascript">
@@ -60,7 +61,6 @@ html, body {
 </script>
 </head>
 <body>
- <a href="https://github.com/thunder-spb/wot-clan-stat">Скачать статистику себе c github'a</a>
 <header>
 	<h1><?php  
 		echo '<img src="'.$clanrow['smallimg'].'" style="width: 24px; height:24px;" align="absmiddle"/>';
@@ -74,7 +74,7 @@ html, body {
 //echo $clan_i['tag'];
 ?></h1>
 </header>
-<table><tr><td valign="top">
+<table align="center"><tr><td valign="top">
 <div class="tables">
 <div id="tabs">
 	<ul>

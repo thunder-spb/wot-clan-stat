@@ -12,7 +12,7 @@ if($_REQUEST['filterBy'] != 'null'){
 
 $data = array();
 $date2=date("Y-m-d",strtotime(' -30 day '.$hosttime));
-$sql="SELECT rating,date,time FROM `player` where idp='$idac' and date>='$date2' order by date,time";
+$sql="SELECT rating,wn6,date,time FROM `player` where idp='$idac' and date>='$date2' order by date,time";
 $result = mysql_query( $sql,$connect ) or die("<br>Couldn t execute query.".mysql_error()); 
 	while($row = mysql_fetch_assoc($result)) {
 		//if($row[reason]!=NULL) $message=$row[message].", Ïðè÷èíà: ".$row[reason];

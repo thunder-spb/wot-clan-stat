@@ -44,8 +44,7 @@ html, body {
 	font-size: 80%;
 }
 body {
-	background-image: url(bg-body.jpg);
-	
+
 }
     </style>
 

@@ -117,28 +117,6 @@ INSERT INTO `cat_achiev` (`id_ac`, `medal`, `medal_ru`, `img`, `type`) VALUES
 (78, 'sturdy', 'Спартанец', 'Sparta', 6);
 
 -- --------------------------------------------------------
-
---
--- Table structure for table `tech`
---
-
-DROP TABLE IF EXISTS `tech`;
-CREATE TABLE IF NOT EXISTS `tech` (
-  `current` int(11) NOT NULL DEFAULT '0',
-  `lasthourwm` int(11) NOT NULL,
-  `lastiv` int(11) NOT NULL,
-  PRIMARY KEY (`current`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Dumping data for table `tech`
---
-
-INSERT INTO `tech` (`current`, `lasthourwm`, `lastiv`) VALUES
-(1360, 33, 0);
-
--- --------------------------------------------------------
-
 --
 -- Table structure for table `wm_regions`
 --

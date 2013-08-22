@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.8
+-- version 4.0.5
 -- http://www.phpmyadmin.net
 --
 -- Хост: localhost
--- Время создания: Июн 15 2013 г., 02:55
--- Версия сервера: 5.1.67-log
--- Версия PHP: 5.3.23-pl0-gentoo
+-- Время создания: Авг 23 2013 г., 00:31
+-- Версия сервера: 5.1.70-log
+-- Версия PHP: 5.3.27-pl0-gentoo
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -49,24 +49,22 @@ CREATE TABLE IF NOT EXISTS `btl` (
   `started` tinyint(1) NOT NULL,
   `arena` varchar(20) NOT NULL,
   PRIMARY KEY (`id_b`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='текущие битвы клана' AUTO_INCREMENT=29758 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='текущие битвы клана' AUTO_INCREMENT=192084 ;
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `cat_tanks`
+-- Структура таблицы `cat_achiev`
 --
 
-CREATE TABLE IF NOT EXISTS `cat_tanks` (
-  `id_t` int(11) NOT NULL AUTO_INCREMENT,
-  `localized_name` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
-  `image_url` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
-  `name` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
-  `level` int(11) NOT NULL,
-  `nation` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `class` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id_t`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=285 ;
+CREATE TABLE IF NOT EXISTS `cat_achiev` (
+  `id_ac` int(11) NOT NULL AUTO_INCREMENT,
+  `medal` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `medal_ru` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `img` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  `type` int(11) NOT NULL,
+  PRIMARY KEY (`id_ac`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=79 ;
 
 -- --------------------------------------------------------
 
@@ -87,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `clan` (
   KEY `idc` (`idc`),
   KEY `role_localised` (`role_localised`),
   KEY `date` (`date`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3571 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=24530 ;
 
 -- --------------------------------------------------------
 
@@ -112,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `clan_info` (
   `fishek` int(3) NOT NULL,
   `smallimg` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id _cl`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=77 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=382 ;
 
 -- --------------------------------------------------------
 
@@ -132,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `event_clan` (
   PRIMARY KEY (`id_ec`),
   KEY `idc` (`idc`),
   KEY `date` (`date`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=30880 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=94128 ;
 
 -- --------------------------------------------------------
 
@@ -149,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `event_tank` (
   `date` date NOT NULL,
   `time` time NOT NULL,
   PRIMARY KEY (`id_et`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1865 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=27485 ;
 
 -- --------------------------------------------------------
 
@@ -189,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `player` (
   KEY `idc` (`idc`),
   KEY `idp` (`idp`),
   KEY `name_2` (`name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=16757 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=103519 ;
 
 -- --------------------------------------------------------
 
@@ -203,7 +201,7 @@ CREATE TABLE IF NOT EXISTS `player_ach` (
   `ida` int(11) NOT NULL,
   `amount` int(11) NOT NULL,
   PRIMARY KEY (`id_pa`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=129131 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=152293 ;
 
 -- --------------------------------------------------------
 
@@ -231,7 +229,7 @@ CREATE TABLE IF NOT EXISTS `player_btl` (
   KEY `idt` (`idt`),
   KEY `idtidp` (`idt`,`idp`),
   KEY `idpidt` (`idp`,`idt`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=449601 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2540172 ;
 
 -- --------------------------------------------------------
 
@@ -248,7 +246,7 @@ CREATE TABLE IF NOT EXISTS `possession` (
   `capital` tinyint(1) NOT NULL,
   `mutiny` tinyint(1) NOT NULL,
   PRIMARY KEY (`id_pos`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=242 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1043 ;
 
 -- --------------------------------------------------------
 
@@ -270,7 +268,22 @@ CREATE TABLE IF NOT EXISTS `province` (
   `region` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
   `neighbours` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id_pr`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=12583 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=294354 ;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `tech_log`
+--
+
+CREATE TABLE IF NOT EXISTS `tech_log` (
+  `date` int(11) NOT NULL,
+  `players` int(11) NOT NULL,
+  `all` int(1) NOT NULL,
+  `cntplayers` int(11) NOT NULL,
+  `timer` int(11) NOT NULL,
+  PRIMARY KEY (`date`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -285,7 +298,7 @@ CREATE TABLE IF NOT EXISTS `wm_event` (
   `time` int(11) NOT NULL,
   `idc` int(11) NOT NULL,
   PRIMARY KEY (`id_e`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=705 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2605 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

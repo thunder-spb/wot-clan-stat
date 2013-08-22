@@ -1,18 +1,26 @@
 <?php
 // выборка данных игрока. анализ, внесение изменений, запись в лог-таблицу
 include('settings.kak');
+$starttime=time();
 $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Ошибка подключения к БД");
 $setnames = mysql_query( 'SET NAMES utf8' );
 header('Content-Type: text/html; charset=UTF-8'); 
 //$clan_array[] = array("clan_id" => "12638", "clan_tag" => "[SMPLC]",  "clan_name" => "Sample clan");
-
+$allpl=1;
 $count1=0; //счётчик от дурака
+//$cntmaxpl=10;
 $sql = "select * from tech";
 $q = mysql_query($sql, $connect);
 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $qqt = mysql_fetch_array($q);
 $start=$qqt['current'];
+$cntmaxpl=$qqt['cntmaxpl'];
+$max_player_request=$qqt['maxplreq'];
+$req_freq=$qqt['reqtarget'];
+if ($cntmaxpl<1){
+	$cntmaxpl=1;
+}
 $sql = "select count(*) as cntpl from clan";
 $q2 = mysql_query($sql,$connect);
 if (mysql_errno() <> 0) echo "MySQL Error 1 ".mysql_errno().": ".mysql_error()."\n";
@@ -39,7 +47,8 @@ $q2 = mysql_query($sql,$connect);
 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $row = mysql_fetch_array($q2);
 $cntT = $row['cntt'];
-$t = time()-700000;
+$t = time()-604800;
+
 $clanlist = mysql_query("select idc from clan_info where actdate>'$t'",$connect);
 $clancnt=array();
 foreach ($clan_array as $clan_i) {
@@ -60,9 +69,11 @@ foreach ($ida as $id) {
 		$freq=$qqt['freq'];
 		$target=$qqt['target'];
 		if ($force==1) $target=$freq;
-		$force=0;
 		if ($freq >= $target) {
-			if ($count1>=10) break;//не стоит злоупотреблять доверием
+			if ($count1>=$cntmaxpl){
+				$allpl=0;
+				break;//не стоит злоупотреблять доверием
+			}
 			$count1=$count1+1;
 			$freq=0;
 			$inclan=0;//проверка на изменения списка альянса
@@ -497,7 +508,7 @@ foreach ($ida as $id) {
 							if ($battles30t<>0){
 								$level_avg /= $battles30t;	
 							}
-							echo "<br>\nbattles/month: $battles30t \navg.level/month: $level_avg ";
+							echo "<br>\nbattles/month: $battles30t \navg.level/month: $level_avg ".PHP_EOL;
 							$sqldelstart="SELECT max(date) as maxidpb FROM `player` where idp=$id and date<'$date2'";
 							$delstart1 = mysql_query($sqldelstart, $connect);
 							if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
@@ -554,7 +565,7 @@ foreach ($ida as $id) {
 								   //+(6-min($level_avg,6))*-60);
 							echo "<br> Рейтинг wn730 ".$wn730;
 							echo "<br> % побед ".$win30;
-							echo "<br> разница побед".$winsdelta;
+							echo "<br> разница побед".$winsdelta.PHP_EOL;
 							// $sql="UPDATE `player` SET `in_clan`='1', `name`='$pname', `rating30`='$rating30',`wn630`='$wn630', `win30`= '$win30' WHERE `idp`='$id'";
 						 // mysql_query($sql, $connect);
 						 // if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
@@ -574,8 +585,70 @@ foreach ($ida as $id) {
 	$sql="UPDATE `clan` SET `freq`='$freq',`target`='$target' WHERE `idp`='$id'";
 	mysql_query($sql, $connect);
 	if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
+	
 }
-
+//далее набор непонятных вычислений.
+//нужных только для саморегуляции нагрузки 
+if ($force<>1){
+	$sql = "select count(*) as cntlog, min(`date`) as mindate from tech_log where date>'$t'";
+	$q = mysql_query($sql,$connect);
+	if (mysql_errno() <> 0) echo "MySQL Error 1 ".mysql_errno().": ".mysql_error()."\n";
+	$log = mysql_fetch_array($q);
+	$cntlog = $log['cntlog'];
+	$sql = "select min(`date`) as mindate,max(`date`) as maxdate ,avg(`players`) as avgplayers,sum(`players`) as sumpl, avg(`cntplayers`) as avgcntplayers,sum(`all`) as sumall,avg(`timer`) as atimer from tech_log where date>'$t'";
+	$q = mysql_query($sql,$connect);
+	if (mysql_errno() <> 0) echo "MySQL Error 1 ".mysql_errno().": ".mysql_error()."\n";
+	$log = mysql_fetch_array($q);
+	print_r($log);
+	$mindate = $log['mindate'];
+	$maxdate=$log['maxdate'];
+	$sumall=$log['sumall'];
+	$atimer=$log['atimer'];
+	$avgcntplayers=$log['avgcntplayers'];
+	$diffdate=$maxdate-$mindate;
+	$a=round($sumall/$cntlog,2);
+	echo "коэфициент наполнения - ".$a.PHP_EOL."с последнего сброса прошло - ".$diffdate." секунд".PHP_EOL;
+	if (($diffdate>2000)or(($cntlog>10)and(($atimer>25)or($a<0.7)))){
+		
+		if ($a<0.9){
+			echo "Слишком мало".PHP_EOL;
+				if ($atimer<25){
+					$cntmaxpl+=1;
+					echo "Увеличиваем всякие-разные коэфициенты -".$cntmaxpl.PHP_EOL;
+				}else{
+					$max_player_request-=1;
+					echo "Уменьшаем количество запросов- ".$max_player_request.PHP_EOL;
+					
+				}
+		}else{
+			echo "слишком много".PHP_EOL;
+			if ($atimer<25){
+				$max_player_request+=1;
+				echo "Увеличиваем количество запросов - ".$max_player_request.PHP_EOL;
+			}else{
+				$cntmaxpl-=1;
+				echo "Уменьшаем всякие-разные коэфициенты -".$cntmaxpl.PHP_EOL;
+			}
+		}
+		//24/((ОбщееЧислоБойцов/max_player_request)/КоличествоЗапросовВЧасПоКрону)
+		$req_freq=round(((24*(3600/($diffdate/$cntlog)))/($avgcntplayers/$max_player_request)),0);
+		$sql="TRUNCATE TABLE `tech_log`";
+		mysql_query($sql, $connect);
+		if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
+	}
+	$sql="UPDATE `tech` SET `cntmaxpl`='$cntmaxpl',`maxplreq`='$max_player_request',`reqtarget`='$req_freq'";
+	mysql_query($sql, $connect);
+	if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
+	echo "за последнее время было сделано ".$cntlog." запусков сборщика ".$mindate.PHP_EOL;
+	$req_freq=round(((24*(3600/($diffdate/$cntlog)))/($avgcntplayers/$max_player_request)),0);
+	echo $req_freq." - рекомендуемая переменная REQ_FREQ".PHP_EOL;
+	$endtime=time()-$starttime;
+	$sql = "INSERT INTO `tech_log` (`date`, `players`, `all`, `cntplayers`, `timer`)";
+	$sql.= " VALUES ('$starttime','$count1', '$allpl', '$cntplayer', '$endtime')";	
+	$q = mysql_query($sql, $connect);
+	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+	echo "Обработано всего: ".$count1." бойцов\n<br>";
+}
 function get_page($url) {
 	$ch = curl_init();
 			//array('Accept-Language: ru-ru,ru'

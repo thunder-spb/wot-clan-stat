@@ -251,9 +251,12 @@ foreach ($clancnt as $idc) {
 			$provinces_id=$id=$item["provinces"][0]["id"];
 			$btlarena=$item["arenas"][0];
 			$started=$item["started"];
+			echo "started ".$started.PHP_EOL;
 			$type=$item["type"];
 			$prov = mysql_query("select id_pr,periphery, region,arena_id,type  from province where id='$id'",$connect);
 			$result = mysql_fetch_array($prov,MYSQL_ASSOC);
+			print_r($result);
+			echo PHP_EOL;
 			$succes=0;
 			//if (($result==NULL) or($result['periphery']==NULL) or($result['region']==NULL)or ($result['arena_id']==0) or ($result['type']==NULL)) {
 			if ($result['region']==NULL){
@@ -288,8 +291,8 @@ foreach ($clancnt as $idc) {
 					$status=$provdata['status'];
 					$combats=$provdata['combats'];
 					mysql_query("delete from province where id='$id'",$connect);
-					//echo "----Выборка боёв из данных по провинции----".$provinces_name.PHP_EOL;
-					//print_r($combats);
+					// echo "----Выборка боёв из данных по провинции----".$provinces_name.PHP_EOL;
+					// print_r($combats);
 					$per=$provdata['periphery'];
 					$landing_url=$provdata['landing_url'];
 					$landing_final_battle_time=0;
@@ -308,10 +311,10 @@ foreach ($clancnt as $idc) {
 					$sql = "insert into province ( id, name,neighbours, type,prime_time, revenue,  periphery,arena_id,landing_url,landing_final_battle_time,region)";
 					$sql .= " values ('$id', '$provinces_name','$neighbours', '$status','$prime', '$revenue','$per', '$arena_id','$landing_url','$landing_final_battle_time','$region')";
 					mysql_query($sql, $connect);
-					$sql12 = "delete from `btl` where id_prov='$id'"; 
-					$qq2 = mysql_query($sql12,$connect);
-					if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."";
 					if ($status<>"start"){
+						$sql12 = "delete from `btl` where id_prov='$id'"; 
+						$qq2 = mysql_query($sql12,$connect);
+						if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."";
 						foreach ($combats as $cmb){
 							$ncombat=key($combats);
 							$combatants=$combats["$ncombat"]['combatants'];
@@ -369,6 +372,7 @@ foreach ($clancnt as $idc) {
 						mysql_query($sql, $connect);
 						if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."";
 						$nlanding=$nlanding+1;
+						echo "LANDING".PHP_EOL;
 					}
 					$succes=1;
 					break;
