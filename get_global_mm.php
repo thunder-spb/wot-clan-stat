@@ -608,7 +608,7 @@ if ($force<>1){
 	$diffdate=$maxdate-$mindate;
 	$a=round($sumall/$cntlog,2);
 	echo "коэфициент наполнения - ".$a.PHP_EOL."с последнего сброса прошло - ".$diffdate." секунд".PHP_EOL;
-	if (($diffdate>2000)or(($cntlog>10)and(($atimer>25)or($a<0.7)))){
+	if (($diffdate>87000)or(($cntlog>10)and(($atimer>25)or($a<0.7)))){
 		
 		if ($a<0.9){
 			echo "Слишком мало".PHP_EOL;
