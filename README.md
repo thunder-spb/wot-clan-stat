@@ -28,12 +28,9 @@ $clan_array = array (
 );
 $hosttime = " +0 hour";		// timezone shift
 $timetolife = 30;               // time to life stat for each tank
-$max_player_request=10; // количество одновременных запросов к серверам КВГ
 ```
 
 2. After that you need to create mySQL tables. Tables structures located under *mysql* folder.
-	_main_db.sql_ - contains all tables which will be used for work
-	_cat_achiev.sql_ - contains all achievements in game
 	
 3. Setting up cron. It's easy. We need to run 3 script to update our database.
 
