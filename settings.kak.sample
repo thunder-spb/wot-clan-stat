@@ -1,4 +1,4 @@
-      ,.,,.<?php
+<?php
 $host = "localhost";		// your mySQL server host
 $account = "username";		// your mySQL username
 $password = "passwd";		// your mySQL password
