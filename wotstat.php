@@ -125,7 +125,27 @@ body {
 				 <div id="n3pager"></div>
                  </td>
                </table>
-		<table id="all"></table>
+			   <div id="stat">
+				   <ul>
+						<li><a href="#all1">Всё</a></li>
+						<li><a href="#clan1">Клановая</a></li>
+						<li><a href="#rota1">Ротная</a></li>
+						<li><a href="#random1">Рандом(-клан и роты)</a></li>
+						
+					</ul>
+					<div id="all1">
+						<table id="all"></table>
+					</div>	
+					<div id="clan1">
+						<table id="clan"></table>
+					</div>	
+					<div id="rota1">
+						<table id="rota"></table>
+					</div>	
+					<div id="random1">
+						<table id="random"></table>
+					</div>	
+				</div>
 		
 	</div>
 	<div id="tab-2">

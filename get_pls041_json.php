@@ -43,7 +43,7 @@ if($start <0) $start = 0;
 //$sql="SELECT sum(battle_count) as b_c,sum(win_count) as w_c,class as cls from `player_btl` c, `cat_tanks` a where c.idp='$idac' and c.idt=a.id_t and id_pb in (select max(id_pb) from `player_btl` where idp='$idac' and idt=c.idt) group by class order by b_c desc";
 
 //$sql="SELECT sum(battle_count) as b_c,sum(win_count) as w_c,class as cls from `player_btl` c, `cat_tanks` a where c.idp='$idac' and c.idt=a.id_t and id_pb in (select max(id_pb) from `player_btl` where idp='$idac' and idt=c.idt) group by class order by b_c desc";
-$sql="SELECT sum(bc) AS b_c,sum(wc) AS w_c, class as cls FROM (SELECT max(battle_count) AS bc, max(win_count) AS wc, class FROM `player_btl` pl,`cat_tanks` ct WHERE idp='$idac' AND  pl.idt=ct.id_t GROUP BY idt) ts GROUP BY class ORDER BY b_c DESC";
+$sql="SELECT sum(bc) AS b_c,sum(wc) AS w_c, class as cls FROM (SELECT max(battle_count) AS bc, max(win_count) AS wc, class FROM `player_btl` pl,`cat_tanks` ct WHERE idp='$idac' AND  pl.idt=ct.wotidt GROUP BY idt) ts GROUP BY class ORDER BY b_c DESC";
 
 //SELECT * from `player_btl` c, `cat_tanks` a where c.idp='259339' and c.idt=a.id_t and id_pb in (select max(id_pb) from `player_btl` where idp='259339' and idt=c.idt)
 //SELECT * from `player_btl` c, `cat_tanks` a where c.idp='4479693' and c.idt=a.id_t and id_pb in (select max(id_pb) from `player_btl` where idp='4479693' and idt=c.idt) //список последней техники

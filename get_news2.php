@@ -29,10 +29,10 @@ for($i=0;$i<$count;$i++) {
 	$row = mysql_fetch_array($result,MYSQL_ASSOC);
 	 $a=$row['type'];
 	 $amessage=$row['message'];
-//	 $sp5="";$sp6="";
+	 $sp5="<b>";$sp6="</b>";
 	 //if($a=1) {$sp5="<span style='color: red;'><b>"; $sp6="</b></span>";}
 	 //if($a=2) {$sp5="<span style='color: green;'><b>"; $sp6="</b></span>";}
-	//$amessage=$sp5.$amessage.$sp6;
+	$amessage=$sp5.$amessage.$sp6;
 	// $procmessage=$sp1.$proc.$sp2;
 	//$s=$i+1;
 	//$responce->rows[$i]['id_ec']=$s;

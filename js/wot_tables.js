@@ -26,6 +26,9 @@ $(function() {
                 }
             }
         });
+	$( "#stat" ).tabs({
+        
+        });	
 	$('#link').change(stickTogether);
 //--------Новости
 	var tnews1 = $("#news1").jqGrid({
@@ -106,7 +109,7 @@ $(function() {
 		width: 410,
 		height: 200,
 		scroll:true,
-		caption: 'Пополнение ангара',
+		caption: 'Танки',
 		rownumbers: false,
 		rownumWidth: 100,
 		pager: '#n3pager'
@@ -149,7 +152,7 @@ $(function() {
 	var tall = $("#all").jqGrid({
 		sortable: true,
 		altRows: true,
-		url:'ui_main_json.php?sidx=2&sord=asc&idc='+idc,
+		url:'ui_main_json.php?sidx=2&type=1&sord=asc&idc='+idc,
 		datatype: 'json',
 		mtype: "POST",
 		postData: {'filterBy':null},
@@ -189,13 +192,159 @@ $(function() {
 		
 		
 		onSortCol: function(name,index,sortorder)
-		{	$("#all").jqGrid('setGridParam',{url:"ui_main_json.php?idc="+idc+"&sidx="+(index+1)+"&sord="+sortorder}).trigger("reloadGrid");
+		{	$("#all").jqGrid('setGridParam',{url:"ui_main_json.php?idc="+idc+"&type=1&sidx="+(index+1)+"&sord="+sortorder}).trigger("reloadGrid");
 			var col=$('#all').jqGrid('getGridParam','colNames');
 			var coln=(col[index]);
 			$("#all").jqGrid('setCaption',"Общий обзор клана, сортировка по полю '"+coln+"'");
 		}, 
 	});
-	
+	var tall_clan = $("#clan").jqGrid({
+		sortable: true,
+		altRows: true,
+		url:'ui_main_json.php?sidx=2&type=2&sord=asc&idc='+idc,
+		datatype: 'json',
+		mtype: "POST",
+		postData: {'filterBy':null},
+		colNames:['ID','Ник','Боёв','%%','%%-30','РЭ','РЭ-30','WN6','WN6-30','Воин', 'Урон ср.','Опыт.ср','Захватчик', 'Защитник','Светляк','Побед','Фрагов','Опыт','Опыт макс.','Урон'],
+		colModel :[			
+			{name:'idp', index:'idp', width:33, align:"center"},
+			{name:'name', index:'name', width:45, align:"center"},
+			{name:'battles_count', index:'battles_count', width:30, align:"center"},
+			
+			{name:'proc', index:'proc', width:20, align:"center"},
+			{name:'win30', index:'win30', width:20, align:"center",hidden:true},
+            {name:'rating', index:'rating', width:25, align:"center",hidden:true},
+			{name:'rating30', index:'rating30', width:25, align:"center",hidden:true},
+			{name:'wn6', index:'wn6', width:25, align:"center",hidden:true},
+			{name:'wn630', index:'wn630', width:25, align:"center",hidden:true},
+			{name:'akillsm', index:'akillsm', width:30, align:"center"},
+			{name:'adamagem', index:'adamagem', width:25, align:"center"},
+			{name:'battle_avg_xp', index:'battle_avg_xp', width:30, align:"center"},
+			{name:'capture_p', index:'capture_p', width:25, align:"center"},
+			{name:'dropped_capture_p', index:'dropped_capture_p', width:25, align:"center"},
+			{name:'spotted_p', index:'spotted_p', width:25, align:"center"},
+			{name:'wins', index:'wins', width:30, align:"center"},
+			{name:'frags', index:'frags', width:30, align:"center"},
+			{name:'xp', index:'xp', width:40, align:"center"},
+			{name:'max_xp', index:'max_xp', width:30, align:"center",hidden:true},
+			
+			{name:'damage_dealt', index:'damage_dealt', width:30, align:"center"}
+                ],
+		rowNum:100,
+		scroll: false,
+		sortname: 'name',
+		viewrecords: true,
+		sortorder: 'desc',
+		width: 1250,
+		height: 'auto',
+		caption: 'Клановые войны',
+		
+		
+		onSortCol: function(name,index,sortorder)
+		{	$("#clan").jqGrid('setGridParam',{url:"ui_main_json.php?idc="+idc+"&sidx="+(index+1)+"&type=2&sord="+sortorder}).trigger("reloadGrid");
+			var col=$('#clan').jqGrid('getGridParam','colNames');
+			var coln=(col[index]);
+			$("#clan").jqGrid('setCaption',"Клановые войны, сортировка по полю '"+coln+"'");
+		}, 
+	});
+	var tall_rota = $("#rota").jqGrid({
+		sortable: true,
+		altRows: true,
+		url:'ui_main_json.php?sidx=2&type=3&sord=asc&idc='+idc,
+		datatype: 'json',
+		mtype: "POST",
+		postData: {'filterBy':null},
+		colNames:['ID','Ник','Боёв','%%','%%-30','РЭ','РЭ-30','WN6','WN6-30','Воин', 'Урон ср.','Опыт.ср','Захватчик', 'Защитник','Светляк','Побед','Фрагов','Опыт','Опыт макс.','Урон'],
+		colModel :[			
+			{name:'idp', index:'idp', width:33, align:"center"},
+			{name:'name', index:'name', width:45, align:"center"},
+			{name:'battles_count', index:'battles_count', width:30, align:"center"},
+			
+			{name:'proc', index:'proc', width:20, align:"center"},
+			{name:'win30', index:'win30', width:20, align:"center",hidden:true},
+            {name:'rating', index:'rating', width:25, align:"center",hidden:true},
+			{name:'rating30', index:'rating30', width:25, align:"center",hidden:true},
+			{name:'wn6', index:'wn6', width:25, align:"center",hidden:true},
+			{name:'wn630', index:'wn630', width:25, align:"center",hidden:true},
+			{name:'akillsm', index:'akillsm', width:30, align:"center"},
+			{name:'adamagem', index:'adamagem', width:25, align:"center"},
+			{name:'battle_avg_xp', index:'battle_avg_xp', width:30, align:"center"},
+			{name:'capture_p', index:'capture_p', width:25, align:"center"},
+			{name:'dropped_capture_p', index:'dropped_capture_p', width:25, align:"center"},
+			{name:'spotted_p', index:'spotted_p', width:25, align:"center"},
+			{name:'wins', index:'wins', width:30, align:"center"},
+			{name:'frags', index:'frags', width:30, align:"center"},
+			{name:'xp', index:'xp', width:40, align:"center"},
+			{name:'max_xp', index:'max_xp', width:30, align:"center",hidden:true},
+			
+			{name:'damage_dealt', index:'damage_dealt', width:30, align:"center"}
+                ],
+		rowNum:100,
+		scroll: false,
+		sortname: 'name',
+		viewrecords: true,
+		sortorder: 'desc',
+		width: 1250,
+		height: 'auto',
+		caption: 'Ротные бои',
+		
+		
+		onSortCol: function(name,index,sortorder)
+		{	$("#rota").jqGrid('setGridParam',{url:"ui_main_json.php?idc="+idc+"&sidx="+(index+1)+"&type=3&sord="+sortorder}).trigger("reloadGrid");
+			var col=$('#rota').jqGrid('getGridParam','colNames');
+			var coln=(col[index]);
+			$("#rota").jqGrid('setCaption',"Ротные бои, сортировка по полю '"+coln+"'");
+		}, 
+	});
+	var tall_random = $("#random").jqGrid({
+		sortable: true,
+		altRows: true,
+		url:'ui_main_json.php?sidx=2&type=4&sord=asc&idc='+idc,
+		datatype: 'json',
+		mtype: "POST",
+		postData: {'filterBy':null},
+		colNames:['ID','Ник','Боёв','%%','%%-30','РЭ','РЭ-30','WN6','WN6-30','Воин', 'Урон ср.','Опыт.ср','Захватчик', 'Защитник','Светляк','Побед','Фрагов','Опыт','Опыт макс.','Урон'],
+		colModel :[			
+			{name:'idp', index:'idp', width:33, align:"center"},
+			{name:'name', index:'name', width:45, align:"center"},
+			{name:'battles_count', index:'battles_count', width:30, align:"center"},
+			
+			{name:'proc', index:'proc', width:20, align:"center"},
+			{name:'win30', index:'win30', width:20, align:"center",hidden:true},
+            {name:'rating', index:'rating', width:25, align:"center",hidden:true},
+			{name:'rating30', index:'rating30', width:25, align:"center",hidden:true},
+			{name:'wn6', index:'wn6', width:25, align:"center",hidden:true},
+			{name:'wn630', index:'wn630', width:25, align:"center",hidden:true},
+			{name:'akillsm', index:'akillsm', width:30, align:"center"},
+			{name:'adamagem', index:'adamagem', width:25, align:"center"},
+			{name:'battle_avg_xp', index:'battle_avg_xp', width:30, align:"center"},
+			{name:'capture_p', index:'capture_p', width:25, align:"center"},
+			{name:'dropped_capture_p', index:'dropped_capture_p', width:25, align:"center"},
+			{name:'spotted_p', index:'spotted_p', width:25, align:"center"},
+			{name:'wins', index:'wins', width:30, align:"center"},
+			{name:'frags', index:'frags', width:30, align:"center"},
+			{name:'xp', index:'xp', width:40, align:"center"},
+			{name:'max_xp', index:'max_xp', width:30, align:"center",hidden:true},
+			
+			{name:'damage_dealt', index:'damage_dealt', width:30, align:"center"}
+                ],
+		rowNum:100,
+		scroll: false,
+		sortname: 'name',
+		viewrecords: true,
+		sortorder: 'desc',
+		width: 1250,
+		height: 'auto',
+		caption: 'Рандом',
+		
+		
+		onSortCol: function(name,index,sortorder)
+		{	$("#random").jqGrid('setGridParam',{url:"ui_main_json.php?idc="+idc+"&sidx="+(index+1)+"&type=4&sord="+sortorder}).trigger("reloadGrid");
+			var col=$('#random').jqGrid('getGridParam','colNames');
+			var coln=(col[index]);
+			$("#random").jqGrid('setCaption',"Рандом, сортировка по полю '"+coln+"'");
+		}, 
+	});
 	//---Бойцы
 	var tplayers = $("#players_table").jqGrid({
 		sortable: true,

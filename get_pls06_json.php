@@ -21,7 +21,7 @@ if($totalrows) {
 	$limit = $totalrows;
 }
 $minDate=date("Y-m-d",strtotime(' -30 day '.$hosttime));
-$sql="SELECT count(*) as cnt from `player_btl` c, cat_tanks a WHERE idp='$idac' and c.idt=a.id_t and date>='$minDate'";
+$sql="SELECT count(*) as cnt from `player_btl` c, cat_tanks a WHERE idp='$idac' and c.idt=a.wotidt and date>='$minDate'";
 $result = mysql_query($sql); 
 $row = mysql_fetch_array($result,MYSQL_ASSOC); 
 $count = $row['cnt']; 
@@ -33,7 +33,7 @@ if(($count>0) and ($limit>0)) {
 if ($page > $total_pages) $page=$total_pages;
 $start = $limit*$page - $limit;
 if($start <0) $start = 0;
-$sql="SELECT c.idt,a.localized_name,c.battle_count as minb_c,c.win_count as minw_c,c.date,c.time from `player_btl` c, cat_tanks a WHERE idp='$idac' and c.idt=a.id_t and date>='$minDate' order by date desc,time desc,c.battle_count desc";
+$sql="SELECT c.idt,a.localized_name,c.battle_count as minb_c,c.win_count as minw_c,c.date,c.time from `player_btl` c, cat_tanks a WHERE idp='$idac' and c.idt=a.wotidt and date>='$minDate' order by date desc,time desc,c.battle_count desc";
 $result = mysql_query( $sql,$connect ) or die("<br>Couldn t execute query.".mysql_error()); 
 $data=new stdclass;
 	$data->page       = $page;

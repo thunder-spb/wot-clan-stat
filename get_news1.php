@@ -30,7 +30,7 @@ for($i=0;$i<$count;$i++) {
 	$row = mysql_fetch_array($result,MYSQL_ASSOC);
 	 $a=$row['type'];
 	 $amessage=$row['message'];
-	 $sp5="";$sp6="";
+	 $sp5="<b>";$sp6="</b>";
 	 if($a==1) {$sp5="<span style='color: red;'><b>"; $sp6="</b></span>";}
 	 if($a==2) {$sp5="<span style='color: green;'><b>"; $sp6="</b></span>";}
 	 if($a==10) {$sp5="<span style='color: blue;'><b>"; $sp6="</b></span>";}

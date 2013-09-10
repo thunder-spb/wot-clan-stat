@@ -21,12 +21,12 @@ $result = mysql_query( $sql,$connect ) or die("Couldn t execute query.".mysql_er
 	$i = 0;
 
 while($row = mysql_fetch_assoc($result)) {
-	$idt=$row['id_t'];$br=0;	
+	$idt=$row['wotidt'];$br=0;	
 	$sql2="SELECT pl.name,pb.idp,max(pb.battle_count) as battle_count ,max(pb.win_count) as win_count FROM `player_btl` pb, `player` pl,`clan` cl WHERE pl.idp=pb.idp and pb.idt=$idt and cl.idp=pl.idp and cl.idc=$idc group by idp order by battle_count desc";
 	$result2 = mysql_query( $sql2,$connect ) or die("<br>Couldn t execute query.".mysql_error()); 
 	$cnt=0;
 	$player="";
-	$img="<img src='http://".$wot_host.$row['image_url']."'/>"; 
+	$img='<img src="'.$row['image_url'].'" width="70px" />'; 
 	
 	while($row2 = mysql_fetch_assoc($result2)) {
 		$proc=round(($row2['win_count']*100/$row2['battle_count']),2);

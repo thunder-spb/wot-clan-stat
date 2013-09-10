@@ -47,7 +47,7 @@ for($i=0;$i<$count;$i++) {
 	if ($typepr=="gold"){$messagetype='<img src="images/province_type_gold.png" style="width: 16px; height:16px;" align="absmiddle"/>';$amessage=" ключевая провинция ";}
 	if ($typepr=="normal"){$messagetype='<img src="images/province_type_normal.png" style="width: 16px; height:16px;" align="absmiddle"/>';$amessage=" провинция ";}
 	$atype=$row['type'];
-	$sp5="";$sp6="";
+	$sp5="<b>";$sp6="</b>";
 	if ($atype==0){$typea=" Потеряна ";$sp5="<span style='color: red;'><b>"; $sp6="</b></span> ";}
 	if ($atype==1){
 		$typea=" Захвачена ";

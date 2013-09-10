@@ -18,7 +18,7 @@ if ($actwmdate['lasthourwm']<>NULL){
 		//die ();
 	}
 }
-$t = time()-700000;
+$t = time()-604800;
 $clanlist = mysql_query("select idc from clan_info where actdate>'$t'",$connect);
 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $clancnt=array();

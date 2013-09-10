@@ -12,11 +12,11 @@ if($_REQUEST['filterBy'] != 'null'){
 $minDate=date("Y-m-d",strtotime(' -7 day '.$hosttime));// за 7 дней
 //$minDate=date("Y-m-d",strtotime(' -1 day'));// за седня
 //$idac=259339;
-$result = mysql_query("SELECT count(*) as cnt from cat_tanks a,player_btl b where a.id_t=b.idt and b.idp='$idac' and b.date>'$minDate'");
+$result = mysql_query("SELECT count(*) as cnt from cat_tanks a,player_btl b where a.wotidt=b.idt and b.idp='$idac' and b.date>'$minDate'");
 $row = mysql_fetch_array($result,MYSQL_ASSOC); 
 $count = $row['cnt']; 
 
-$sql="SELECT max(c.battle_count)as b_c,max(c.win_count) as w_c, c.idt as idtr, a.level,a.class,a.image_url,a.localized_name from `player_btl` c, cat_tanks a where idp='$idac' and c.idt=a.id_t and date>='$minDate' group by c.idt order by level desc,class desc";
+$sql="SELECT max(c.battle_count)as b_c,max(c.win_count) as w_c, c.idt as idtr, a.level,a.class,a.image_url,a.localized_name from `player_btl` c, cat_tanks a where idp='$idac' and c.idt=a.wotidt and date>='$minDate' group by c.idt order by level desc,class desc";
 $result = mysql_query( $sql,$connect ) or die("Couldn t execute query.".mysql_error()); 
 $message="<table border='0'><tr>";
 //echo $message;
@@ -44,7 +44,7 @@ for($i=0;$i<$count;$i++) {
 			$st=$st+1;
 			$br=0; $brr="";
 		}
-		$img="<img src='http://".$wot_host.$row['image_url']."'/>"; 
+		$img='<img src="'.$row['image_url'].'" width="100px"  />'; 
 		$sp1=""; $sp2="";$sp3="";$sp4="";$sp5="";$sp6="";
 		if($row['class']=='SPG') $color='ffdab9';
 		if($row['class']=='AT-SPG') $color='c6efef';
