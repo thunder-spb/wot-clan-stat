@@ -15,12 +15,12 @@ if($start <0) $start = 0;
 $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Не удалось подключиться к базе данных!!!dump_wot_stat");
 $setnames = mysql_query( 'SET NAMES utf8' );
-$result = mysql_query("SELECT COUNT(*) AS count FROM event_tank WHERE idc = '$idc' and ((type>0 and type<10) or type=14)"); 
+$result = mysql_query("SELECT COUNT(*) AS count FROM event_tank et, cat_tanks ct WHERE  et.idt=ct.wotidt and (ct.level>8) and et.idc = '$idc' and ((et.type>0 and et.type<10) or et.type=14)"); 
 $row = mysql_fetch_array($result,MYSQL_ASSOC); 
 $count = $row['count']; 
 if( $count >0 ) { $total_pages = ceil($count/$limit); } else { $total_pages = 0; }
 //$SQL="SELECT id_et,type, message, date FROM event_tank WHERE idc = $idc and type>0 ORDER BY $sidx DESC LIMIT $start , $limit";
-$SQL="SELECT distinct (a.id_et),a.type,b.class as classt, b.localized_name,b.level,b.nation,  a.date, d.name FROM event_tank a,cat_tanks b,player d  WHERE a.idc = $idc and b.wotidt=a.idt  and ((a.type>0 and a.type<10) or a.type=14) and d.idp=a.idp  ORDER BY $sidx DESC LIMIT $start , $limit";
+$SQL="SELECT distinct (a.id_et),a.type,b.class as classt, b.localized_name,b.level,b.nation,  a.date, d.name FROM event_tank a,cat_tanks b,player d  WHERE a.idc = $idc and (b.level>8) and b.wotidt=a.idt  and ((a.type>0 and a.type<10) or a.type=14) and d.idp=a.idp  ORDER BY $sidx DESC LIMIT $start , $limit";
 $result = mysql_query( $SQL,$connect ) or die("Couldn t execute query.".mysql_error()); 
 $responce=new stdclass;
 $responce->page = $page; 
