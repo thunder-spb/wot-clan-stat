@@ -22,38 +22,127 @@ $row = mysql_fetch_array($result,MYSQL_ASSOC);
 $count = $row['count']; 
 //$SQL="SELECT idp,name,battles_count,wins,ROUND((wins*100/battles_count),2) as proc,frags,ROUND((frags/battles_count),2) as akillm,battle_avg_xp,xp,max_xp,capture_points,dropped_capture_points,damage_dealt, ROUND((damage_dealt/battles_count),2) as adamagem  from player c where idp = c.idp and in_clan>0 and id_p in (select max(id_p) FROM `player` WHERE idp=c.idp) ORDER BY $sidx $sord ,name";
 if ($type==1){
-	$SQL="SELECT pl.idp,pl.name,pl.battles_count,round((pl.wins*100/pl.battles_count),2) AS proc, pl.win30, pl.rating,pl.rating30,pl.wn6,pl.wn630,round((pl.frags/pl.battles_count),2) AS akillm,round((pl.damage_dealt/pl.battles_count),2) AS adamagem, pl.battle_avg_xp, round((pl.capture_points/pl.battles_count),2) as capture_p,round((pl.dropped_capture_points/pl.battles_count),2) as dropped_capture_p,round((pl.spotted/pl.battles_count),2) as spotted_p, pl.wins,pl.frags,pl.xp,pl.max_xp,pl.damage_dealt FROM player pl,(select max(id_p) as maxid, name from player group by name) lastresults WHERE idc = '$idc' and in_clan > 0  and pl.name = lastresults.name and pl.id_p = lastresults.maxid ORDER BY $sidx $sord";
+	$SQL="SELECT pl.idp,pl.name,pl.battles_count,round((pl.wins*100/pl.battles_count),2) AS proc,
+		pl.win30, pl.rating,pl.rating30,pl.wn6,pl.wn630,round((pl.frags/pl.battles_count),2) AS akillm,
+		round((pl.damage_dealt/pl.battles_count),2) AS adamagem, 
+		pl.battle_avg_xp, 
+		round((pl.capture_points/pl.battles_count),2) as capture_p,round((pl.dropped_capture_points/pl.battles_count),2) as dropped_capture_p,
+		round((pl.spotted/pl.battles_count),2) as spotted_p, 
+		pl.wins,pl.frags,
+		pl.xp,pl.max_xp,pl.damage_dealt FROM player pl,(select max(id_p) as maxid, name from player group by name) lastresults WHERE idc = '$idc' and in_clan > 0  and pl.name = lastresults.name and pl.id_p = lastresults.maxid ORDER BY $sidx $sord";
+	$result = mysql_query( $SQL,$connect ) or die("Couldn t execute query.".mysql_error()); 
 }elseif ($type==2){
-	$SQL="SELECT pl.idp as idp,pl.name,plc.battles_count_clan as battles_count,round((plc.wins_clan*100/plc.battles_count_clan),2) AS proc, pl.win30, pl.rating,pl.rating30,pl.wn6,pl.wn630,round((plc.frags_clan/plc.battles_count_clan),2) AS akillm,round((plc.damage_dealt_clan/plc.battles_count_clan),2) AS adamagem, plc.battle_avg_xp_clan as battle_avg_xp, round((plc.capture_points_clan/plc.battles_count_clan),2) as capture_p,round((plc.dropped_capture_points_clan/plc.battles_count_clan),2) as dropped_capture_p,round((plc.spotted_clan/plc.battles_count_clan),2) as spotted_p, plc.wins_clan as wins,plc.frags_clan as frags,plc.xp_clan as xp,pl.max_xp,plc.damage_dealt_clan as damage_dealt FROM player pl, player_clan plc,(select max(id_p) as maxid, name from player group by name) lastresults WHERE idc = '$idc' and in_clan > 0 and pl.idp=plc.idp and pl.name = lastresults.name and pl.id_p = lastresults.maxid group by pl.idp ORDER BY $sidx $sord";
+	$SQL="SELECT pl.idp as idp,pl.name,plc.battles_count_clan as battles_count,
+	round((plc.wins_clan*100/plc.battles_count_clan),2) AS proc, pl.win30, pl.rating,pl.rating30,pl.wn6,pl.wn630,
+	round((plc.frags_clan/max(plc.battles_count_clan)),2) AS akillm,round((plc.damage_dealt_clan/max(plc.battles_count_clan)),2) AS adamagem, 
+	plc.battle_avg_xp_clan as battle_avg_xp, round((plc.capture_points_clan/max(plc.battles_count_clan)),2) as capture_p,
+	round((plc.dropped_capture_points_clan/max(plc.battles_count_clan)),2) as dropped_capture_p,
+	round((plc.spotted_clan/max(plc.battles_count_clan)),2) as spotted_p, max(plc.wins_clan) as wins,plc.frags_clan as frags,plc.xp_clan as xp,
+	pl.max_xp,plc.damage_dealt_clan as damage_dealt FROM player pl, player_clan plc,(select max(id_p) as maxid, 
+	name from player group by name) lastresults,(select max(id_p) as maxid, idp from player_clan group by idp) as lastclan 
+	WHERE idc = '$idc' and in_clan > 0 and pl.idp=plc.idp and pl.name = lastresults.name and pl.id_p = lastresults.maxid 
+		and plc.id_p = lastclan.maxid 
+	group by pl.idp 
+	ORDER BY $sidx $sord";
+	$result = mysql_query( $SQL,$connect ) or die("Couldn t execute query.".mysql_error());
 }elseif ($type==3){
-	$SQL="SELECT pl.idp as idp,pl.name,plc.battles_count_company as battles_count,round((plc.wins_company*100/plc.battles_count_company),2) AS proc, pl.win30, pl.rating,pl.rating30,pl.wn6,pl.wn630,round((plc.frags_company/plc.battles_count_company),2) AS akillm,round((plc.damage_dealt_company/plc.battles_count_company),2) AS adamagem, plc.battle_avg_xp_company as battle_avg_xp, round((plc.capture_points_company/plc.battles_count_company),2) as capture_p,round((plc.dropped_capture_points_company/plc.battles_count_company),2) as dropped_capture_p,round((plc.spotted_company/plc.battles_count_company),2) as spotted_p, plc.wins_company as wins,plc.frags_company as frags,plc.xp_company as xp,pl.max_xp,plc.damage_dealt_company as damage_dealt FROM player pl, player_company plc,(select max(id_p) as maxid, name from player group by name) lastresults WHERE idc = '$idc' and in_clan > 0 and pl.idp=plc.idp and pl.name = lastresults.name and pl.id_p = lastresults.maxid group by pl.idp ORDER BY $sidx $sord";
-
-	//$SQL="SELECT pl.idp,pl.name,pl.battles_count_company as battles_count,round((pl.wins_company*100/pl.battles_count_company),2) AS proc, pl.win30, pl.rating,pl.rating30,pl.wn6,pl.wn630,round((pl.frags_company/pl.battles_count_company),2) AS akillm,round((pl.damage_dealt_company/pl.battles_count_company),2) AS adamagem, pl.battle_avg_xp_company as battle_avg_xp, round((pl.capture_points_company/pl.battles_count_company),2) as capture_p,round((pl.dropped_capture_points_company/pl.battles_count_company),2) as dropped_capture_p,round((pl.spotted_company/pl.battles_count_company),2) as spotted_p, pl.wins_company as wins,pl.frags_company as frags,pl.xp_company as xp,pl.max_xp,pl.damage_dealt_company as damage_dealt FROM player pl,(select max(id_p) as maxid, name from player group by name) lastresults WHERE idc = '$idc' and in_clan > 0  and pl.name = lastresults.name and pl.id_p = lastresults.maxid ORDER BY $sidx $sord";
-}elseif ($type==4){
-	$SQL="SELECT pl.idp,pl.name,
-		(pl.battles_count-plr.battles_count_company-plc.battles_count_clan) as battles_count,
-		round(((pl.wins-plr.wins_company-plc.wins_clan)*100/(pl.battles_count-plr.battles_count_company-plc.battles_count_clan)),2) AS proc,
-		pl.win30, pl.rating,pl.rating30,pl.wn6,pl.wn630,
-		round(((pl.frags-plc.frags_clan-plr.frags_company)/(pl.battles_count-plr.battles_count_company-plc.battles_count_clan)),2) AS akillm,
-		round(((pl.damage_dealt-plr.damage_dealt_company-plc.damage_dealt_clan)/(pl.battles_count-plr.battles_count_company-plc.battles_count_clan)),2) AS adamagem,
-		round(((pl.xp-plr.xp_company-plc.xp_clan)/(pl.battles_count-plr.battles_count_company-plc.battles_count_clan)),0) as battle_avg_xp,
-		round(((pl.capture_points-plr.capture_points_company-plc.capture_points_clan)/(pl.battles_count-plr.battles_count_company-plc.battles_count_clan)),2) as capture_p,
-		round(((pl.dropped_capture_points-plr.dropped_capture_points_company-plc.dropped_capture_points_clan)/(pl.battles_count-plr.battles_count_company-plc.battles_count_clan)),2) as dropped_capture_p,
-		round(((pl.spotted-plr.spotted_company-plc.spotted_clan)/(pl.battles_count-plr.battles_count_company-plc.battles_count_clan)),2) as spotted_p,
-		(pl.wins-plr.wins_company-plc.wins_clan) as wins,
-		(pl.frags-plc.frags_clan-plr.frags_company) as frags,
-		(pl.xp-plr.xp_company-plc.xp_clan) as xp,
-		pl.max_xp,
-		(pl.damage_dealt-plr.damage_dealt_company-plc.damage_dealt_clan) as damage_dealt
-		FROM player pl,player_clan  plc, player_company plr,(select max(id_p) as maxid, name from player group by name) lastresults WHERE idc = '$idc' and in_clan > 0  and  plc.idp=pl.idp and  plr.idp=pl.idp and pl.name = lastresults.name and pl.id_p = lastresults.maxid group by pl.idp ORDER BY $sidx $sord";
+	$SQL="SELECT pl.idp as idp,pl.name,plc.battles_count_company as battles_count,
+	round((plc.wins_company*100/plc.battles_count_company),2) AS proc, pl.win30, pl.rating,pl.rating30,pl.wn6,pl.wn630,
+	round((plc.frags_company/plc.battles_count_company),2) AS akillm,
+	round((plc.damage_dealt_company/plc.battles_count_company),2) AS adamagem, plc.battle_avg_xp_company as battle_avg_xp, 
+	round((plc.capture_points_company/plc.battles_count_company),2) as capture_p,
+	round((plc.dropped_capture_points_company/plc.battles_count_company),2) as dropped_capture_p,
+	round((plc.spotted_company/plc.battles_count_company),2) as spotted_p, plc.wins_company as wins,plc.frags_company as frags,
+	plc.xp_company as xp,pl.max_xp,plc.damage_dealt_company as damage_dealt 
+	FROM player pl, player_company plc,(select max(id_p) as maxid, name from player group by name) lastresults,
+	(select max(id_p) as maxid, idp from player_company group by idp) as lastcompany 	
+	WHERE idc = '$idc' and in_clan > 0 and pl.idp=plc.idp and pl.name = lastresults.name and pl.id_p = lastresults.maxid 
+	AND plc.id_p = lastcompany.maxid
+	group by pl.idp ORDER BY $sidx $sord";
+	$result = mysql_query( $SQL,$connect ) or die("Couldn t execute query.".mysql_error());
 }
-$result = mysql_query( $SQL,$connect ) or die("Couldn t execute query.".mysql_error()); 
+elseif ($type==4){
+	$SQL="SELECT pl.idp,pl.name,pl.battles_count,round((pl.wins*100/pl.battles_count),2) AS proc,
+		pl.win30, pl.rating,pl.rating30,pl.wn6,pl.wn630,round((pl.frags/pl.battles_count),2) AS akillm,
+		pl.battle_avg_xp, 
+		pl.capture_points as capture_p,
+		pl.dropped_capture_points as dropped_capture_p,
+		pl.spotted as spotted_p, 
+		pl.wins as wins, 
+		pl.frags as frags,
+		pl.xp,
+		pl.max_xp,
+		pl.damage_dealt as damage
+		 FROM player pl,
+		 (select max(id_p) as maxid, name from player group by name) as lastresults 
+		 WHERE idc = '$idc' and in_clan > 0  and pl.name = lastresults.name and pl.id_p = lastresults.maxid ORDER BY $sidx $sord";
+	$result = mysql_query( $SQL,$connect ) or die("Couldn t execute query.".mysql_error()); 
+	
+}
 $responce=new stdclass;
 $responce->page = $page; 
 $responce->total = 1; 
 $responce->records = $count; 
+// $result = mysql_query( $SQL,$connect ) or die("Couldn t execute query.".mysql_error()); 
 for($i=0;$i<$count;$i++) { 
-	$row = mysql_fetch_array($result,MYSQL_ASSOC);
+	if ($type<>4){
+		$row = mysql_fetch_array($result,MYSQL_ASSOC);
+		$proc=$row['proc'];
+		$bc=$row['battles_count'];
+		$fragsb=$row['akillm'];
+		$winsb=$row['wins'];
+		$damageb=$row['adamagem'];
+		$avgxp=$row['battle_avg_xp'];
+		$cpt=$row['capture_p'];
+		$dcpt=$row['dropped_capture_p'];
+		$spottedb=$row['spotted_p'];
+		$frags=$row['frags'];
+		$xp=$row['xp'];
+		$damage_dealt=$row['damage_dealt'];
+	}
+	else{
+		$row = mysql_fetch_array($result,MYSQL_ASSOC);
+		$idp=$row['idp'];
+			
+		$SQL="SELECT plc.battles_count_clan as battles_countc,
+			plc.frags_clan as fragsc,
+			plc.wins_clan as winsc,
+			plc.capture_points_clan as cptc,
+			plc.damage_dealt_clan as dmgc,
+			plc.dropped_capture_points_clan as dcptc,
+			plc.spotted_clan as sptc, 
+			plc.xp_clan as xpc
+		FROM player_clan plc,(select max(id_p) as maxid from player_clan where idp='$idp') as lastclan 
+		WHERE plc.idp = '$idp' 	and plc.id_p = lastclan.maxid ";
+		$resultclan = mysql_query( $SQL,$connect ) or die("Couldn t execute query.".mysql_error());
+		$rowclan = mysql_fetch_array($resultclan,MYSQL_ASSOC);
+		$SQL="SELECT plc.battles_count_company as battles_countc,
+			plc.frags_company as fragsc,
+			plc.wins_company as winsc,
+			plc.capture_points_company as cptc,
+			plc.damage_dealt_company as dmgc,
+			plc.dropped_capture_points_company as dcptc,
+			plc.spotted_company as sptc, 
+			plc.xp_company as xpc
+		FROM player_company plc,(select max(id_p) as maxid from player_company where idp='$idp') as lastcompany 
+		WHERE plc.idp = '$idp' 	and plc.id_p = lastcompany.maxid ";
+		$resultcompany = mysql_query( $SQL,$connect ) or die("Couldn t execute query.".mysql_error());
+		$rowcompany = mysql_fetch_array($resultcompany,MYSQL_ASSOC);
+		$bc=$row['battles_count']-$rowclan['battles_countc']-$rowcompany['battles_countc'];
+		$winsb=$row['wins']-$rowclan['winsc']-$rowcompany['winsc'];
+		$damage_dealt=$row['damage']-$rowclan['dmgc']-$rowcompany['dmgc'];
+		$proc=round(($winsb*100/$bc),2);
+		$frags=$row['frags']-$rowclan['fragsc']-$rowcompany['fragsc'];
+		$fragsb=round($frags/$bc,2);
+		$damageb=round(($damage_dealt/$bc),2);
+		$xp=$row['xp']-$rowclan['xpc']-$rowcompany['xpc'];
+		$avgxp=round(($xp/$bc),2);
+		$cpt=round((($row['capture_p']-$rowclan['cptc']-$rowcompany['cptc'])/$bc),2);
+		$dcpt=round((($row['dropped_capture_p']-$rowclan['dcptc']-$rowcompany['dcptc'])/$bc),2);
+		$spottedb=round((($row['spotted_p']-$rowclan['sptc']-$rowcompany['sptc'])/$bc),2);
+		
+		
+	}
 	$link='<a href="http://worldoftanks.ru/community/accounts/'.$row['idp'].'/" target="_blank">'.$row['name'].'</a>';
 	$rating=$row['rating'];
 	$rating30=$row['rating30'];
@@ -64,7 +153,6 @@ for($i=0;$i<$count;$i++) {
 	$win30mess=$win30;
 	$wn6mess=$wn6;
 	$wn630mess=$wn630;
-	$proc=$row['proc'];
 	$ratingmessage=$rating;
 	$rating30message=$rating30;
 	$sp5="";$sp6="</b></span>";
@@ -101,8 +189,9 @@ for($i=0;$i<$count;$i++) {
 	$procmessage=$sp1.$proc.$sp6;
 	$s=$i+1;
 	$responce->rows[$i]['idp']=$s;
-	$responce->rows[$i]['cell']=array($s,$link,$row['battles_count'],$procmessage,$win30mess,$ratingmessage,$rating30message,$wn6mess,$wn630mess,$row['akillm'],$row['adamagem'],$row['battle_avg_xp'],$row['capture_p'],$row['dropped_capture_p'],$row['spotted_p'],$row['wins'],$row['frags'],$row['xp'],$row['max_xp'],$row['damage_dealt']); 
+	$responce->rows[$i]['cell']=array($s,$link,$bc,$procmessage,$win30mess,$ratingmessage,$rating30message,$wn6mess,$wn630mess,$fragsb,$damageb,$avgxp,$cpt,$dcpt,$spottedb,$winsb,$frags,$xp,$row['max_xp'],$damage_dealt); 
 } 
+
 header("Content-type: text/script;charset=utf-8");
 echo json_encode($responce);
 ?>
