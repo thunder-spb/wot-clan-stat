@@ -8,6 +8,10 @@ $setnames = mysql_query( 'SET NAMES utf8' );
 header('Content-Type: text/html; charset=UTF-8'); 
 //print_r ($_SERVER);
 $myeol=PHP_EOL;
+if (!(isset($appid))){
+ $appid="demo";
+}
+
 if (array_key_exists("SERVER_NAME", $_SERVER)){
 	$myeol="<br>";
 }
@@ -64,7 +68,20 @@ while ($clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC)) {
 	$clancnt[]=$clanrow["idc"];
 }
 $clancnt=array_unique($clancnt);
-
+$idlist="";
+foreach ($ida as $id) {
+ $idlist=$idlist.$id.",";
+}
+print_r ($idlist);
+$pageidp = "2.0/account/info/?application_id=".$appid."&account_id=".$idlist;		
+$pageidp = "api.".$wot_host.'/'.$pageidp;
+$data2 = get_page($pageidp);
+$data2 = json_decode($data2, true);
+// $pageidp = "2.0/account/tanks/?application_id=".$appid."&account_id=".$idlist;		
+// $pageidp = "api.".$wot_host.'/'.$pageidp;
+// $data2pt = get_page($pageidp);
+// $data2pt = json_decode($data2pt, true);
+// print_r ($data2pt);
 foreach ($ida as $id) {
 		$sql = "select * from clan where idp='$id'";
 		$q = mysql_query($sql, $connect);
@@ -116,10 +133,10 @@ foreach ($ida as $id) {
 			$time = date("H:i:s",strtotime($hosttime));
 			// $data = get_page($pageidp);
 			// $data = json_decode($data, true);
-			$pageidp = "2.0/account/info/?application_id=171745d21f7f98fd8878771da1000a31&account_id=".$id;		
-			$pageidp = "api.".$wot_host.'/'.$pageidp;
-			$data2 = get_page($pageidp);
-			$data2 = json_decode($data2, true);
+			// $pageidp = "2.0/account/info/?application_id=".$appid."&account_id=".$id;		
+			// $pageidp = "api.".$wot_host.'/'.$pageidp;
+			// $data2 = get_page($pageidp);
+			// $data2 = json_decode($data2, true);
 			//print_r($data2);
 			
 			if ($data2['status'] == 'ok') {   // основной блок обработки инфы
@@ -329,7 +346,7 @@ foreach ($ida as $id) {
 						}	
 						
 // работа со списком техники
-						$pageidp = "2.0/account/tanks/?application_id=171745d21f7f98fd8878771da1000a31&account_id=".$id;		
+						$pageidp = "2.0/account/tanks/?application_id=".$appid."&account_id=".$id;		
 						$pageidp = "api.".$wot_host.'/'.$pageidp;
 						$data2pt = get_page($pageidp);
 						$data2pt = json_decode($data2pt, true);
@@ -349,7 +366,7 @@ foreach ($ida as $id) {
 								$newtankexist=0;
 								if($qqtt['id_t']==NULL){
 									
-									$pageidp = "2.0/encyclopedia/tankinfo/?application_id=171745d21f7f98fd8878771da1000a31&tank_id=".$wotidt;		
+									$pageidp = "2.0/encyclopedia/tankinfo/?application_id=".$appid."&tank_id=".$wotidt;		
 									$pageidp = "api.".$wot_host.'/'.$pageidp;
 									$data2tank = get_page($pageidp);
 									$data2tank = json_decode($data2tank, true);

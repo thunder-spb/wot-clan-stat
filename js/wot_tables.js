@@ -205,14 +205,14 @@ $(function() {
 		datatype: 'json',
 		mtype: "POST",
 		postData: {'filterBy':null},
-		colNames:['ID','Ник','Боёв','%%','%%-30','РЭ','РЭ-30','WN6','WN6-30','Воин', 'Урон ср.','Опыт.ср','Захватчик', 'Защитник','Светляк','Побед','Фрагов','Опыт','Опыт макс.','Урон'],
+		colNames:['ID','Ник','Боёв','%%','Боёв-30','РЭ','РЭ-30','WN6','WN6-30','Воин', 'Урон ср.','Опыт.ср','Захватчик', 'Защитник','Светляк','Побед','Фрагов','Опыт','Опыт макс.','Урон'],
 		colModel :[			
 			{name:'idp', index:'idp', width:33, align:"center"},
 			{name:'name', index:'name', width:45, align:"center"},
 			{name:'battles_count', index:'battles_count', width:30, align:"center"},
 			
 			{name:'proc', index:'proc', width:20, align:"center"},
-			{name:'win30', index:'win30', width:20, align:"center",hidden:true},
+			{name:'win30', index:'win30', width:20, align:"center"},
             {name:'rating', index:'rating', width:25, align:"center",hidden:true},
 			{name:'rating30', index:'rating30', width:25, align:"center",hidden:true},
 			{name:'wn6', index:'wn6', width:25, align:"center",hidden:true},
@@ -254,14 +254,14 @@ $(function() {
 		datatype: 'json',
 		mtype: "POST",
 		postData: {'filterBy':null},
-		colNames:['ID','Ник','Боёв','%%','%%-30','РЭ','РЭ-30','WN6','WN6-30','Воин', 'Урон ср.','Опыт.ср','Захватчик', 'Защитник','Светляк','Побед','Фрагов','Опыт','Опыт макс.','Урон'],
+		colNames:['ID','Ник','Боёв','%%','Боёв-30','РЭ','РЭ-30','WN6','WN6-30','Воин', 'Урон ср.','Опыт.ср','Захватчик', 'Защитник','Светляк','Побед','Фрагов','Опыт','Опыт макс.','Урон'],
 		colModel :[			
 			{name:'idp', index:'idp', width:33, align:"center"},
 			{name:'name', index:'name', width:45, align:"center"},
 			{name:'battles_count', index:'battles_count', width:30, align:"center"},
 			
 			{name:'proc', index:'proc', width:20, align:"center"},
-			{name:'win30', index:'win30', width:20, align:"center",hidden:true},
+			{name:'win30', index:'win30', width:20, align:"center"},
             {name:'rating', index:'rating', width:25, align:"center",hidden:true},
 			{name:'rating30', index:'rating30', width:25, align:"center",hidden:true},
 			{name:'wn6', index:'wn6', width:25, align:"center",hidden:true},
@@ -493,9 +493,10 @@ $(function() {
 		datatype: 'json',
 		mtype: "POST",
 		postData: {'filterBy':null},
-		colNames:['Танк', 'Боёв','%%','Уровень','Тип','Страна'],
+		colNames:['Танк','M','Боёв','%%','Уровень','Тип','Страна'],
 		colModel :[
-			{name:'localized_name', index:'localized_name', width:30, align:"center"},			
+			{name:'localized_name', index:'localized_name', width:30, align:"center"},	
+			{name:'mst', index:'mst', width:30, align:"center"},				
 			{name:'battle_count', index:'battle_count', width:40, align:"center"},
 			{name:'proc', index:'proc', width:30, align:"center"},
 			{name:'level', index:'level', width:20, align:"center"},
@@ -533,6 +534,7 @@ $(function() {
 			if (row_data.cls == 'SPG'){
 				$('#pl_summary_table3').jqGrid('setCell',row_id,'localized_name','',{'background-color':'#ffdab9'});
 				$('#pl_summary_table3').jqGrid('setCell',row_id,'battle_count','',{'background-color':'#ffdab9'});
+				$('#pl_summary_table3').jqGrid('setCell',row_id,'mst','',{'background-color':'#ffdab9'});
 				$('#pl_summary_table3').jqGrid('setCell',row_id,'proc','',{'background-color':'#ffdab9'});
 				$('#pl_summary_table3').jqGrid('setCell',row_id,'level','',{'background-color':'#ffdab9'});
 				$('#pl_summary_table3').jqGrid('setCell',row_id,'cls','САУ',{'background-color':'#ffdab9'});
@@ -541,6 +543,7 @@ $(function() {
 			if (row_data.cls == 'AT-SPG'){
 				$('#pl_summary_table3').jqGrid('setCell',row_id,'localized_name','',{'background-color':'#c6efef'});
 				$('#pl_summary_table3').jqGrid('setCell',row_id,'battle_count','',{'background-color':'#c6efef'});
+				$('#pl_summary_table3').jqGrid('setCell',row_id,'mst','',{'background-color':'#c6efef'});
 				$('#pl_summary_table3').jqGrid('setCell',row_id,'proc','',{'background-color':'#c6efef'});
 				$('#pl_summary_table3').jqGrid('setCell',row_id,'level','',{'background-color':'#c6efef'});
 				$('#pl_summary_table3').jqGrid('setCell',row_id,'cls','ПТ',{'background-color':'#c6efef'});
@@ -549,6 +552,7 @@ $(function() {
 			if (row_data.cls == 'mediumTank'){
 				$('#pl_summary_table3').jqGrid('setCell',row_id,'localized_name','',{'background-color':'#d0f0c0'});
 				$('#pl_summary_table3').jqGrid('setCell',row_id,'battle_count','',{'background-color':'#d0f0c0'});
+				$('#pl_summary_table3').jqGrid('setCell',row_id,'mst','',{'background-color':'#d0f0c0'});
 				$('#pl_summary_table3').jqGrid('setCell',row_id,'proc','',{'background-color':'#d0f0c0'});
 				$('#pl_summary_table3').jqGrid('setCell',row_id,'level','',{'background-color':'#d0f0c0'});
 				$('#pl_summary_table3').jqGrid('setCell',row_id,'cls','СТ',{'background-color':'#d0f0c0'});
@@ -557,6 +561,7 @@ $(function() {
 			if (row_data.cls == 'heavyTank'){
 				$('#pl_summary_table3').jqGrid('setCell',row_id,'localized_name','',{'background-color':'#98ff98'});
 				$('#pl_summary_table3').jqGrid('setCell',row_id,'battle_count','',{'background-color':'#98ff98'});
+				$('#pl_summary_table3').jqGrid('setCell',row_id,'mst','',{'background-color':'#98ff98'});
 				$('#pl_summary_table3').jqGrid('setCell',row_id,'proc','',{'background-color':'#98ff98'});
 				$('#pl_summary_table3').jqGrid('setCell',row_id,'level','',{'background-color':'#98ff98'});
 				$('#pl_summary_table3').jqGrid('setCell',row_id,'cls','ТТ',{'background-color':'#98ff98'});

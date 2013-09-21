@@ -43,7 +43,7 @@ if($start <0) $start = 0;
 
 
 //$sql="SELECT a.localized_name,c.battle_count,ROUND((win_count*100/battle_count),2) as proc,a.level,a.class as cls,a.nation from `player_btl` c, cat_tanks a where idp='$idac' and c.idt=a.id_t and time in (select max(time) FROM `player_btl` q WHERE q.idp=c.idp and date in (select max(date) FROM `player_btl` w WHERE w.idp=c.idp)) ORDER BY ".$sidx." ".$sord." LIMIT ".$start.", ".$limit;
-$sql="SELECT a.localized_name ,max(c.battle_count) as battle_count,ROUND((max(c.win_count)*100/max(c.battle_count)),2) as proc,a.level,a.class as cls,a.nation from `player_btl` c, cat_tanks a where idp='$idac' and c.idt=a.wotidt group by c.idt ORDER BY ".$sidx." ".$sord." LIMIT ".$start.", ".$limit;
+$sql="SELECT a.localized_name ,max(c.battle_count) as battle_count,max(c.master) as mst,ROUND((max(c.win_count)*100/max(c.battle_count)),2) as proc,a.level,a.class as cls,a.nation from `player_btl` c, cat_tanks a where idp='$idac' and c.idt=a.wotidt group by c.idt ORDER BY ".$sidx." ".$sord." LIMIT ".$start.", ".$limit;
 
 //echo $sql.'<br>';
 $result = mysql_query( $sql,$connect ) or die("<br>Couldn t execute query.".mysql_error()); 
@@ -52,9 +52,14 @@ $data=new stdclass;
 	$data->total      = $total_pages;
 	$data->records    = $count;
 	$i = 0;
+	
 	while($row = mysql_fetch_assoc($result)) {
-		//                                a.localized_name,  c.battle_count,      proc,    a.level,cls,a.nation
-		$data->rows[$i]['cell'] = array($row['localized_name'],$row['battle_count'],$row['proc'],$row['level'],$row['cls'],$row['nation']);
+		$mst=$row['mst'];
+		$msg="--";
+		if ($mst<>0){
+			$msg='<img src="images/MarkOfMastery'.$mst.'.png" style="width: 20px; height:20px;" align="absmiddle"/>';
+		}
+		$data->rows[$i]['cell'] = array($row['localized_name'],$msg,$row['battle_count'],$row['proc'],$row['level'],$row['cls'],$row['nation']);
 		$i++;
 	}
 
