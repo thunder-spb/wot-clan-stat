@@ -346,342 +346,341 @@ foreach ($ida as $id) {
 						}	
 						
 // работа со списком техники
-						$pageidp = "2.0/account/tanks/?application_id=".$appid."&account_id=".$id;		
-						$pageidp = "api.".$wot_host.'/'.$pageidp;
-						$data2pt = get_page($pageidp);
-						$data2pt = json_decode($data2pt, true);
-						if ($data2pt['status'] == "ok"){
-							$date2=date("Y-m-d",strtotime(' -'.$timetolife.' day '.$hosttime));
-							$battles30t=0;
-							$level_avg = 0;
-							$level_avg_all=0;
-							$wins30t=0;
-							foreach ($data2pt['data'][$id] as $pltank){
-								$wotidt=$pltank['tank_id'];
-								// проверка на новый танк в клане
-								$sqlt = "select * from cat_tanks where `wotidt`='$wotidt'";
-								$qt = mysql_query($sqlt, $connect);
-								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-								$qqtt = mysql_fetch_array($qt);
-								$newtankexist=0;
-								if($qqtt['id_t']==NULL){
-									
-									$pageidp = "2.0/encyclopedia/tankinfo/?application_id=".$appid."&tank_id=".$wotidt;		
-									$pageidp = "api.".$wot_host.'/'.$pageidp;
-									$data2tank = get_page($pageidp);
-									$data2tank = json_decode($data2tank, true);
-									if ($data2tank['status'] == "ok"){
-										$tname=$data2tank['data'][$wotidt]['name'];
-										echo "обновляем данные о танке ".$tname.$myeol;
-										$level=$data2tank['data'][$wotidt]['level'];
-										$nation=$data2tank['data'][$wotidt]['nation'];
-										$class=$data2tank['data'][$wotidt]['type'];
-										$localized_name=$data2tank['data'][$wotidt]['localized_name'];
-										$image_url=$data2tank['data'][$wotidt]['image'];
-										$sqltn = "select * from cat_tanks where `name`='$tname'";
-										$qtn = mysql_query($sqltn, $connect);
-										if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-										$qqttn = mysql_fetch_array($qtn);
-										if ($qqttn['id_t']==NULL){
-											$newtankexist=1;
-											$sqltank= "INSERT INTO cat_tanks (wotidt,localized_name,image_url,name,level,nation,class)";
-											$sqltank.= " VALUES ('$wotidt','$localized_name','$image_url','$tname','$level','$nation','$class')";
-										}else{
-											$sqltank="UPDATE cat_tanks SET `wotidt`='$wotidt', `localized_name`='$localized_name', `image_url`='$image_url', `level`='$level', `nation`='$nation', `class`='$class' where `name`='$tname'";
-										}
-										$q = mysql_query($sqltank, $connect);
-										if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-									}else{
-										echo " Не удалось получить данные о технике".$myeol;
-										die;
-									}
-								}else{
-									
-									$tname=$qqtt['name'];
-									$nation=$qqtt['nation']; 
-									$level=$qqtt['level'];
-									$localized_name=$qqtt['localized_name']; 
-									$image_url=$qqtt['image_url']; 
-									$class=$qqtt['class'];
-									// $battle_count=$data['data']['vehicles'][$i]['battle_count'];
-									// $win_count=$data['data']['vehicles'][$i]['win_count'];
-								}
-								$markm=$pltank['mark_of_mastery']; 
-								$garage=$pltank['in_garage']; 
-								$battle_count=$pltank['statistics']['all']['battles'];
-								$win_count=$pltank['statistics']['all']['wins'];
-								$level_avg_all += $battle_count*$level;
-								$fragst=$pltank['statistics']['all']['frags'];
-								$spottedt=$pltank['statistics']['all']['spotted'];
-								$survivedBattles=$pltank['statistics']['all']['survived_battles'];
-								$damageDealt=$pltank['statistics']['all']['damage_dealt'];
-								
-								// $sqlt = "select id_t from cat_tanks where `wotidt`='$wotidt'";
-								// $qt = mysql_query($sqlt, $connect);
-								// if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-								// $qqtt = mysql_fetch_array($qt);
-								// $idt=$qqtt['id_t'];
-								//проверка на изменение ангара у игрока + исключение повторной записи в лог танков
-								if ($newtankexist!=1){
-									$sqlt2 = "select count(*) as cnt2 from player_btl where idt='$wotidt' and idp='$id'";
-									$qt2 = mysql_query($sqlt2, $connect);
+						if 	(($rGPL['mbattles']<>$battles_count) or ($rGPL['mbattles'] == NULL) or ($newtankist==1)) {
+
+							$pageidp = "2.0/account/tanks/?application_id=".$appid."&account_id=".$id;		
+							$pageidp = "api.".$wot_host.'/'.$pageidp;
+							$data2pt = get_page($pageidp);
+							$data2pt = json_decode($data2pt, true);
+							if ($data2pt['status'] == "ok"){
+								$date2=date("Y-m-d",strtotime(' -'.$timetolife.' day '.$hosttime));
+								$battles30t=0;
+								$level_avg = 0;
+								$level_avg_all=0;
+								$wins30t=0;
+								foreach ($data2pt['data'][$id] as $pltank){
+									$wotidt=$pltank['tank_id'];
+									// проверка на новый танк в клане
+									$sqlt = "select * from cat_tanks where `wotidt`='$wotidt'";
+									$qt = mysql_query($sqlt, $connect);
 									if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-									$qqtt2 = mysql_fetch_array($qt2);
-									if((($qqtt2['cnt2']==NULL) or ($qqtt2['cnt2']==0)) and ($newtankist!=1) and ($cntT>0)){
-										$type=0;
-										if ($level==10){$type=1;}
-										if ($level==9){$type=2;}
+									$qqtt = mysql_fetch_array($qt);
+									$newtankexist=0;
+									if($qqtt['id_t']==NULL){
+										
+										$pageidp = "2.0/encyclopedia/tankinfo/?application_id=".$appid."&tank_id=".$wotidt;		
+										$pageidp = "api.".$wot_host.'/'.$pageidp;
+										$data2tank = get_page($pageidp);
+										$data2tank = json_decode($data2tank, true);
+										if ($data2tank['status'] == "ok"){
+											$tname=$data2tank['data'][$wotidt]['name'];
+											echo "обновляем данные о танке ".$tname.$myeol;
+											$level=$data2tank['data'][$wotidt]['level'];
+											$nation=$data2tank['data'][$wotidt]['nation'];
+											$class=$data2tank['data'][$wotidt]['type'];
+											$localized_name=$data2tank['data'][$wotidt]['localized_name'];
+											$image_url=$data2tank['data'][$wotidt]['image'];
+											$sqltn = "select * from cat_tanks where `name`='$tname'";
+											$qtn = mysql_query($sqltn, $connect);
+											if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+											$qqttn = mysql_fetch_array($qtn);
+											if ($qqttn['id_t']==NULL){
+												$newtankexist=1;
+												$sqltank= "INSERT INTO cat_tanks (wotidt,localized_name,image_url,name,level,nation,class)";
+												$sqltank.= " VALUES ('$wotidt','$localized_name','$image_url','$tname','$level','$nation','$class')";
+											}else{
+												$sqltank="UPDATE cat_tanks SET `wotidt`='$wotidt', `localized_name`='$localized_name', `image_url`='$image_url', `level`='$level', `nation`='$nation', `class`='$class' where `name`='$tname'";
+											}
+											$q = mysql_query($sqltank, $connect);
+											if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+										}else{
+											echo " Не удалось получить данные о технике".$myeol;
+											die;
+										}
+									}else{
+										
+										$tname=$qqtt['name'];
+										$nation=$qqtt['nation']; 
+										$level=$qqtt['level'];
+										$localized_name=$qqtt['localized_name']; 
+										$image_url=$qqtt['image_url']; 
+										$class=$qqtt['class'];
+										// $battle_count=$data['data']['vehicles'][$i]['battle_count'];
+										// $win_count=$data['data']['vehicles'][$i]['win_count'];
+									}
+									$markm=$pltank['mark_of_mastery']; 
+									$garage=$pltank['in_garage']; 
+									$battle_count=$pltank['statistics']['all']['battles'];
+									$win_count=$pltank['statistics']['all']['wins'];
+									$level_avg_all += $battle_count*$level;
+									$fragst=$pltank['statistics']['all']['frags'];
+									$spottedt=$pltank['statistics']['all']['spotted'];
+									$survivedBattles=$pltank['statistics']['all']['survived_battles'];
+									$damageDealt=$pltank['statistics']['all']['damage_dealt'];
+									
+									// $sqlt = "select id_t from cat_tanks where `wotidt`='$wotidt'";
+									// $qt = mysql_query($sqlt, $connect);
+									// if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+									// $qqtt = mysql_fetch_array($qt);
+									// $idt=$qqtt['id_t'];
+									//проверка на изменение ангара у игрока + исключение повторной записи в лог танков
+									if ($newtankexist!=1){
+										$sqlt2 = "select count(*) as cnt2 from player_btl where idt='$wotidt' and idp='$id'";
+										$qt2 = mysql_query($sqlt2, $connect);
+										if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+										$qqtt2 = mysql_fetch_array($qt2);
+										if((($qqtt2['cnt2']==NULL) or ($qqtt2['cnt2']==0)) and ($newtankist!=1) and ($cntT>0)){
+											$type=0;
+											if ($level==10){$type=1;}
+											if ($level==9){$type=2;}
+											$sqlt = "INSERT INTO event_tank (idp,type,idc, idt,  date, time)";
+											$sqlt.= " VALUES ('$id','$type','$idc', '$wotidt',  '$date', '$time')";
+											$qt = mysql_query($sqlt, $connect);
+											if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+										}
+									}
+									// запись о текущих боях, есс число боев на танке увеличилось
+									$SQL3="SELECT max(battle_count) as ba_co, max(master) as maxmaster, max(date) as datebat, max(damageDealt) as dammax from player_btl where idp=$id and idt=$wotidt";
+									$qt3 = mysql_query($SQL3, $connect);
+									if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+									$qqtt3 = mysql_fetch_array($qt3);
+									$wi_co=$qqtt3['ba_co']; 
+									$dateb=$qqtt3['datebat'];
+									$damagem=$qqtt3['dammax'];
+									$maxmaster=$qqtt3['maxmaster'];
+									if (($markm>$maxmaster)and($allians==1)and($newtankist!=1)){
+										echo "          master - ".$markm.$myeol;
+										$type=10+$markm;
 										$sqlt = "INSERT INTO event_tank (idp,type,idc, idt,  date, time)";
 										$sqlt.= " VALUES ('$id','$type','$idc', '$wotidt',  '$date', '$time')";
 										$qt = mysql_query($sqlt, $connect);
 										if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 									}
-								}
-								// запись о текущих боях, есс число боев на танке увеличилось
-								$SQL3="SELECT max(battle_count) as ba_co, max(master) as maxmaster, max(date) as datebat, max(damageDealt) as dammax from player_btl where idp=$id and idt=$wotidt";
-								$qt3 = mysql_query($SQL3, $connect);
-								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-								$qqtt3 = mysql_fetch_array($qt3);
-								$wi_co=$qqtt3['ba_co']; 
-								$dateb=$qqtt3['datebat'];
-								$damagem=$qqtt3['dammax'];
-								$maxmaster=$qqtt3['maxmaster'];
-								if (($markm>$maxmaster)and($allians==1)and($newtankist!=1)){
-									echo "          master - ".$markm.$myeol;
-									$type=10+$markm;
-									$sqlt = "INSERT INTO event_tank (idp,type,idc, idt,  date, time)";
-									$sqlt.= " VALUES ('$id','$type','$idc', '$wotidt',  '$date', '$time')";
+									if ($wi_co<>$battle_count){ 
+										$x1=$battle_count-$wi_co;
+										echo "     $localized_name  +$x1 ".$myeol;
+										if ($dateb==$date){
+											$sqlt = "UPDATE player_btl SET `master`='$markm',`garage`='$garage',`time`='$time', `battle_count`='$battle_count', `win_count`='$win_count',`frags`='$fragst', `spotted`='$spottedt', `survivedBattles`='$survivedBattles', `damageDealt`='$damageDealt' WHERE `idp`='$id' and `idt`='$wotidt' and`date`='$date' ";
+										}
+										else{
+											$sqlt = "INSERT INTO player_btl (idp, idt, date, time, battle_count, win_count, frags, spotted, survivedBattles, damageDealt,master,garage)";
+											$sqlt.= " VALUES ('$id', '$wotidt', '$date1', '$time', '$battle_count', '$win_count', '$fragst', '$spottedt', '$survivedBattles', '$damageDealt','$markm','$garage')";
+										}	
+									}
+									else{ 
+										 // //привет варгеймингу, из-за сбоев в отдаче статистики приходится добавлять этот костыль
+										 $sqlt = "UPDATE player_btl SET `time`='$time',`master`='$markm',`garage`='$garage', `battle_count`='$battle_count', `win_count`='$win_count',`frags`='$fragst', `spotted`='$spottedt', `survivedBattles`='$survivedBattles', `damageDealt`='$damageDealt' WHERE `idp`='$id' and `idt`='$wotidt' and`date`='$dateb' ";
+									}
 									$qt = mysql_query($sqlt, $connect);
 									if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-								}
-								if ($wi_co<>$battle_count){ 
-									$x1=$battle_count-$wi_co;
-									echo "     $localized_name  +$x1 ".$myeol;
-									if ($dateb==$date){
-										$sqlt = "UPDATE player_btl SET `master`='$markm',`garage`='$garage',`time`='$time', `battle_count`='$battle_count', `win_count`='$win_count',`frags`='$fragst', `spotted`='$spottedt', `survivedBattles`='$survivedBattles', `damageDealt`='$damageDealt' WHERE `idp`='$id' and `idt`='$wotidt' and`date`='$date' ";
+									//удаляем старые выборки
+									$sqldelstart="SELECT max(date) as maxidpb FROM `player_btl` where idp=$id and idt=$wotidt and date<'$date2'";
+									$delstart1 = mysql_query($sqldelstart, $connect);
+									if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+									$delstart = mysql_fetch_array($delstart1);
+									if ($delstart['maxidpb']<>NULL){
+										$idpb=$delstart['maxidpb'];
+										$sql12 = "delete from `player_btl` where idp='$id' and idt='$wotidt' and date<'$idpb'"; 
+										$qq2 = mysql_query($sql12,$connect);
+										if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
 									}
-									else{
-										$sqlt = "INSERT INTO player_btl (idp, idt, date, time, battle_count, win_count, frags, spotted, survivedBattles, damageDealt,master,garage)";
-										$sqlt.= " VALUES ('$id', '$wotidt', '$date1', '$time', '$battle_count', '$win_count', '$fragst', '$spottedt', '$survivedBattles', '$damageDealt','$markm','$garage')";
-									}	
+									// удаляем старые выборки по player_c*
+									$sqldelstart="SELECT max(date) as maxidpb FROM player_clan where idp=$id and  date<'$date2'";
+									$delstart1 = mysql_query($sqldelstart, $connect);
+									if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+									$delstart = mysql_fetch_array($delstart1);
+									if ($delstart['maxidpb']<>NULL){
+										$idpb=$delstart['maxidpb'];
+										$sql12 = "delete from `player_clan` where idp='$id'  and date<'$idpb'"; 
+										$qq2 = mysql_query($sql12,$connect);
+										if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
+									}
+									$sqldelstart="SELECT max(date) as maxidpb FROM player_company where idp=$id and  date<'$date2'";
+									$delstart1 = mysql_query($sqldelstart, $connect);
+									if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+									$delstart = mysql_fetch_array($delstart1);
+									if ($delstart['maxidpb']<>NULL){
+										$idpb=$delstart['maxidpb'];
+										$sql12 = "delete from `player_company` where idp='$id'  and date<'$idpb'"; 
+										$qq2 = mysql_query($sql12,$connect);
+										if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
+									}
+									//
+									$sqlstart="SELECT min(battle_count) as bcbefore, min(win_count)as winbefore FROM `player_btl` where idp=$id and idt=$wotidt and date<'$date2'";
+									$bc30tsql = mysql_query($sqlstart, $connect);
+									if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+									$bc = mysql_fetch_array($bc30tsql);
+									$bcdelta=$battle_count-$bc['bcbefore'];
+									$windelta=$win_count-$bc['winbefore'];
+									if ($bcdelta<>0){
+										$wins30t+=$windelta;
+										$battles30t+=$bcdelta;
+										//echo "     $tname -- $bcdelta wins $windelta".$myeol;
+										$level_avg += $bcdelta*$level;
+									}
 								}
-								else{ 
-									 // //привет варгеймингу, из-за сбоев в отдаче статистики приходится добавлять этот костыль
-									 $sqlt = "UPDATE player_btl SET `time`='$time',`master`='$markm',`garage`='$garage', `battle_count`='$battle_count', `win_count`='$win_count',`frags`='$fragst', `spotted`='$spottedt', `survivedBattles`='$survivedBattles', `damageDealt`='$damageDealt' WHERE `idp`='$id' and `idt`='$wotidt' and`date`='$dateb' ";
+								if ($battles_count<>0){
+									$level_avg_all /= $battles_count;	
+								}	
+								echo "средний уровень танков - ".$level_avg_all.$myeol;
+								//rating
+								 $rating=0;
+								 if ($battles_count<>0){
+									
+									 $rating = round($frags/$battles_count*250
+											 +$damage_dealt/$battles_count*(10/($level_avg_all+2))*(0.23+2*$level_avg_all/100)
+											 +$spotted/$battles_count*150
+											 +$dropped_capture_points/$battles_count*150
+											 +(log($capture_points/$battles_count+1,1.732))*150);
+									echo " Rating newEFF:  ".$rating.$myeol;	
+									$wn6=round((1240-1040/pow(min($level_avg_all,6), 0.164))*$frags/$battles_count
+											+$damage_dealt/$battles_count*530/(184*exp(0.24*$level_avg_all)+130)
+											+$spotted/$battles_count*125
+											+min($dropped_capture_points/$battles_count,2.2)*100
+											+((185/(0.17+exp(($wins*100/$battles_count-35)*-0.134)))-500)*0.45
+											+(6-min($level_avg_all,6))*-60);
+									 echo " Rating WN6:  ".$wn6.$myeol;	  
+									 $wn7=round((1240-1040/pow(min($level_avg_all,6), 0.164))*$frags/$battles_count
+											+$damage_dealt/$battles_count*530/(184*exp(0.24*$level_avg_all)+130)
+											+$spotted/$battles_count*125
+											+min($dropped_capture_points/$battles_count,2.2)*100
+											+((185/(0.17+exp(($wins*100/$battles_count-35)*-0.134)))-500)*0.45
+											-((5-min($level_avg_all,5))*125)/(1+exp(($level_avg_all-pow($battles_count/220,3/$level_avg_all)*1.5))));
+										   // //-[(5 - MIN(TIER,5))*125] / [1 + e^( ( TIER - (GAMESPLAYED/220)^(3/TIER) )*1.5 )] 
+									 echo " Rating WN7: ".$wn7.$myeol;	
+								 }
+								 if ($battles_count<100) {
+									$wn6=0;
+									$rating=0;
+									$dropped_capture_points=0;
+									$capture_points=0;
+									$frags=0;
+									$spotted=0;
 								}
-								$qt = mysql_query($sqlt, $connect);
-								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-								//удаляем старые выборки
-								$sqldelstart="SELECT max(date) as maxidpb FROM `player_btl` where idp=$id and idt=$wotidt and date<'$date2'";
-								$delstart1 = mysql_query($sqldelstart, $connect);
-								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-								$delstart = mysql_fetch_array($delstart1);
-								if ($delstart['maxidpb']<>NULL){
-									$idpb=$delstart['maxidpb'];
-									$sql12 = "delete from `player_btl` where idp='$id' and idt='$wotidt' and date<'$idpb'"; 
-									$qq2 = mysql_query($sql12,$connect);
-									if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-								}
-								// удаляем старые выборки по player_c*
-								$sqldelstart="SELECT max(date) as maxidpb FROM player_clan where idp=$id and  date<'$date2'";
-								$delstart1 = mysql_query($sqldelstart, $connect);
-								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-								$delstart = mysql_fetch_array($delstart1);
-								if ($delstart['maxidpb']<>NULL){
-									$idpb=$delstart['maxidpb'];
-									$sql12 = "delete from `player_clan` where idp='$id'  and date<'$idpb'"; 
-									$qq2 = mysql_query($sql12,$connect);
-									if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-								}
-								$sqldelstart="SELECT max(date) as maxidpb FROM player_company where idp=$id and  date<'$date2'";
-								$delstart1 = mysql_query($sqldelstart, $connect);
-								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-								$delstart = mysql_fetch_array($delstart1);
-								if ($delstart['maxidpb']<>NULL){
-									$idpb=$delstart['maxidpb'];
-									$sql12 = "delete from `player_company` where idp='$id'  and date<'$idpb'"; 
-									$qq2 = mysql_query($sql12,$connect);
-									if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-								}
-								//
-								$sqlstart="SELECT min(battle_count) as bcbefore, min(win_count)as winbefore FROM `player_btl` where idp=$id and idt=$wotidt and date<'$date2'";
-								$bc30tsql = mysql_query($sqlstart, $connect);
-								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-								$bc = mysql_fetch_array($bc30tsql);
-								$bcdelta=$battle_count-$bc['bcbefore'];
-								$windelta=$win_count-$bc['winbefore'];
-								if ($bcdelta<>0){
-									$wins30t+=$windelta;
-									$battles30t+=$bcdelta;
-									//echo "     $tname -- $bcdelta wins $windelta".$myeol;
-									$level_avg += $bcdelta*$level;
-								}
-							}
-							if ($battles_count<>0){
-								$level_avg_all /= $battles_count;	
-							}	
-							echo "средний уровень танков - ".$level_avg_all.$myeol;
-							//rating
-							 $rating=0;
-							 if ($battles_count<>0){
-								
-								 $rating = round($frags/$battles_count*250
-										 +$damage_dealt/$battles_count*(10/($level_avg_all+2))*(0.23+2*$level_avg_all/100)
-										 +$spotted/$battles_count*150
-										 +$dropped_capture_points/$battles_count*150
-										 +(log($capture_points/$battles_count+1,1.732))*150);
-								echo " Rating newEFF:  ".$rating.$myeol;	
-								$wn6=round((1240-1040/pow(min($level_avg_all,6), 0.164))*$frags/$battles_count
-									    +$damage_dealt/$battles_count*530/(184*exp(0.24*$level_avg_all)+130)
-									    +$spotted/$battles_count*125
-									    +min($dropped_capture_points/$battles_count,2.2)*100
-									    +((185/(0.17+exp(($wins*100/$battles_count-35)*-0.134)))-500)*0.45
-									    +(6-min($level_avg_all,6))*-60);
-								 echo " Rating WN6:  ".$wn6.$myeol;	  
-								 $wn7=round((1240-1040/pow(min($level_avg_all,6), 0.164))*$frags/$battles_count
-									    +$damage_dealt/$battles_count*530/(184*exp(0.24*$level_avg_all)+130)
-									    +$spotted/$battles_count*125
-									    +min($dropped_capture_points/$battles_count,2.2)*100
-									    +((185/(0.17+exp(($wins*100/$battles_count-35)*-0.134)))-500)*0.45
-									    -((5-min($level_avg_all,5))*125)/(1+exp(($level_avg_all-pow($battles_count/220,3/$level_avg_all)*1.5))));
-									   // //-[(5 - MIN(TIER,5))*125] / [1 + e^( ( TIER - (GAMESPLAYED/220)^(3/TIER) )*1.5 )] 
-								 echo " Rating WN7: ".$wn7.$myeol;	
-							 }
-							 if ($battles_count<100) {
-								$wn6=0;
-								$rating=0;
-								$dropped_capture_points=0;
-								$capture_points=0;
-								$frags=0;
-								$spotted=0;
-							}
-							$rgpldate=$rGPL['mdate'];
-							$sqlpl="UPDATE player SET `time`='$time', `spotted`='$spotted', `hits_percents`='$hits_percents', `capture_points`='$capture_points', `damage_dealt`='$damage_dealt', `frags`='$frags', `dropped_capture_points`='$dropped_capture_points',wins='$wins',losses='$losses',battles_count='$battles_count',survived_battles='$survived_battles',xp='$xp',battle_avg_xp='$battle_avg_xp',
-								max_xp='$max_xp', rating='$rating', wn6='$wn6' WHERE `idp`='$id' and`date`='$rgpldate' ";
-							$sqlpl_clan="UPDATE player_clan SET `time`='$time',`spotted_clan`='$spotted_clan', `hits_percents_clan`='$hits_percents_clan', 
-								`capture_points_clan`='$capture_points_clan', `damage_dealt_clan`='$damage_dealt_clan', `frags_clan`='$frags_clan', 
-								`dropped_capture_points_clan`='$dropped_capture_points_clan',wins_clan='$wins_clan',losses_clan='$losses_clan',
-								battles_count_clan='$battles_count_clan',survived_battles_clan='$survived_battles_clan',xp_clan='$xp_clan',
-								battle_avg_xp_clan='$battle_avg_xp_clan'  WHERE `idp`='$id' and`date`='$rgpldate' ";	
-							$sqlpl_company="UPDATE player_company SET `time`='$time',`spotted_company`='$spotted_company', `hits_percents_company`='$hits_percents_company', 
-								`capture_points_company`='$capture_points_company', `damage_dealt_company`='$damage_dealt_company', `frags_company`='$frags_company', 
-								`dropped_capture_points_company`='$dropped_capture_points_company',wins_company='$wins_company',losses_company='$losses_company',
-								battles_count_company='$battles_count_company',survived_battles_company='$survived_battles_company',xp_company='$xp_company',
-								battle_avg_xp_company='$battle_avg_xp_company'  WHERE `idp`='$id' and`date`='$rgpldate' ";								
-							if 	(($rGPL['mbattles']<>$battles_count) or ($rGPL['mbattles'] == NULL)or ($rGPL['maxbcclan'] == NULL)or ($rGPL['maxbccompany'] == NULL) or ($newtankist==1)) {
-								//echo "<br>\n\nNew data!!!\n--------------------";
-								if (($rGPL['mbattles']<>$battles_count) and ($rGPL['mbattles'] != NULL) and ($newtankist!=1)){
-									if ($target>1) $target=(int)($target/2);
-								}
-								echo "New Target : $target".$myeol;
-								if ($rGPL['mdate']<>$date) {
-									$sqlpl = "INSERT INTO player (idp,idc,name,created_at,spotted, hits_percents,capture_points,damage_dealt,frags,dropped_capture_points,
-									 wins,losses,battles_count,survived_battles,xp,battle_avg_xp,
-									  max_xp,in_clan, date, time, rating,wn6)";
-									$sqlpl.= " VALUES ('$id','$idc','$pname','$created_at', 
-									 '$spotted','$hits_percents','$capture_points','$damage_dealt','$frags','$dropped_capture_points','$wins','$losses','$battles_count','$survived_battles','$xp','$battle_avg_xp',
-									 '$max_xp','1', '$date1', '$time', '$rating','$wn6')";
-								}
-								echo "боев в клане: ".$battles_count_clan." Было: ".$rGPL['maxbcclan'].$myeol;
-								if ($rGPL['maxbcclan']<>$battles_count_clan){
-									 $sqlpl_clan = "INSERT INTO player_clan (idp, spotted_clan, hits_percents_clan,capture_points_clan,damage_dealt_clan,frags_clan,dropped_capture_points_clan,wins_clan,losses_clan,battles_count_clan,survived_battles_clan,xp_clan,battle_avg_xp_clan,
-										date, time, rating,wn6)";
-									$sqlpl_clan.= " VALUES ('$id',
-									 '$spotted_clan','$hits_percents_clan','$capture_points_clan','$damage_dealt_clan','$frags_clan','$dropped_capture_points_clan','$wins_clan','$losses_clan','$battles_count_clan','$survived_battles_clan','$xp_clan','$battle_avg_xp_clan',
-									 '$date1', '$time', 0,0)";
-								}
-								if ($rGPL['maxbccompany']<>$battles_count_company){
-									$sqlpl_company = "INSERT INTO player_company (idp, spotted_company, hits_percents_company,capture_points_company,damage_dealt_company,frags_company,dropped_capture_points_company,wins_company,losses_company,battles_count_company,survived_battles_company,xp_company,battle_avg_xp_company,
-										date, time, rating,wn6)";
-									$sqlpl_company.= " VALUES ('$id',
-									 '$spotted_company','$hits_percents_company','$capture_points_company','$damage_dealt_company','$frags_company','$dropped_capture_points_company','$wins_company','$losses_company','$battles_count_company','$survived_battles_company','$xp_company','$battle_avg_xp_company',
-									 '$date1', '$time', 0,0)";
-								}
-							}else{
-								if ($target<$req_freq){
-									if ($allians==0){
+								$rgpldate=$rGPL['mdate'];
+								$sqlpl="UPDATE player SET `time`='$time', `spotted`='$spotted', `hits_percents`='$hits_percents', `capture_points`='$capture_points', `damage_dealt`='$damage_dealt', `frags`='$frags', `dropped_capture_points`='$dropped_capture_points',wins='$wins',losses='$losses',battles_count='$battles_count',survived_battles='$survived_battles',xp='$xp',battle_avg_xp='$battle_avg_xp',
+									max_xp='$max_xp', rating='$rating', wn6='$wn6' WHERE `idp`='$id' and`date`='$rgpldate' ";
+								$sqlpl_clan="UPDATE player_clan SET `time`='$time',`spotted_clan`='$spotted_clan', `hits_percents_clan`='$hits_percents_clan', 
+									`capture_points_clan`='$capture_points_clan', `damage_dealt_clan`='$damage_dealt_clan', `frags_clan`='$frags_clan', 
+									`dropped_capture_points_clan`='$dropped_capture_points_clan',wins_clan='$wins_clan',losses_clan='$losses_clan',
+									battles_count_clan='$battles_count_clan',survived_battles_clan='$survived_battles_clan',xp_clan='$xp_clan',
+									battle_avg_xp_clan='$battle_avg_xp_clan'  WHERE `idp`='$id' and`date`='$rgpldate' ";	
+								$sqlpl_company="UPDATE player_company SET `time`='$time',`spotted_company`='$spotted_company', `hits_percents_company`='$hits_percents_company', 
+									`capture_points_company`='$capture_points_company', `damage_dealt_company`='$damage_dealt_company', `frags_company`='$frags_company', 
+									`dropped_capture_points_company`='$dropped_capture_points_company',wins_company='$wins_company',losses_company='$losses_company',
+									battles_count_company='$battles_count_company',survived_battles_company='$survived_battles_company',xp_company='$xp_company',
+									battle_avg_xp_company='$battle_avg_xp_company'  WHERE `idp`='$id' and`date`='$rgpldate' ";								
+								if 	(($rGPL['mbattles']<>$battles_count) or ($rGPL['mbattles'] == NULL)or ($rGPL['maxbcclan'] == NULL)or ($rGPL['maxbccompany'] == NULL) or ($newtankist==1)) {
+									//echo "<br>\n\nNew data!!!\n--------------------";
+									if (($rGPL['mbattles']<>$battles_count) and ($rGPL['mbattles'] != NULL) and ($newtankist!=1)){
+										if ($target>1) $target=(int)($target/2);
+									}
+									echo "New Target : $target".$myeol;
+									if ($rGPL['mdate']<>$date) {
+										$sqlpl = "INSERT INTO player (idp,idc,name,created_at,spotted, hits_percents,capture_points,damage_dealt,frags,dropped_capture_points,
+										 wins,losses,battles_count,survived_battles,xp,battle_avg_xp,
+										  max_xp,in_clan, date, time, rating,wn6)";
+										$sqlpl.= " VALUES ('$id','$idc','$pname','$created_at', 
+										 '$spotted','$hits_percents','$capture_points','$damage_dealt','$frags','$dropped_capture_points','$wins','$losses','$battles_count','$survived_battles','$xp','$battle_avg_xp',
+										 '$max_xp','1', '$date1', '$time', '$rating','$wn6')";
+									}
+									echo "боев в клане: ".$battles_count_clan." Было: ".$rGPL['maxbcclan'].$myeol;
+									if ($rGPL['maxbcclan']<>$battles_count_clan){
+										 $sqlpl_clan = "INSERT INTO player_clan (idp, spotted_clan, hits_percents_clan,capture_points_clan,damage_dealt_clan,frags_clan,dropped_capture_points_clan,wins_clan,losses_clan,battles_count_clan,survived_battles_clan,xp_clan,battle_avg_xp_clan,
+											date, time, rating,wn6)";
+										$sqlpl_clan.= " VALUES ('$id',
+										 '$spotted_clan','$hits_percents_clan','$capture_points_clan','$damage_dealt_clan','$frags_clan','$dropped_capture_points_clan','$wins_clan','$losses_clan','$battles_count_clan','$survived_battles_clan','$xp_clan','$battle_avg_xp_clan',
+										 '$date1', '$time', 0,0)";
+									}
+									if ($rGPL['maxbccompany']<>$battles_count_company){
+										$sqlpl_company = "INSERT INTO player_company (idp, spotted_company, hits_percents_company,capture_points_company,damage_dealt_company,frags_company,dropped_capture_points_company,wins_company,losses_company,battles_count_company,survived_battles_company,xp_company,battle_avg_xp_company,
+											date, time, rating,wn6)";
+										$sqlpl_company.= " VALUES ('$id',
+										 '$spotted_company','$hits_percents_company','$capture_points_company','$damage_dealt_company','$frags_company','$dropped_capture_points_company','$wins_company','$losses_company','$battles_count_company','$survived_battles_company','$xp_company','$battle_avg_xp_company',
+										 '$date1', '$time', 0,0)";
+									}
+								}else{
+									if ($target<$req_freq){
+										if ($allians==0){
+											$target=$target+1;
+										}	
 										$target=$target+1;
-									}	
-									$target=$target+1;
+									}else {
+										$target=$req_freq;
+									}
 								}
+								$q = mysql_query($sqlpl, $connect);
+								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+								$q = mysql_query($sqlpl_clan, $connect);
+								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+								$q = mysql_query($sqlpl_company, $connect);
+								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+								if ($battles30t<>0){
+									$level_avg /= $battles30t;	
+								}
+								echo "battles/month: $battles30t \navg.level/month: $level_avg ".$myeol;
+								$sqldelstart="SELECT max(date) as maxidpb FROM `player` where idp=$id and date<'$date2'";
+								$delstart1 = mysql_query($sqldelstart, $connect);
+								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+								$delstart = mysql_fetch_array($delstart1);
+								if ($delstart['maxidpb']<>NULL){
+									$idpb=$delstart['maxidpb'];
+									$sql12 = "delete from `player` where idp='$id' and date<'$idpb'"; 
+									$qq2 = mysql_query($sql12,$connect);
+									if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
+								}
+								$sql="UPDATE `player` SET `in_clan`='1', `name`='$pname' WHERE `idp`='$id'";
+								mysql_query($sql, $connect);
+								if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
+								//данные для  30д.рейтинга
+								$sql = "select  * FROM `player` where idp='$id' order by id_p limit 1";
+								$q = mysql_query($sql,$connect);
+								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+								$databefore = mysql_fetch_array($q);
+								$battlesdelta=$battles_count-$databefore['battles_count'];
+								$winsdelta=$wins-$databefore['wins'];
+								$rating30=0;
+								$wn630=0;
+								$win30=0;
+								if ($battlesdelta>100){
+									$fragsdelta=$frags-$databefore['frags'];
+									$damagedelta=$damage_dealt-$databefore['damage_dealt'];
+									//echo "<br> боёв за месяц=$battlesdelta дамаг $damagedelta";
+									$spotteddelta=$spotted-$databefore['spotted'];
+									$dropdelta=$dropped_capture_points-$databefore['dropped_capture_points'];
+									$captdelta=$capture_points-$databefore['capture_points'];
+									echo "боёв за месяц=$battlesdelta дамаг $damagedelta обнаружено $spotteddelta зб $dropdelta зах $captdelta".$myeol;
+									$rating30 = round($fragsdelta/$battlesdelta*250
+											+$damagedelta/$battlesdelta*(10/($level_avg+2))*(0.23+2*$level_avg/100)
+											+$spotteddelta/$battlesdelta*150
+											+$dropdelta/$battlesdelta*150
+											+(log($captdelta/$battlesdelta+1,1.732))*150);
+									echo " Рейтинг30 - ".$rating30.$myeol; 	
+									
+									$win30=round($winsdelta*100/$battlesdelta,2);
+									
+									$wn630=round((1240-1040/pow(min($level_avg,6), 0.164))*$fragsdelta/$battlesdelta
+										   +$damagedelta/$battlesdelta*530/(184*exp(0.24*$level_avg)+130)
+										   +$spotteddelta/$battlesdelta*125
+										   +min($dropdelta/$battlesdelta,2.2)*100
+										   +((185/(0.17+exp(($wins30t*100/$battlesdelta-35)*-0.134)))-500)*0.45
+										   +(6-min($level_avg,6))*-60);
+									echo " Рейтинг wn630 - ".$wn630.$myeol;
+									$wn730=round((1240-1040/pow(min($level_avg,6), 0.164))*$fragsdelta/$battlesdelta
+										   +$damagedelta/$battlesdelta*530/(184*exp(0.24*$level_avg)+130)
+										   +$spotteddelta/$battlesdelta*125
+										   +min($dropdelta/$battlesdelta,2.2)*100
+										   +((185/(0.17+exp(($wins30t*100/$battlesdelta-35)*-0.134)))-500)*0.45
+										   -((5-min($level_avg,5))*125)/(1+exp(($level_avg-pow($battlesdelta/220,3/$level_avg)*1.5))));
+										   //+(6-min($level_avg,6))*-60);
+									echo " Рейтинг wn730 - ".$wn730.$myeol;
+									echo " % побед 30 - ".$win30.$myeol;
+									echo " Разница побед - ".$winsdelta.$myeol;
+								}
+								$sql="UPDATE `player` SET `in_clan`='1', `name`='$pname', `rating30`='$rating30',`wn630`='$wn630', `win30`= '$win30' WHERE `idp`='$id'";
+								 mysql_query($sql, $connect);
+								 if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
 							}
-							$q = mysql_query($sqlpl, $connect);
-							if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-							$q = mysql_query($sqlpl_clan, $connect);
-							if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-							$q = mysql_query($sqlpl_company, $connect);
-							if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-							if ($battles30t<>0){
-								$level_avg /= $battles30t;	
-							}
-							echo "battles/month: $battles30t \navg.level/month: $level_avg ".$myeol;
-							$sqldelstart="SELECT max(date) as maxidpb FROM `player` where idp=$id and date<'$date2'";
-							$delstart1 = mysql_query($sqldelstart, $connect);
-							if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-							$delstart = mysql_fetch_array($delstart1);
-							if ($delstart['maxidpb']<>NULL){
-								$idpb=$delstart['maxidpb'];
-								$sql12 = "delete from `player` where idp='$id' and date<'$idpb'"; 
-								$qq2 = mysql_query($sql12,$connect);
-								if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-								// $sql12 = "delete from `player_clan` where idp='$id' and date<'$idpb'"; 
-								// $qq2 = mysql_query($sql12,$connect);
-								// if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-								// $sql12 = "delete from `player_company` where idp='$id' and date<'$idpb'"; 
-								// $qq2 = mysql_query($sql12,$connect);
-								// if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-							}
-							$sql="UPDATE `player` SET `in_clan`='1', `name`='$pname' WHERE `idp`='$id'";
-							mysql_query($sql, $connect);
-							if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-							//данные для  30д.рейтинга
-							$sql = "select  * FROM `player` where idp='$id' order by id_p limit 1";
-							$q = mysql_query($sql,$connect);
-							if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-							$databefore = mysql_fetch_array($q);
-							$battlesdelta=$battles_count-$databefore['battles_count'];
-							$winsdelta=$wins-$databefore['wins'];
-							$rating30=0;
-							$wn630=0;
-							$win30=0;
-							if ($battlesdelta>100){
-								$fragsdelta=$frags-$databefore['frags'];
-								$damagedelta=$damage_dealt-$databefore['damage_dealt'];
-								//echo "<br> боёв за месяц=$battlesdelta дамаг $damagedelta";
-								$spotteddelta=$spotted-$databefore['spotted'];
-								$dropdelta=$dropped_capture_points-$databefore['dropped_capture_points'];
-								$captdelta=$capture_points-$databefore['capture_points'];
-								echo "боёв за месяц=$battlesdelta дамаг $damagedelta обнаружено $spotteddelta зб $dropdelta зах $captdelta".$myeol;
-								$rating30 = round($fragsdelta/$battlesdelta*250
-										+$damagedelta/$battlesdelta*(10/($level_avg+2))*(0.23+2*$level_avg/100)
-										+$spotteddelta/$battlesdelta*150
-										+$dropdelta/$battlesdelta*150
-										+(log($captdelta/$battlesdelta+1,1.732))*150);
-								echo " Рейтинг30 - ".$rating30.$myeol; 	
-								
-								$win30=round($winsdelta*100/$battlesdelta,2);
-								
-								$wn630=round((1240-1040/pow(min($level_avg,6), 0.164))*$fragsdelta/$battlesdelta
-									   +$damagedelta/$battlesdelta*530/(184*exp(0.24*$level_avg)+130)
-									   +$spotteddelta/$battlesdelta*125
-									   +min($dropdelta/$battlesdelta,2.2)*100
-									   +((185/(0.17+exp(($wins30t*100/$battlesdelta-35)*-0.134)))-500)*0.45
-									   +(6-min($level_avg,6))*-60);
-								echo " Рейтинг wn630 - ".$wn630.$myeol;
-								$wn730=round((1240-1040/pow(min($level_avg,6), 0.164))*$fragsdelta/$battlesdelta
-									   +$damagedelta/$battlesdelta*530/(184*exp(0.24*$level_avg)+130)
-									   +$spotteddelta/$battlesdelta*125
-									   +min($dropdelta/$battlesdelta,2.2)*100
-									   +((185/(0.17+exp(($wins30t*100/$battlesdelta-35)*-0.134)))-500)*0.45
-									   -((5-min($level_avg,5))*125)/(1+exp(($level_avg-pow($battlesdelta/220,3/$level_avg)*1.5))));
-									   //+(6-min($level_avg,6))*-60);
-								echo " Рейтинг wn730 - ".$wn730.$myeol;
-								echo " % побед 30 - ".$win30.$myeol;
-								echo " Разница побед - ".$winsdelta.$myeol;
-							}
-							$sql="UPDATE `player` SET `in_clan`='1', `name`='$pname', `rating30`='$rating30',`wn630`='$wn630', `win30`= '$win30' WHERE `idp`='$id'";
-							 mysql_query($sql, $connect);
-							 if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
 						}
 					}
 				}
