@@ -599,15 +599,6 @@ foreach ($ida as $id) {
 										 '$spotted_company','$hits_percents_company','$capture_points_company','$damage_dealt_company','$frags_company','$dropped_capture_points_company','$wins_company','$losses_company','$battles_count_company','$survived_battles_company','$xp_company','$battle_avg_xp_company',
 										 '$date1', '$time', 0,0)";
 									}
-								}else{
-									if ($target<$req_freq){
-										if ($allians==0){
-											$target=$target+1;
-										}	
-										$target=$target+1;
-									}else {
-										$target=$req_freq;
-									}
 								}
 								$q = mysql_query($sqlpl, $connect);
 								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
@@ -680,6 +671,15 @@ foreach ($ida as $id) {
 								$sql="UPDATE `player` SET `in_clan`='1', `name`='$pname', `rating30`='$rating30',`wn630`='$wn630', `win30`= '$win30' WHERE `idp`='$id'";
 								 mysql_query($sql, $connect);
 								 if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
+							}
+						}else{
+							if ($target<$req_freq){
+								if ($allians==0){
+									$target=$target+1;
+								}	
+								$target=$target+1;
+							}else {
+								$target=$req_freq;
 							}
 						}
 					}
