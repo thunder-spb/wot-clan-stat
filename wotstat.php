@@ -24,10 +24,23 @@ foreach ($clan_array as $clan_i) {
 $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Ошибка подключения к БД");
 $setnames = mysql_query( 'SET NAMES utf8' );
-$clanlist = mysql_query("select tag, name, rate, firepower, skill, position,smallimg from clan_info where idc='$idc'",$connect);
+$clanlist = mysql_query("select cl.tag as tag, cl.name as name, rate, firepower, skill, position,smallimg,alliances.name as aname from clan_info as cl left join alliances on cl.alliansid=alliances.ida  where idc='$idc'",$connect);
 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC);
-
+$validclan=0;
+$user=0;
+if (isset($_COOKIE['user'])){
+	$user=$_COOKIE['user'];
+	$pl = mysql_query("select name,idc from player  where idp='$user' order by `date` desc",$connect);
+	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+	$userd=mysql_fetch_array($pl,MYSQL_ASSOC);
+	foreach ($clan_array as $clan_i) {
+		$idc_temp = $clan_i["clan_id"];
+		if ($userd['idc'] == $idc_temp) {
+			$validclan=1;
+		}
+	}
+}
 ?>
 </title>
 <?php
@@ -67,15 +80,29 @@ body {
 </script>
 </head>
 <body>
+<?php if (!isset($_COOKIE['user'])or ($user==0)) {
+?>
+<div id="login">
+ <a href="login.php">Вход</a>
+</div>
+<?php 
+}else{
+  echo "Добро пожаловать, ".$userd['name'];
 
+		if ($validclan==0){
+			echo " Сожалеем, но вы не являетесь бойцом из нашего альянса. " ; 
+		}
+?>
+<a href="exit.php">Выход</a>
+<?php
+	}
+?>
 <header>
 	<h1><?php 
 	if ($clanrow<>NULL){
-		echo '<img src="'.$clanrow['smallimg'].'" style="width: 24px; height:24px;" align="absmiddle"/>';
-		echo " ".$clanrow["tag"];
-		echo '  -   ';
-		echo $clanrow["name"];
-		//echo "<br>";
+		echo '<img src="'.$clanrow['smallimg'].'" style="width: 24px; height:24px;" align="absmiddle"/> ';
+		echo "<b>".$clanrow["name"]."</b> [".$clanrow["tag"]."] <b>'".$clanrow["aname"]."'</b>";
+		//
 		echo " | место № ". $clanrow["position"]." | сила - ".$clanrow["rate"]. " | огн. мощь - ".$clanrow["firepower"]." | скилл - ".$clanrow["skill"];
 	}else{
 		foreach ($clan_array as $clan_i) {
@@ -104,11 +131,17 @@ body {
 <div id="tabs">
 	<ul>
 	    <li><a href="#tab-1">Клан</a></li>
+<?php 
+	if ($validclan==1){
+?>
 		<li><a href="#tab-2">Бойцы</a></li>
 		<li><a href="#tab-3">Техника</a></li>
 		<li><a href="#tab-6">ГК</a></li>
 		<li><a href="#tab-7">Техника 2</a></li>
 		<li><a href="#tab-8">Графики</a></li>
+<?php
+	}
+?>
 	</ul>
 	
 	<div id="tab-1">
@@ -148,6 +181,9 @@ body {
 				</div>
 		
 	</div>
+<?php 
+	if ($validclan==1){
+?>
 	<div id="tab-2">
 		
 		<table>
@@ -249,6 +285,9 @@ body {
                            </tr>
                </table>
       </div>
+<?php
+	}
+?>
 </div>
 </div>
 

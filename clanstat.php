@@ -18,10 +18,22 @@ if (array_key_exists("idc",$_GET)) {
 $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Ошибка подключения к БД");
 $setnames = mysql_query( 'SET NAMES utf8' );
-$clanlist = mysql_query("select tag, name, rate, firepower, skill,color, position,smallimg from clan_info where idc='$idc'",$connect);
+$clanlist = mysql_query("select cl.tag as tag, cl.name as name, rate, firepower, skill, position,smallimg,alliances.name as aname from clan_info as cl left join alliances on cl.alliansid=alliances.ida  where idc='$idc'",$connect);
 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC);
 echo $clanrow['tag'];
+$user=@$_COOKIE['user'];
+$pl = mysql_query("select name,idc from player  where idp='$user' order by `date` desc",$connect);
+if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+$user=mysql_fetch_array($pl,MYSQL_ASSOC);
+$validclan=0;
+foreach ($clan_array as $clan_i) {
+	$idc_temp = $clan_i["clan_id"];
+	if ($user['idc'] == $idc_temp) {
+		$validclan=1;
+	}
+}
+
 //echo $idc;
 //}
 ?>
@@ -61,13 +73,20 @@ html, body {
 </script>
 </head>
 <body>
+
 <header>
 	<h1><?php  
-		echo '<img src="'.$clanrow['smallimg'].'" style="width: 24px; height:24px;" align="absmiddle"/>';
-		echo " ".$clanrow["tag"];
-		echo '  -   ';
-		echo $clanrow["name"];
-		//echo "<span style='background-color:". $rowclan['color'].";'>"."    "."</span>";
+	if ($validclan==0){
+		echo "Вы не авторизованны";
+		exit();
+	}
+		$aname="";
+		if ($clanrow["aname"]<>NULL){
+			$aname="'".$clanrow["aname"]."'";
+		}
+		echo '<img src="'.$clanrow['smallimg'].'" style="width: 24px; height:24px;" align="absmiddle"/> ';
+		echo "<b>".$clanrow["name"]."</b> [".$clanrow["tag"]."] <b>".$aname."</b>";
+		//
 		echo " | место № ". $clanrow["position"]." | сила - ".$clanrow["rate"]. " | огн. мощь - ".$clanrow["firepower"]." | скилл - ".$clanrow["skill"];
 	
 

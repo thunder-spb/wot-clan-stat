@@ -12,8 +12,6 @@ $actwmdate=mysql_fetch_array($actwmdatesql,MYSQL_ASSOC);
 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $hour=date("H",strtotime($hosttime));
 if ($actwmdate['lasthourwm']<>NULL){
-	//echo "<br> активный ход <br>".$hour;
-	//echo "<br>последний успешный ход".$actwmdate['lasthourwm'];
 	if ($actwmdate['lasthourwm']==$hour){
 		//die ();
 	}
@@ -36,11 +34,16 @@ $iv = mysql_query("select lastiv from tech",$connect);
 $ivdb=mysql_fetch_array($iv,MYSQL_ASSOC);
 $iv=$ivdb['lastiv'];
 $dataiv=array();
+$dataivall=array();
 if ($iv<$t){
 	$pageidc = "http://ivanerr.ru/lt/export.php?byclanid";		
 	//$pageidc = $wot_host.'/'.$pageidc;
 	$dataiv1 = get_page($pageidc);
 	$dataiv = json_decode($dataiv1, true);
+	$pageidc = "http://ivanerr.ru/lt/export.php?alliances";		
+	//$pageidc = $wot_host.'/'.$pageidc;
+	$dataiv1 = get_page($pageidc);
+	$dataivall = json_decode($dataiv1, true);
 }
 //print_r ($dataiv);
 $sql = "select `idc` from clan_info where 1";
@@ -57,10 +60,29 @@ while ($clani=mysql_fetch_array($q1,MYSQL_ASSOC)) {
 		  $firepower=$dataiv["$iidc"]['firepower'];
 		  $skill=$dataiv["$iidc"]['skill'];
 		  $position=$dataiv["$iidc"]['position'];
-		  $sql = "UPDATE `clan_info` SET `rate`='$totalrate', firepower='$firepower', skill='$skill',  position='$position' WHERE `idc`='$iidc'";
+		  $alliansid=$dataiv["$iidc"]['allianceid'];
+		  $sql = "UPDATE `clan_info` SET `rate`='$totalrate', alliansid='$alliansid', firepower='$firepower', skill='$skill',  position='$position' WHERE `idc`='$iidc'";
 		  $q = mysql_query($sql, $connect);
 		  if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 	}
+}
+foreach ($dataivall as $ida){
+	$id=$ida['id'];
+	$name=$ida['name'];
+	$tag=$ida['tag'];;
+	$color=$ida['color'];
+	$sql = "select `ida` from alliances where ida='$id'";
+	$q1 = mysql_query($sql, $connect);
+	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n"; 
+	$row=mysql_fetch_array($q1,MYSQL_ASSOC);
+	if ($row['ida']<>NULL){
+		  $sql = "UPDATE `alliances` SET `name`='$name', tag='$tag', color='$color' WHERE `ida`='$id'";
+	}else{
+		$sql= "INSERT INTO alliances (ida,name, tag, color)";
+		$sql.= " VALUES ('$id', '$name', '$tag','$color')";
+	}
+	$q = mysql_query($sql, $connect);
+	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 }
 if ($cnt<>0){
 	$t1=time();

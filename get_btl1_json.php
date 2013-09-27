@@ -46,7 +46,7 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 		$SQL2 = "select idb,idc,time from btl where idb='$idb'and idc<>'$idc'";
 		$result22 = mysql_query( $SQL2,$connect );
 		$clane="";
-		$t=time()-700000;
+		$t=time()-604800;
 		while($row3=mysql_fetch_array($result22,MYSQL_ASSOC)){
 		//if ($row3<>NULL){
 			$clansa=$row3['idc'];

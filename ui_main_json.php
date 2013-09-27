@@ -208,8 +208,9 @@ for($i=0;$i<$count;$i++) {
 	if($wn6<1100) {$sp3="<span style='color: red;'><b>";  }
 	if($wn6>1200) {$sp3="<span style='color: green;'><b>";  }
 	if($wn6>1500) {$sp3="<span style='color: blue;'><b>";  }
-	if($wn630<1100) {$sp9="<span style='color: red;'><b>";  }
-	if($wn630>1200) {$sp9="<span style='color: green;'><b>";  }
+	if($wn630<1300) {$sp9="<span style='color: red;'><b>";  }
+	if($wn630>1400) {$sp9="<span style='color: green;'><b>";  }
+	if($wn630>1800) {$sp9="<span style='color: blue;'><b>";  }
 	if ($type==1){
 		if($win30<50) {$sp2="<span style='color: red;'><b>";  }
 		if($win30>55) {$sp2="<span style='color: green;'><b>";  }

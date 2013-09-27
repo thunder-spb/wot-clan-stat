@@ -25,7 +25,7 @@ if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n
 $qqt = mysql_fetch_array($q);
 $start=$qqt['current'];
 $cntmaxpl=$qqt['cntmaxpl'];
-$max_player_request=$qqt['maxplreq'];
+$max_player_request=min(99,$qqt['maxplreq']);
 $req_freq=$qqt['reqtarget'];
 if ($cntmaxpl<1){
 	$cntmaxpl=1;
@@ -573,7 +573,14 @@ foreach ($ida as $id) {
 								if 	(($rGPL['mbattles']<>$battles_count) or ($rGPL['mbattles'] == NULL)or ($rGPL['maxbcclan'] == NULL)or ($rGPL['maxbccompany'] == NULL) or ($newtankist==1)) {
 									//echo "<br>\n\nNew data!!!\n--------------------";
 									if (($rGPL['mbattles']<>$battles_count) and ($rGPL['mbattles'] != NULL) and ($newtankist!=1)){
-										if ($target>1) $target=(int)($target/2);
+										if ( $allians==1) {
+											$target=max(1,(int)($target/2));
+										}else{
+											$target=max(2,(int)($target/2));
+										}
+									}
+									if ($newtankist==1){
+										$target+=2;
 									}
 									echo "New Target : $target".$myeol;
 									if ($rGPL['mdate']<>$date) {
@@ -714,7 +721,7 @@ if (($force<>1)and ($offs<>0)){
 	$diffdate=$maxdate-$mindate;
 	$a=round($sumall/$cntlog,2);
 	echo "коэфициент наполнения - ".$a.$myeol."с последнего сброса прошло - ".$diffdate." секунд".$myeol;
-	if (($diffdate>87000)or(($cntlog>10)and(($atimer>25)or($a<0.7)))){
+	if (($diffdate>10800)or(($cntlog>10)and(($atimer>25)or($a<0.7)or ($atimer<5)))){
 		
 		if ($a<0.9){
 			echo "Слишком мало".$myeol;
