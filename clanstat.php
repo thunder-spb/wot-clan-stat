@@ -110,7 +110,6 @@ if (isset($_COOKIE['user'])) {
 	    <li><a href="#tab-1">Клан</a></li>
 		<li><a href="#tab-3">Техника</a></li>
 		<li><a href="#tab-6">ГК</a></li>
-		<li><a href="#tab-7">Техника 2</a></li>
 	</ul>
 	
 	<div id="tab-1">
@@ -127,26 +126,19 @@ if (isset($_COOKIE['user'])) {
 		
 	</div>
 	<div id="tab-3">		
-		<table id="techABS"></table>
-		<div id="techABSpager"></div>	
-		<br>
-		<table id="techCHM"></table>
-		<div id="techCHMpager"></div>	
-		<br>
-		<table id="techHT"></table>
-		<div id="techHTpager"></div>	
-		<br>
-		<table id="techMT"></table>
-		<div id="techMTpager"></div>	
-		<br>
-		<table id="techLT"></table>
-		<div id="techLTpager"></div>	
-		<br>
-		<table id="techSAU"></table>
-		<div id="techSAUpager"></div>
-		<br>
-		<table id="techAT"></table>
-		<div id="techATpager"></div>				
+		<table>
+			<tr>
+				<td valign="top">
+					<table id="techABS"></table>
+					<div id="techABSpager"></div>	
+				</td>
+				<td valign="top">
+					<table id="techCHM"></table>
+					<div id="techCHMpager"></div>	
+				</td>
+			</tr>			
+		</table>
+						
 	</div>
 	<div id="tab-6">
 		<table>
@@ -161,11 +153,7 @@ if (isset($_COOKIE['user'])) {
         <table id="battles1"></table>
 		<div id="battles1pager"></div>
      </div>
-	<div id="tab-7">
-		<table id="techABS2"></table>
-		<table id="techCHAMP2"></table>
-	</div>
-       
+	       
 </div>
 </div>
 

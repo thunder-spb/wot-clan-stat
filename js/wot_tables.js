@@ -810,92 +810,79 @@ $(function() {
 			}
 		}
 	});	
-	tmstat9 = $('#cn').jqGrid({
-		sortable: false,
-		altRows: true,
-		url:'get_cnews_json.php',
-		datatype: 'json',
-		mtype: "POST",
-		postData: {'filterBy':null},
-		colNames:['Дата','Событие'],
-		colModel :[
-			{name:'date', index:'date', width:30, align:"center"},	
-			{name:'message', index:'message', width:148, align:"left"}
-			
-			],
-		pager: '#cn_pager',
-		sortname: 'date',
-		viewrecords: true,
-		sortorder: 'desc',
-		width: 340,
-		height: 137,
-		rowNum: 100,
-		//hiddengrid:true,
-		caption: ' ',
-		rownumbers: false,
-		rownumWidth: 40,
-		grouping: false,
-		
-	});
-	tmstat10 = $('#techABS').jqGrid({
+	
+	tmstat9 = $('#techABS').jqGrid({
 		sortable: false,
 		altRows: false,
 		url:'get_pls09_json.php?idc='+idc,
 		datatype: 'json',
 		mtype: "POST",
 		postData: {'filterBy':null},
-		colNames:['','','Танк','Ур.','Шт.','в Ангаре у бойцов ( %% / всего боёв )'],
+		colNames:['','','','Танк','Ур.','Шт.'],
 		colModel :[
-			{name:'cls', index:'cls', width:-1, align:"left"},
-			{name:'col1', index:'col1', width:40, align:"center"},
+			{name:'cls', index:'cls', width:-1, align:"left",hidden:true},
+			
+			{name:'wotidt', index:'wotidt', width:40, align:"center",hidden:true},
+			{name:'img', index:'img', width:40, align:"center"},
 			{name:'col2', index:'col2', width:50, align:"center"},
-			{name:'level', index:'level', width:20, align:"center"},
+			{name:'level', index:'level', width:20, align:"center",hidden:true},
 			{name:'col3', index:'col3', width:20, align:"center"},
-			{name:'col4', index:'col4', width:600, align:"left"}
+			
 												
 			],
 		pager: '#techABSpager',
 		sortname: 'class',
 		viewrecords: true,
 		sortorder: 'desc',
-		width: 1250,
-		height: "100%",
+		width: 620,
+		height: 'auto',
 		rowNum: 100,
-		hiddengrid:true,
 		caption: 'Абсолют / Глобалка',
 		rownumbers: false,
 		rownumWidth: 40,
 		grouping: false,
+		
 		toolbar: false,
-		scroll: true,
+		//scroll: true,
+		subGrid : true,
+		subGridUrl : 'techsubgrid.php?idc='+idc,
+		subGridModel : [ 
+			{
+				name  : ['№', 'Имя', 'Боёв', '%%'],
+				width : [55, 200, 80, 80, 80],
+				align : ['left','left','right','right','right'],
+				params:['wotidt'],
+			}
+		],
 		afterInsertRow: function(row_id, row_data){
 			if (row_data.cls == 'SPG'){
+				$('#techABS').jqGrid('setCell',row_id,'img','',{'background-color':'#ffdab9'});
 				$('#techABS').jqGrid('setCell',row_id,'col1','',{'background-color':'#ffdab9'});
 				$('#techABS').jqGrid('setCell',row_id,'col2','',{'background-color':'#ffdab9'});
 				$('#techABS').jqGrid('setCell',row_id,'level','',{'background-color':'#ffdab9'});
 				$('#techABS').jqGrid('setCell',row_id,'col3','',{'background-color':'#ffdab9'});
-				$('#techABS').jqGrid('setCell',row_id,'col4','',{'background-color':'#ffdab9'});
-			}
+			}	
 			if (row_data.cls == 'AT-SPG'){
+			$('#techABS').jqGrid('setCell',row_id,'img','',{'background-color':'#c6efef'});
 				$('#techABS').jqGrid('setCell',row_id,'col1','',{'background-color':'#c6efef'});
 				$('#techABS').jqGrid('setCell',row_id,'col2','',{'background-color':'#c6efef'});
 				$('#techABS').jqGrid('setCell',row_id,'level','',{'background-color':'#c6efef'});
 				$('#techABS').jqGrid('setCell',row_id,'col3','',{'background-color':'#c6efef'});
-				$('#techABS').jqGrid('setCell',row_id,'col4','',{'background-color':'#c6efef'});
-			}
+			}	
 			if (row_data.cls == 'mediumTank'){
+			   $('#techABS').jqGrid('setCell',row_id,'img','',{'background-color':'#d0f0c0'});
 				$('#techABS').jqGrid('setCell',row_id,'col1','',{'background-color':'#d0f0c0'});
 				$('#techABS').jqGrid('setCell',row_id,'col2','',{'background-color':'#d0f0c0'});
 				$('#techABS').jqGrid('setCell',row_id,'level','',{'background-color':'#d0f0c0'});
 				$('#techABS').jqGrid('setCell',row_id,'col3','',{'background-color':'#d0f0c0'});
-				$('#techABS').jqGrid('setCell',row_id,'col4','',{'background-color':'#d0f0c0'});
 			}
 			if (row_data.cls == 'heavyTank'){
+		    	$('#techABS').jqGrid('setCell',row_id,'img','',{'background-color':'#98ff98'});
 				$('#techABS').jqGrid('setCell',row_id,'col1','',{'background-color':'#98ff98'});
 				$('#techABS').jqGrid('setCell',row_id,'col2','',{'background-color':'#98ff98'});
 				$('#techABS').jqGrid('setCell',row_id,'level','',{'background-color':'#98ff98'});
 				$('#techABS').jqGrid('setCell',row_id,'col3','',{'background-color':'#98ff98'});
-				$('#techABS').jqGrid('setCell',row_id,'col4','',{'background-color':'#98ff98'});
+				
 			}
 		}
 		
@@ -908,377 +895,76 @@ $(function() {
 		datatype: 'json',
 		mtype: "POST",
 		postData: {'filterBy':null},
-		colNames:['','','Танк','Ур.','Шт.','в Ангаре у бойцов ( %% / всего боёв )'],
+		colNames:['','','','Танк','Ур.','Шт.'],
 		colModel :[
-			{name:'cls', index:'cls', width:-1, align:"left"},
-			{name:'col1', index:'col1', width:40, align:"center"},
+			{name:'cls', index:'cls', width:-1, align:"left",hidden:true},
+			
+			{name:'wotidt', index:'wotidt', width:40, align:"center",hidden:true},
+			{name:'img', index:'img', width:40, align:"center"},
 			{name:'col2', index:'col2', width:50, align:"center"},
-			{name:'level', index:'level', width:20, align:"center"},
+			{name:'level', index:'level', width:20, align:"center",hidden:true},
 			{name:'col3', index:'col3', width:20, align:"center"},
-			{name:'col4', index:'col4', width:600, align:"left"}
+			
 												
 			],
 		pager: '#techCHMpager',
 		sortname: 'class',
 		viewrecords: true,
 		sortorder: 'desc',
-		width: 1250,
-		height: "100%",
+		width: 620,
+		height: 'auto',
 		rowNum: 100,
-		hiddengrid:true,
 		caption: 'Чемпионка',
 		rownumbers: false,
 		rownumWidth: 40,
 		grouping: false,
+		
 		toolbar: false,
-		scroll: true,
+		//scroll: true,
+		subGrid : true,
+		subGridUrl : 'techsubgrid.php?idc='+idc,
+		subGridModel : [ 
+			{
+				name  : ['№', 'Имя', 'Боёв', '%%'],
+				width : [55, 200, 80, 80, 80],
+				align : ['left','left','right','right','right'],
+				params:['wotidt'],
+			}
+		],
 		afterInsertRow: function(row_id, row_data){
 			if (row_data.cls == 'SPG'){
+				$('#techCHM').jqGrid('setCell',row_id,'img','',{'background-color':'#ffdab9'});
 				$('#techCHM').jqGrid('setCell',row_id,'col1','',{'background-color':'#ffdab9'});
 				$('#techCHM').jqGrid('setCell',row_id,'col2','',{'background-color':'#ffdab9'});
 				$('#techCHM').jqGrid('setCell',row_id,'level','',{'background-color':'#ffdab9'});
 				$('#techCHM').jqGrid('setCell',row_id,'col3','',{'background-color':'#ffdab9'});
-				$('#techCHM').jqGrid('setCell',row_id,'col4','',{'background-color':'#ffdab9'});
-			}
+			}	
 			if (row_data.cls == 'AT-SPG'){
+			$('#techCHM').jqGrid('setCell',row_id,'img','',{'background-color':'#c6efef'});
 				$('#techCHM').jqGrid('setCell',row_id,'col1','',{'background-color':'#c6efef'});
 				$('#techCHM').jqGrid('setCell',row_id,'col2','',{'background-color':'#c6efef'});
 				$('#techCHM').jqGrid('setCell',row_id,'level','',{'background-color':'#c6efef'});
 				$('#techCHM').jqGrid('setCell',row_id,'col3','',{'background-color':'#c6efef'});
-				$('#techCHM').jqGrid('setCell',row_id,'col4','',{'background-color':'#c6efef'});
-			}
+			}	
 			if (row_data.cls == 'mediumTank'){
+			   $('#techCHM').jqGrid('setCell',row_id,'img','',{'background-color':'#d0f0c0'});
 				$('#techCHM').jqGrid('setCell',row_id,'col1','',{'background-color':'#d0f0c0'});
 				$('#techCHM').jqGrid('setCell',row_id,'col2','',{'background-color':'#d0f0c0'});
 				$('#techCHM').jqGrid('setCell',row_id,'level','',{'background-color':'#d0f0c0'});
 				$('#techCHM').jqGrid('setCell',row_id,'col3','',{'background-color':'#d0f0c0'});
-				$('#techCHM').jqGrid('setCell',row_id,'col4','',{'background-color':'#d0f0c0'});
 			}
 			if (row_data.cls == 'heavyTank'){
+		    	$('#techCHM').jqGrid('setCell',row_id,'img','',{'background-color':'#98ff98'});
 				$('#techCHM').jqGrid('setCell',row_id,'col1','',{'background-color':'#98ff98'});
 				$('#techCHM').jqGrid('setCell',row_id,'col2','',{'background-color':'#98ff98'});
 				$('#techCHM').jqGrid('setCell',row_id,'level','',{'background-color':'#98ff98'});
 				$('#techCHM').jqGrid('setCell',row_id,'col3','',{'background-color':'#98ff98'});
-				$('#techCHM').jqGrid('setCell',row_id,'col4','',{'background-color':'#98ff98'});
+				
 			}
 		}
 		
 	});
-	tmstat10 = $('#techHT').jqGrid({
-		sortable: false,
-		altRows: false,
-		url:'get_tech01.php?idc='+idc,
-		datatype: 'json',
-		mtype: "POST",
-		postData: {'filterBy':null},
-		colNames:['','','Танк','Ур.','Шт.','в Ангаре у бойцов ( %% / всего боёв )'],
-		colModel :[
-			{name:'cls', index:'cls', width:-1, align:"left"},
-			{name:'col1', index:'col1', width:40, align:"center"},
-			{name:'col2', index:'col2', width:50, align:"center"},
-			{name:'level', index:'level', width:20, align:"center"},
-			{name:'col3', index:'col3', width:20, align:"center"},
-			{name:'col4', index:'col4', width:600, align:"left"}
-												
-			],
-		pager: '#techHTpager',
-		sortname: 'class',
-		viewrecords: true,
-		sortorder: 'desc',
-		width: 1250,
-		height: "100%",
-		rowNum: 100,
-		hiddengrid:true,
-		caption: '<img src="images/icons/ht.png" style="width: 16px; height:15px;" align="absmiddle"/> Тяжёлые танки',
-		rownumbers: false,
-		rownumWidth: 40,
-		grouping: false,
-		toolbar: false,
-		scroll: true,
-		afterInsertRow: function(row_id, row_data){
-			if (row_data.cls == 'SPG'){
-				$('#techHT').jqGrid('setCell',row_id,'col1','',{'background-color':'#ffdab9'});
-				$('#techHT').jqGrid('setCell',row_id,'col2','',{'background-color':'#ffdab9'});
-				$('#techHT').jqGrid('setCell',row_id,'level','',{'background-color':'#ffdab9'});
-				$('#techHT').jqGrid('setCell',row_id,'col3','',{'background-color':'#ffdab9'});
-				$('#techHT').jqGrid('setCell',row_id,'col4','',{'background-color':'#ffdab9'});
-			}
-			if (row_data.cls == 'AT-SPG'){
-				$('#techHT').jqGrid('setCell',row_id,'col1','',{'background-color':'#c6efef'});
-				$('#techHT').jqGrid('setCell',row_id,'col2','',{'background-color':'#c6efef'});
-				$('#techHT').jqGrid('setCell',row_id,'level','',{'background-color':'#c6efef'});
-				$('#techHT').jqGrid('setCell',row_id,'col3','',{'background-color':'#c6efef'});
-				$('#techHT').jqGrid('setCell',row_id,'col4','',{'background-color':'#c6efef'});
-			}
-			if (row_data.cls == 'mediumTank'){
-				$('#techHT').jqGrid('setCell',row_id,'col1','',{'background-color':'#d0f0c0'});
-				$('#techHT').jqGrid('setCell',row_id,'col2','',{'background-color':'#d0f0c0'});
-				$('#techHT').jqGrid('setCell',row_id,'level','',{'background-color':'#d0f0c0'});
-				$('#techHT').jqGrid('setCell',row_id,'col3','',{'background-color':'#d0f0c0'});
-				$('#techHT').jqGrid('setCell',row_id,'col4','',{'background-color':'#d0f0c0'});
-			}
-			if (row_data.cls == 'heavyTank'){
-				$('#techHT').jqGrid('setCell',row_id,'col1','',{'background-color':'#98ff98'});
-				$('#techHT').jqGrid('setCell',row_id,'col2','',{'background-color':'#98ff98'});
-				$('#techHT').jqGrid('setCell',row_id,'level','',{'background-color':'#98ff98'});
-				$('#techHT').jqGrid('setCell',row_id,'col3','',{'background-color':'#98ff98'});
-				$('#techHT').jqGrid('setCell',row_id,'col4','',{'background-color':'#98ff98'});
-			}
-		}
-		
-	});
-	tmstat10 = $('#techMT').jqGrid({
-		sortable: false,
-		altRows: false,
-		url:'get_tech02.php?idc='+idc,
-		datatype: 'json',
-		mtype: "POST",
-		postData: {'filterBy':null},
-		colNames:['','','Танк','Ур.','Шт.','в Ангаре у бойцов ( %% / всего боёв )'],
-		colModel :[
-			{name:'cls', index:'cls', width:-1, align:"left"},
-			{name:'col1', index:'col1', width:40, align:"center"},
-			{name:'col2', index:'col2', width:50, align:"center"},
-			{name:'level', index:'level', width:20, align:"center"},
-			{name:'col3', index:'col3', width:20, align:"center"},
-			{name:'col4', index:'col4', width:600, align:"left"}
-												
-			],
-		pager: '#techMTpager',
-		sortname: 'class',
-		viewrecords: true,
-		sortorder: 'desc',
-		width: 1250,
-		height: "100%",
-		rowNum: 100,
-		hiddengrid:true,
-		caption: '<img src="images/icons/mt.png" style="width: 16px; height:15px;" align="absmiddle"/> Средние танки',
-		rownumbers: false,
-		rownumWidth: 40,
-		grouping: false,
-		toolbar: false,
-		scroll: true,
-		afterInsertRow: function(row_id, row_data){
-			if (row_data.cls == 'SPG'){
-				$('#techMT').jqGrid('setCell',row_id,'col1','',{'background-color':'#ffdab9'});
-				$('#techMT').jqGrid('setCell',row_id,'col2','',{'background-color':'#ffdab9'});
-				$('#techMT').jqGrid('setCell',row_id,'level','',{'background-color':'#ffdab9'});
-				$('#techMT').jqGrid('setCell',row_id,'col3','',{'background-color':'#ffdab9'});
-				$('#techMT').jqGrid('setCell',row_id,'col4','',{'background-color':'#ffdab9'});
-			}
-			if (row_data.cls == 'AT-SPG'){
-				$('#techMT').jqGrid('setCell',row_id,'col1','',{'background-color':'#c6efef'});
-				$('#techMT').jqGrid('setCell',row_id,'col2','',{'background-color':'#c6efef'});
-				$('#techMT').jqGrid('setCell',row_id,'level','',{'background-color':'#c6efef'});
-				$('#techMT').jqGrid('setCell',row_id,'col3','',{'background-color':'#c6efef'});
-				$('#techMT').jqGrid('setCell',row_id,'col4','',{'background-color':'#c6efef'});
-			}
-			if (row_data.cls == 'mediumTank'){
-				$('#techMT').jqGrid('setCell',row_id,'col1','',{'background-color':'#d0f0c0'});
-				$('#techMT').jqGrid('setCell',row_id,'col2','',{'background-color':'#d0f0c0'});
-				$('#techMT').jqGrid('setCell',row_id,'level','',{'background-color':'#d0f0c0'});
-				$('#techMT').jqGrid('setCell',row_id,'col3','',{'background-color':'#d0f0c0'});
-				$('#techMT').jqGrid('setCell',row_id,'col4','',{'background-color':'#d0f0c0'});
-			}
-			if (row_data.cls == 'heavyTank'){
-				$('#techHT').jqGrid('setCell',row_id,'col1','',{'background-color':'#98ff98'});
-				$('#techHT').jqGrid('setCell',row_id,'col2','',{'background-color':'#98ff98'});
-				$('#techHT').jqGrid('setCell',row_id,'level','',{'background-color':'#98ff98'});
-				$('#techHT').jqGrid('setCell',row_id,'col3','',{'background-color':'#98ff98'});
-				$('#techHT').jqGrid('setCell',row_id,'col4','',{'background-color':'#98ff98'});
-			}
-		}
-		
-	});	
-	tmstat10 = $('#techLT').jqGrid({
-		sortable: false,
-		altRows: false,
-		url:'get_tech03.php?idc='+idc,
-		datatype: 'json',
-		mtype: "POST",
-		postData: {'filterBy':null},
-		colNames:['','','Танк','Ур.','Шт.','в Ангаре у бойцов ( %% / всего боёв )'],
-		colModel :[
-			{name:'cls', index:'cls', width:-1, align:"left"},
-			{name:'col1', index:'col1', width:40, align:"center"},
-			{name:'col2', index:'col2', width:50, align:"center"},
-			{name:'level', index:'level', width:20, align:"center"},
-			{name:'col3', index:'col3', width:20, align:"center"},
-			{name:'col4', index:'col4', width:600, align:"left"}
-												
-			],
-		pager: '#techLTpager',
-		sortname: 'class',
-		viewrecords: true,
-		sortorder: 'desc',
-		width: 1250,
-		height: "100%",
-		rowNum: 100,
-		hiddengrid:true,
-		caption: '<img src="images/icons/lt.png" style="width: 16px; height:15px;" align="absmiddle"/> Лёгкие танки',
-		rownumbers: false,
-		rownumWidth: 40,
-		grouping: false,
-		toolbar: false,
-		scroll: true,
-		afterInsertRow: function(row_id, row_data){
-			if (row_data.cls == 'SPG'){
-				$('#techLT').jqGrid('setCell',row_id,'col1','',{'background-color':'#ffdab9'});
-				$('#techLT').jqGrid('setCell',row_id,'col2','',{'background-color':'#ffdab9'});
-				$('#techLT').jqGrid('setCell',row_id,'level','',{'background-color':'#ffdab9'});
-				$('#techLT').jqGrid('setCell',row_id,'col3','',{'background-color':'#ffdab9'});
-				$('#techLT').jqGrid('setCell',row_id,'col4','',{'background-color':'#ffdab9'});
-			}
-			if (row_data.cls == 'AT-SPG'){
-				$('#techLT').jqGrid('setCell',row_id,'col1','',{'background-color':'#c6efef'});
-				$('#techLT').jqGrid('setCell',row_id,'col2','',{'background-color':'#c6efef'});
-				$('#techLT').jqGrid('setCell',row_id,'level','',{'background-color':'#c6efef'});
-				$('#techLT').jqGrid('setCell',row_id,'col3','',{'background-color':'#c6efef'});
-				$('#techLT').jqGrid('setCell',row_id,'col4','',{'background-color':'#c6efef'});
-			}
-			if (row_data.cls == 'mediumTank'){
-				$('#techLT').jqGrid('setCell',row_id,'col1','',{'background-color':'#d0f0c0'});
-				$('#techLT').jqGrid('setCell',row_id,'col2','',{'background-color':'#d0f0c0'});
-				$('#techLT').jqGrid('setCell',row_id,'level','',{'background-color':'#d0f0c0'});
-				$('#techLT').jqGrid('setCell',row_id,'col3','',{'background-color':'#d0f0c0'});
-				$('#techLT').jqGrid('setCell',row_id,'col4','',{'background-color':'#d0f0c0'});
-			}
-			if (row_data.cls == 'heavyTank'){
-				$('#techLT').jqGrid('setCell',row_id,'col1','',{'background-color':'#98ff98'});
-				$('#techLT').jqGrid('setCell',row_id,'col2','',{'background-color':'#98ff98'});
-				$('#techLT').jqGrid('setCell',row_id,'level','',{'background-color':'#98ff98'});
-				$('#techLT').jqGrid('setCell',row_id,'col3','',{'background-color':'#98ff98'});
-				$('#techLT').jqGrid('setCell',row_id,'col4','',{'background-color':'#98ff98'});
-			}
-		}
-		
-	});
-	tmstat10 = $('#techSAU').jqGrid({
-		sortable: false,
-		altRows: false,
-		url:'get_tech04.php?idc='+idc,
-		datatype: 'json',
-		mtype: "POST",
-		postData: {'filterBy':null},
-		colNames:['','','Танк','Ур.','Шт.','в Ангаре у бойцов ( %% / всего боёв )'],
-		colModel :[
-			{name:'cls', index:'cls', width:-1, align:"left"},
-			{name:'col1', index:'col1', width:40, align:"center"},
-			{name:'col2', index:'col2', width:50, align:"center"},
-			{name:'level', index:'level', width:20, align:"center"},
-			{name:'col3', index:'col3', width:20, align:"center"},
-			{name:'col4', index:'col4', width:600, align:"left"}
-												
-			],
-		pager: '#techSAUpager',
-		sortname: 'class',
-		viewrecords: true,
-		sortorder: 'desc',
-		width: 1250,
-		height: "100%",
-		rowNum: 100,
-		hiddengrid:true,
-		caption: '<img src="images/icons/spg.png" style="width: 16px; height:15px;" align="absmiddle"/> САУ',
-		rownumbers: false,
-		rownumWidth: 40,
-		grouping: false,
-		toolbar: false,
-		scroll: true,
-		afterInsertRow: function(row_id, row_data){
-			if (row_data.cls == 'SPG'){
-				$('#techSAU').jqGrid('setCell',row_id,'col1','',{'background-color':'#ffdab9'});
-				$('#techSAU').jqGrid('setCell',row_id,'col2','',{'background-color':'#ffdab9'});
-				$('#techSAU').jqGrid('setCell',row_id,'level','',{'background-color':'#ffdab9'});
-				$('#techSAU').jqGrid('setCell',row_id,'col3','',{'background-color':'#ffdab9'});
-				$('#techSAU').jqGrid('setCell',row_id,'col4','',{'background-color':'#ffdab9'});
-			}
-			if (row_data.cls == 'AT-SPG'){
-				$('#techSAU').jqGrid('setCell',row_id,'col1','',{'background-color':'#c6efef'});
-				$('#techSAU').jqGrid('setCell',row_id,'col2','',{'background-color':'#c6efef'});
-				$('#techSAU').jqGrid('setCell',row_id,'level','',{'background-color':'#c6efef'});
-				$('#techSAU').jqGrid('setCell',row_id,'col3','',{'background-color':'#c6efef'});
-				$('#techSAU').jqGrid('setCell',row_id,'col4','',{'background-color':'#c6efef'});
-			}
-			if (row_data.cls == 'mediumTank'){
-				$('#techSAU').jqGrid('setCell',row_id,'col1','',{'background-color':'#d0f0c0'});
-				$('#techSAU').jqGrid('setCell',row_id,'col2','',{'background-color':'#d0f0c0'});
-				$('#techSAU').jqGrid('setCell',row_id,'level','',{'background-color':'#d0f0c0'});
-				$('#techSAU').jqGrid('setCell',row_id,'col3','',{'background-color':'#d0f0c0'});
-				$('#techSAU').jqGrid('setCell',row_id,'col4','',{'background-color':'#d0f0c0'});
-			}
-			if (row_data.cls == 'heavyTank'){
-				$('#techSAU').jqGrid('setCell',row_id,'col1','',{'background-color':'#98ff98'});
-				$('#techSAU').jqGrid('setCell',row_id,'col2','',{'background-color':'#98ff98'});
-				$('#techSAU').jqGrid('setCell',row_id,'level','',{'background-color':'#98ff98'});
-				$('#techSAU').jqGrid('setCell',row_id,'col3','',{'background-color':'#98ff98'});
-				$('#techSAU').jqGrid('setCell',row_id,'col4','',{'background-color':'#98ff98'});
-			}
-		}
-		
-	});
-	tmstat10 = $('#techAT').jqGrid({
-		sortable: false,
-		altRows: false,
-		url:'get_tech05.php?idc='+idc,
-		datatype: 'json',
-		mtype: "POST",
-		postData: {'filterBy':null},
-		colNames:['','','Танк','Ур.','Шт.','в Ангаре у бойцов ( %% / всего боёв )'],
-		colModel :[
-			{name:'cls', index:'cls', width:-1, align:"left"},
-			{name:'col1', index:'col1', width:40, align:"center"},
-			{name:'col2', index:'col2', width:50, align:"center"},
-			{name:'level', index:'level', width:20, align:"center"},
-			{name:'col3', index:'col3', width:20, align:"center"},
-			{name:'col4', index:'col4', width:600, align:"left"}
-												
-			],
-		pager: '#techATpager',
-		sortname: 'class',
-		viewrecords: true,
-		sortorder: 'desc',
-		width: 1250,
-		height: "100%",
-		rowNum: 100,
-		hiddengrid:true,
-		caption: '<img src="images/icons/at.png" style="width: 16px; height:15px;" align="absmiddle"/> ПТ-САУ',
-		rownumbers: false,
-		rownumWidth: 40,
-		grouping: false,
-		toolbar: false,
-		scroll: true,
-		afterInsertRow: function(row_id, row_data){
-			if (row_data.cls == 'SPG'){
-				$('#techAT').jqGrid('setCell',row_id,'col1','',{'background-color':'#ffdab9'});
-				$('#techAT').jqGrid('setCell',row_id,'col2','',{'background-color':'#ffdab9'});
-				$('#techAT').jqGrid('setCell',row_id,'level','',{'background-color':'#ffdab9'});
-				$('#techAT').jqGrid('setCell',row_id,'col3','',{'background-color':'#ffdab9'});
-				$('#techAT').jqGrid('setCell',row_id,'col4','',{'background-color':'#ffdab9'});
-			}
-			if (row_data.cls == 'AT-SPG'){
-				$('#techAT').jqGrid('setCell',row_id,'col1','',{'background-color':'#c6efef'});
-				$('#techAT').jqGrid('setCell',row_id,'col2','',{'background-color':'#c6efef'});
-				$('#techAT').jqGrid('setCell',row_id,'level','',{'background-color':'#c6efef'});
-				$('#techAT').jqGrid('setCell',row_id,'col3','',{'background-color':'#c6efef'});
-				$('#techAT').jqGrid('setCell',row_id,'col4','',{'background-color':'#c6efef'});
-			}
-			if (row_data.cls == 'mediumTank'){
-				$('#techAT').jqGrid('setCell',row_id,'col1','',{'background-color':'#d0f0c0'});
-				$('#techAT').jqGrid('setCell',row_id,'col2','',{'background-color':'#d0f0c0'});
-				$('#techAT').jqGrid('setCell',row_id,'level','',{'background-color':'#d0f0c0'});
-				$('#techAT').jqGrid('setCell',row_id,'col3','',{'background-color':'#d0f0c0'});
-				$('#techAT').jqGrid('setCell',row_id,'col4','',{'background-color':'#d0f0c0'});
-			}
-			if (row_data.cls == 'heavyTank'){
-				$('#techAT').jqGrid('setCell',row_id,'col1','',{'background-color':'#98ff98'});
-				$('#techAT').jqGrid('setCell',row_id,'col2','',{'background-color':'#98ff98'});
-				$('#techAT').jqGrid('setCell',row_id,'level','',{'background-color':'#98ff98'});
-				$('#techAT').jqGrid('setCell',row_id,'col3','',{'background-color':'#98ff98'});
-				$('#techAT').jqGrid('setCell',row_id,'col4','',{'background-color':'#98ff98'});
-			}
-		}
-		
-	});
+	
 	var twm1 = $('#wmProvinces').jqGrid({
 		sortable: false,
 		altRows: false,
@@ -1410,7 +1096,7 @@ $(function() {
 		viewrecords: true,
 		sortorder: 'desc',
 		width: 1250,
-		height: "100%",
+		height: 'auto',
 		rowNum: 100,
 		//hiddengrid:true,
 		caption: 'Техника ГК',
@@ -1656,41 +1342,5 @@ function stickTogether(){
 		$(slaveId82).trigger('reloadGrid');
 }
 
-function stickTogetherDMB(){
-        var masterId        = $('#players_dmb_table');
-        var masterPostData  = $(masterId).jqGrid('getGridParam','postData');
-        var selId = $(masterId).jqGrid('getGridParam','selrow');
-		var selI = $(masterId).jqGrid('getCell',selId,'id_');
-        if(masterPostData.filterBy){
-            $(masterId).jqGrid('setGridParam',{'postData':{'filterBy':null}});
-            $(masterId).trigger('reloadGrid');
-        }
-        var slaveId   = $('#pl_summary_table'); 
-		var slaveId2  = $('#pl_summary_table2'); 
-		var slaveId3  = $('#pl_summary_table3'); 
-		var slaveId41  = $('#pl_summary_table41'); 
-		var slaveId42  = $('#pl_summary_table42');
-		var slaveId5  = $('#pl_summary_table5');
-		var slaveId6  = $('#pl_summary_table6');
-		var slaveId7  = $('#pl_summary_table7');
-		var slaveId8  = $('#pl_summary_table8');
-        $(slaveId).jqGrid('setGridParam',{'postData':{'filterBy':selI}});
-		$(slaveId2).jqGrid('setGridParam',{'postData':{'filterBy':selI}});
-        $(slaveId3).jqGrid('setGridParam',{'postData':{'filterBy':selI}});    
-		$(slaveId41).jqGrid('setGridParam',{'postData':{'filterBy':selI}}); 
-		$(slaveId42).jqGrid('setGridParam',{'postData':{'filterBy':selI}}); 
-		$(slaveId5).jqGrid('setGridParam',{'postData':{'filterBy':selI}});
-		$(slaveId6).jqGrid('setGridParam',{'postData':{'filterBy':selI}});
-		$(slaveId7).jqGrid('setGridParam',{'postData':{'filterBy':selI}});
-		$(slaveId8).jqGrid('setGridParam',{'postData':{'filterBy':selI}});
-        $(slaveId).trigger('reloadGrid');  
-		$(slaveId2).trigger('reloadGrid');
-		$(slaveId3).trigger('reloadGrid');
-		$(slaveId41).trigger('reloadGrid');
-		$(slaveId42).trigger('reloadGrid');
-		$(slaveId5).trigger('reloadGrid');
-		$(slaveId6).trigger('reloadGrid');
-		$(slaveId7).trigger('reloadGrid');
-		$(slaveId8).trigger('reloadGrid');
-}
+
 

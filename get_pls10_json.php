@@ -8,7 +8,7 @@ $db = mysql_select_db($dbname, $connect) or die("Ошибка подключения к БД");
 $setnames = mysql_query( 'SET NAMES utf8' );
 header('Content-Type: text/html; charset=UTF-8');
 
-$result = mysql_query("SELECT count(*) as cnt FROM `cat_tanks` where level=8");
+$result = mysql_query("SELECT count(*) as cnt FROM `cat_tanks` where level=10");
 $row = mysql_fetch_array($result,MYSQL_ASSOC); 
 $count_t = $row['cnt']; 
 //$message="<table  border='1' width='900px'>";
@@ -22,7 +22,7 @@ $result = mysql_query( $sql,$connect ) or die("Couldn t execute query.".mysql_er
 
 while($row = mysql_fetch_assoc($result)) {
 	$idt=$row['wotidt'];$br=0;	
-	$sql2="SELECT pl.name,pb.idp,max(pb.battle_count) as battle_count ,max(pb.win_count) as win_count FROM `player_btl` pb, `player` pl,`clan` cl WHERE pl.idp=pb.idp and pb.idt=$idt and cl.idp=pl.idp and cl.idc=$idc group by idp order by battle_count desc";
+	$sql2="SELECT pl.name,pb.idt as wotidt, pb.idp,max(pb.battle_count) as battle_count ,max(pb.win_count) as win_count FROM `player_btl` pb, `player` pl,`clan` cl WHERE pl.idp=pb.idp and pb.idt=$idt and cl.idp=pl.idp and cl.idc=$idc group by idp order by battle_count desc";
 	$result2 = mysql_query( $sql2,$connect ) or die("<br>Couldn t execute query.".mysql_error()); 
 	$cnt=0;
 	$player="";
@@ -40,8 +40,11 @@ while($row = mysql_fetch_assoc($result)) {
 	$col2=$row['localized_name'];
 	$col3=$cnt;
 	$col4=$player;
-	$data->rows[$i]['cell'] = array($row['class'],$col1,$col2,$row['level'],$col3,$col4);
-	$i++;
+	$wotidt=$row['wotidt'];
+	if ($cnt>0) {
+		$data->rows[$i]['cell'] = array($row['class'],$wotidt,$col1,$col2,$row['level'],$col3,$col4);
+		$i++;
+	}
 }
 header("Content-type: text/script;charset=utf-8");
 echo json_encode($data);

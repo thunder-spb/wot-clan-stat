@@ -137,7 +137,6 @@ body {
 		<li><a href="#tab-2">Бойцы</a></li>
 		<li><a href="#tab-3">Техника</a></li>
 		<li><a href="#tab-6">ГК</a></li>
-		<li><a href="#tab-7">Техника 2</a></li>
 		<li><a href="#tab-8">Графики</a></li>
 <?php
 	}
@@ -228,27 +227,20 @@ body {
 			</tr>
 		</table>
 	</div>
-	<div id="tab-3">		
-		<table id="techABS"></table>
-		<div id="techABSpager"></div>	
-		<br>
-		<table id="techCHM"></table>
-		<div id="techCHMpager"></div>	
-		<br>
-		<table id="techHT"></table>
-		<div id="techHTpager"></div>	
-		<br>
-		<table id="techMT"></table>
-		<div id="techMTpager"></div>	
-		<br>
-		<table id="techLT"></table>
-		<div id="techLTpager"></div>	
-		<br>
-		<table id="techSAU"></table>
-		<div id="techSAUpager"></div>
-		<br>
-		<table id="techAT"></table>
-		<div id="techATpager"></div>				
+	<div id="tab-3">	
+		<table>
+			<tr>
+				<td valign="top">
+					<table id="techABS"></table>
+					<div id="techABSpager"></div>	
+				</td>
+				<td valign="top">
+					<table id="techCHM"></table>
+					<div id="techCHMpager"></div>	
+				</td>
+			</tr>			
+		</table>
+					
 	</div>
 	<div id="tab-6">
 		<table>
@@ -263,11 +255,7 @@ body {
         <table id="battles1"></table>
 		<div id="battles1pager"></div>
      </div>
-	<div id="tab-7">
-		<table id="techABS2"></table>
-		<table id="techCHAMP2"></table>
-	</div>
-       <div id="tab-8">
+	<div id="tab-8">
                   <table>
                           <tr valign="top">
                                 <td>
