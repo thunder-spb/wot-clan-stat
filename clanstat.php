@@ -73,11 +73,21 @@ html, body {
 </script>
 </head>
 <body>
-
+<?php
+if (isset($_COOKIE['user'])) {
+ echo '<a href="exit.php">Выход</a>';
+}	
+?>
 <header>
 	<h1><?php  
 	if ($validclan==0){
-		echo "Вы не авторизованны";
+		echo "Вы не авторизованны ";
+		if (!isset($_COOKIE['user'])or ($user==0)) {
+		//echo '<div id="login">';
+		//print_r($_SERVER);
+		echo '<a href="login.php'.'?backcall='.$_SERVER['REQUEST_URI'].'">ВХОД</a>';
+		//echo '</div>';			
+		}
 		exit();
 	}
 		$aname="";

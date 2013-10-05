@@ -25,7 +25,7 @@ if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n
 $qqt = mysql_fetch_array($q);
 $start=$qqt['current'];
 $cntmaxpl=$qqt['cntmaxpl'];
-$max_player_request=min(99,$qqt['maxplreq']);
+$max_player_request=$qqt['maxplreq'];
 $req_freq=$qqt['reqtarget'];
 if ($cntmaxpl<1){
 	$cntmaxpl=1;
@@ -70,18 +70,18 @@ while ($clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC)) {
 $clancnt=array_unique($clancnt);
 $idlist="";
 foreach ($ida as $id) {
- $idlist=$idlist.$id.",";
+	$sql = "select * from clan where idp=$id and freq>=target";
+	$c1 = mysql_query($sql,$connect);
+	$c1 = mysql_fetch_array($c1);
+	if ($c1<>NULL){
+		$idlist=$idlist.$id.",";
+	}
 }
 print_r ($idlist);
 $pageidp = "2.0/account/info/?application_id=".$appid."&account_id=".$idlist;		
 $pageidp = "api.".$wot_host.'/'.$pageidp;
 $data2 = get_page($pageidp);
 $data2 = json_decode($data2, true);
-// $pageidp = "2.0/account/tanks/?application_id=".$appid."&account_id=".$idlist;		
-// $pageidp = "api.".$wot_host.'/'.$pageidp;
-// $data2pt = get_page($pageidp);
-// $data2pt = json_decode($data2pt, true);
-// print_r ($data2pt);
 foreach ($ida as $id) {
 		$sql = "select * from clan where idp='$id'";
 		$q = mysql_query($sql, $connect);
@@ -96,7 +96,7 @@ foreach ($ida as $id) {
 				$allpl=0;
 				break;//не стоит злоупотреблять доверием
 			}
-			$count1=$count1+1;
+			
 			$freq=0;
 			$inclan=0;//проверка на изменения списка альянса
 			$clantag1="";
@@ -347,7 +347,7 @@ foreach ($ida as $id) {
 						
 // работа со списком техники
 						if 	(($rGPL['mbattles']<>$battles_count) or ($rGPL['mbattles'] == NULL) or ($newtankist==1)) {
-
+							$count1=$count1+1;
 							$pageidp = "2.0/account/tanks/?application_id=".$appid."&account_id=".$id;		
 							$pageidp = "api.".$wot_host.'/'.$pageidp;
 							$data2pt = get_page($pageidp);
@@ -574,7 +574,7 @@ foreach ($ida as $id) {
 									//echo "<br>\n\nNew data!!!\n--------------------";
 									if (($rGPL['mbattles']<>$battles_count) and ($rGPL['mbattles'] != NULL) and ($newtankist!=1)){
 										if ( $allians==1) {
-											$target=max(1,(int)($target/2));
+											$target=max(1,(int)($target/max(2,($req_freq/8))));
 										}else{
 											$target=max(2,(int)($target/2));
 										}
@@ -721,7 +721,7 @@ if (($force<>1)and ($offs<>0)){
 	$diffdate=$maxdate-$mindate;
 	$a=round($sumall/$cntlog,2);
 	echo "коэфициент наполнения - ".$a.$myeol."с последнего сброса прошло - ".$diffdate." секунд".$myeol;
-	if (($diffdate>10800)or(($cntlog>10)and(($atimer>25)or($a<0.7)or ($atimer<5)))){
+	if (($diffdate>28800)or(($cntlog>10)and(($atimer>25)or($a<0.7)))){
 		
 		if ($a<0.9){
 			echo "Слишком мало".$myeol;
