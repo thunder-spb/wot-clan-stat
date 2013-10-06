@@ -197,20 +197,11 @@ $(function() {
 		grouping: false,
 		
 		toolbar: false,
-		//scroll: true,
 		subGrid : true,
 		subGridRowExpanded: function(subgrid_id, row_id) { 
-			// we pass two parameters 
-			// subgrid_id is a id of the div tag created whitin a table data 
-			// the id of this elemenet is a combination of the "sg_" + id of the row 
-			// the row_id is the id of the row 
-			// If we wan to pass additinal parameters to the url we can use 
-			// a method getRowData(row_id) - which returns associative array in type name-value 
-			// here we can easy construct the flowing 
-			var subgrid_table_id, pager_id; 
+			var subgrid_table_id; 
 			subgrid_table_id = subgrid_id+"_t"; 
-			pager_id = "p_"+subgrid_table_id; 
-			$("#"+subgrid_id).html("<table id='"+subgrid_table_id+"' class='scroll'></table><div id='"+pager_id+"' class='scroll'></div>"); 
+			$("#"+subgrid_id).html("<table id='"+subgrid_table_id+"' class='scroll'></table>"); 
 			jQuery("#"+subgrid_table_id).jqGrid({ 
 				url:"techsubgrid.php?idc="+idc+"&wotidt="+row_id, 
 				datatype: "json", 
@@ -222,19 +213,11 @@ $(function() {
 					{name:"proc",index:"proc",width:80,align:"right"}, 
 				], 
 				rowNum:100, 
-				pager: pager_id, 
 				sortname: 'name', 
 				sortorder: "asc", 
 				height: '100%' 
 			});
-			jQuery("#"+subgrid_table_id).jqGrid('navGrid',"#"+pager_id,{edit:false,add:false,del:false}) 
 		}, 
-		subGridRowColapsed: function(subgrid_id, row_id) { 
-			// this function is called before removing the data 
-			//var subgrid_table_id; 
-			//subgrid_table_id = subgrid_id+"_t"; 
-			//jQuery("#"+subgrid_table_id).remove(); 
-		},
 		afterInsertRow: function(row_id, row_data){
 			if (row_data.cls == 'SPG'){
 				$('#techABS').jqGrid('setCell',row_id,'img','',{'background-color':'#ffdab9'});
@@ -284,9 +267,7 @@ $(function() {
 			{name:'col2', index:'col2', width:50, align:"center"},
 			{name:'level', index:'level', width:20, align:"center",hidden:true},
 			{name:'col3', index:'col3', width:20, align:"center"},
-			
-												
-			],
+		],
 		pager: '#techCHMpager',
 		sortname: 'class',
 		viewrecords: true,
@@ -298,31 +279,12 @@ $(function() {
 		rownumbers: false,
 		rownumWidth: 40,
 		grouping: false,
-		
 		toolbar: false,
-		//scroll: true,
 		subGrid : true,
-		// subGridUrl : 'techsubgrid.php?idc='+idc,
-		// subGridModel : [ 
-			// {
-				// name  : ['№', 'Имя', 'Боёв', '%%'],
-				// width : [55, 200, 80, 80, 80],
-				// align : ['left','left','right','right','right'],
-				// params:['wotidt'],
-			// }
-		// ],
 		subGridRowExpanded: function(subgrid_id, row_id) { 
-			// we pass two parameters 
-			// subgrid_id is a id of the div tag created whitin a table data 
-			// the id of this elemenet is a combination of the "sg_" + id of the row 
-			// the row_id is the id of the row 
-			// If we wan to pass additinal parameters to the url we can use 
-			// a method getRowData(row_id) - which returns associative array in type name-value 
-			// here we can easy construct the flowing 
-			var subgrid_table_id, pager_id; 
+			var subgrid_table_id; 
 			subgrid_table_id = subgrid_id+"_t"; 
-			pager_id = "p_"+subgrid_table_id; 
-			$("#"+subgrid_id).html("<table id='"+subgrid_table_id+"' class='scroll'></table><div id='"+pager_id+"' class='scroll'></div>"); 
+			$("#"+subgrid_id).html("<table id='"+subgrid_table_id+"' class='scroll'></table>"); 
 			jQuery("#"+subgrid_table_id).jqGrid({ 
 				url:"techsubgrid.php?idc="+idc+"&wotidt="+row_id, 
 				datatype: "json", 
@@ -334,19 +296,11 @@ $(function() {
 					{name:"proc",index:"proc",width:80,align:"right"}, 
 				], 
 				rowNum:100, 
-				pager: pager_id, 
 				sortname: 'name', 
 				sortorder: "asc", 
 				height: '100%' 
 			});
-			jQuery("#"+subgrid_table_id).jqGrid('navGrid',"#"+pager_id,{edit:false,add:false,del:false}) 
 		}, 
-		subGridRowColapsed: function(subgrid_id, row_id) { 
-			// this function is called before removing the data 
-			//var subgrid_table_id; 
-			//subgrid_table_id = subgrid_id+"_t"; 
-			//jQuery("#"+subgrid_table_id).remove(); 
-		},
 		afterInsertRow: function(row_id, row_data){
 			if (row_data.cls == 'SPG'){
 				$('#techCHM').jqGrid('setCell',row_id,'img','',{'background-color':'#ffdab9'});

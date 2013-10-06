@@ -852,10 +852,9 @@ $(function() {
 			// If we wan to pass additinal parameters to the url we can use 
 			// a method getRowData(row_id) - which returns associative array in type name-value 
 			// here we can easy construct the flowing 
-			var subgrid_table_id, pager_id; 
+			var subgrid_table_id; 
 			subgrid_table_id = subgrid_id+"_t"; 
-			pager_id = "p_"+subgrid_table_id; 
-			$("#"+subgrid_id).html("<table id='"+subgrid_table_id+"' class='scroll'></table><div id='"+pager_id+"' class='scroll'></div>"); 
+			$("#"+subgrid_id).html("<table id='"+subgrid_table_id+"' class='scroll'></table>"); 
 			jQuery("#"+subgrid_table_id).jqGrid({ 
 				url:"techsubgrid.php?idc="+idc+"&wotidt="+row_id, 
 				datatype: "json", 
@@ -867,12 +866,10 @@ $(function() {
 					{name:"proc",index:"proc",width:80,align:"right"}, 
 				], 
 				rowNum:100, 
-				pager: pager_id, 
 				sortname: 'name', 
 				sortorder: "asc", 
 				height: '100%' 
 			});
-			jQuery("#"+subgrid_table_id).jqGrid('navGrid',"#"+pager_id,{edit:false,add:false,del:false}) 
 		}, 
 		subGridRowColapsed: function(subgrid_id, row_id) { 
 			// this function is called before removing the data 
@@ -964,10 +961,9 @@ $(function() {
 			// If we wan to pass additinal parameters to the url we can use 
 			// a method getRowData(row_id) - which returns associative array in type name-value 
 			// here we can easy construct the flowing 
-			var subgrid_table_id, pager_id; 
+			var subgrid_table_id; 
 			subgrid_table_id = subgrid_id+"_t"; 
-			pager_id = "p_"+subgrid_table_id; 
-			$("#"+subgrid_id).html("<table id='"+subgrid_table_id+"' class='scroll'></table><div id='"+pager_id+"' class='scroll'></div>"); 
+			$("#"+subgrid_id).html("<table id='"+subgrid_table_id+"' class='scroll'></table>"); 
 			jQuery("#"+subgrid_table_id).jqGrid({ 
 				url:"techsubgrid.php?idc="+idc+"&wotidt="+row_id, 
 				datatype: "json", 
@@ -979,12 +975,10 @@ $(function() {
 					{name:"proc",index:"proc",width:80,align:"right"}, 
 				], 
 				rowNum:100, 
-				pager: pager_id, 
 				sortname: 'name', 
 				sortorder: "asc", 
 				height: '100%' 
 			});
-			jQuery("#"+subgrid_table_id).jqGrid('navGrid',"#"+pager_id,{edit:false,add:false,del:false}) 
 		}, 
 		subGridRowColapsed: function(subgrid_id, row_id) { 
 			// this function is called before removing the data 
