@@ -7,7 +7,7 @@ $back="";
 if (!isset($_REQUEST['backcall'])){
     $back="&backcall=".$_REQUEST['backcall'];
 }
-$pageidp = "2.0/auth/login/?application_id=".$appidlogin."&redirect_uri=".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'].$back;	
+$pageidp = "2.0/auth/login/?application_id=".$appidlogin."&redirect_uri=http://".$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'].$back;	
 
 if (!isset($_REQUEST['status'])){
     Header("Location: https://api.{$wot_host}/{$pageidp}");
