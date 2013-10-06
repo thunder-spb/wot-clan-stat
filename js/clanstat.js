@@ -173,14 +173,15 @@ $(function() {
 		datatype: 'json',
 		mtype: "POST",
 		postData: {'filterBy':null},
-		colNames:['','','','Танк','Ур.','Шт.'],
+		colNames:['','','','','Танк','Ур.','Шт.'],
 		colModel :[
-		    {name:'wotidt', index:'wotidt', width:40, align:"center",key:true,hidden:true},	
-			{name:'cls', index:'cls', width:-1, align:"left",hidden:true},
-			{name:'img', index:'img', width:40, align:"center"},
-			{name:'col2', index:'col2', width:50, align:"center"},
-			{name:'level', index:'level', width:20, align:"center",hidden:true},
-			{name:'col3', index:'col3', width:20, align:"center"},
+		    {name:'wotidt', index:'wotidt', width:40, align:"center",sortable:false,key:true,hidden:true},	
+			{name:'cls', index:'cls', width:-1, align:"left",sortable:false,hidden:true},
+			{name:'nation', index:'nation', width:30,sortable:false, align:"center"},
+			{name:'img', index:'img', width:50,sortable:false, align:"center"},
+			{name:'col2', index:'col2', width:50,sortable:false, align:"center"},
+			{name:'level', index:'level', width:20,sortable:false, align:"center",hidden:true},
+			{name:'col3', index:'col3', width:20,sortable:false, align:"center"},
 			
 												
 			],
@@ -197,8 +198,16 @@ $(function() {
 		grouping: false,
 		
 		toolbar: false,
+		//scroll: true,
 		subGrid : true,
 		subGridRowExpanded: function(subgrid_id, row_id) { 
+			// we pass two parameters 
+			// subgrid_id is a id of the div tag created whitin a table data 
+			// the id of this elemenet is a combination of the "sg_" + id of the row 
+			// the row_id is the id of the row 
+			// If we wan to pass additinal parameters to the url we can use 
+			// a method getRowData(row_id) - which returns associative array in type name-value 
+			// here we can easy construct the flowing 
 			var subgrid_table_id; 
 			subgrid_table_id = subgrid_id+"_t"; 
 			$("#"+subgrid_id).html("<table id='"+subgrid_table_id+"' class='scroll'></table>"); 
@@ -218,6 +227,12 @@ $(function() {
 				height: '100%' 
 			});
 		}, 
+		subGridRowColapsed: function(subgrid_id, row_id) { 
+			// this function is called before removing the data 
+			//var subgrid_table_id; 
+			//subgrid_table_id = subgrid_id+"_t"; 
+			//jQuery("#"+subgrid_table_id).remove(); 
+		},
 		afterInsertRow: function(row_id, row_data){
 			if (row_data.cls == 'SPG'){
 				$('#techABS').jqGrid('setCell',row_id,'img','',{'background-color':'#ffdab9'});
@@ -225,6 +240,8 @@ $(function() {
 				$('#techABS').jqGrid('setCell',row_id,'col2','',{'background-color':'#ffdab9'});
 				$('#techABS').jqGrid('setCell',row_id,'level','',{'background-color':'#ffdab9'});
 				$('#techABS').jqGrid('setCell',row_id,'col3','',{'background-color':'#ffdab9'});
+				$('#techABS').jqGrid('setCell',row_id,'nation','',{'background-color':'#ffdab9'});
+				$('#techABS').jqGrid('setCell',row_id,'subgrid','',{'background-color':'#ffdab9'});
 			}	
 			if (row_data.cls == 'AT-SPG'){
 			$('#techABS').jqGrid('setCell',row_id,'img','',{'background-color':'#c6efef'});
@@ -232,6 +249,8 @@ $(function() {
 				$('#techABS').jqGrid('setCell',row_id,'col2','',{'background-color':'#c6efef'});
 				$('#techABS').jqGrid('setCell',row_id,'level','',{'background-color':'#c6efef'});
 				$('#techABS').jqGrid('setCell',row_id,'col3','',{'background-color':'#c6efef'});
+				$('#techABS').jqGrid('setCell',row_id,'nation','',{'background-color':'#c6efef'});
+				$('#techABS').jqGrid('setCell',row_id,'subgrid','',{'background-color':'#c6efef'});
 			}	
 			if (row_data.cls == 'mediumTank'){
 			   $('#techABS').jqGrid('setCell',row_id,'img','',{'background-color':'#d0f0c0'});
@@ -239,6 +258,8 @@ $(function() {
 				$('#techABS').jqGrid('setCell',row_id,'col2','',{'background-color':'#d0f0c0'});
 				$('#techABS').jqGrid('setCell',row_id,'level','',{'background-color':'#d0f0c0'});
 				$('#techABS').jqGrid('setCell',row_id,'col3','',{'background-color':'#d0f0c0'});
+				$('#techABS').jqGrid('setCell',row_id,'nation','',{'background-color':'#d0f0c0'});
+				$('#techABS').jqGrid('setCell',row_id,'subgrid','',{'background-color':'#d0f0c0'});
 			}
 			if (row_data.cls == 'heavyTank'){
 		    	$('#techABS').jqGrid('setCell',row_id,'img','',{'background-color':'#98ff98'});
@@ -246,7 +267,8 @@ $(function() {
 				$('#techABS').jqGrid('setCell',row_id,'col2','',{'background-color':'#98ff98'});
 				$('#techABS').jqGrid('setCell',row_id,'level','',{'background-color':'#98ff98'});
 				$('#techABS').jqGrid('setCell',row_id,'col3','',{'background-color':'#98ff98'});
-				
+				$('#techABS').jqGrid('setCell',row_id,'nation','',{'background-color':'#98ff98'});
+				$('#techABS').jqGrid('setCell',row_id,'subgrid','',{'background-color':'#98ff98'});
 			}
 		}
 		
@@ -259,15 +281,18 @@ $(function() {
 		datatype: 'json',
 		mtype: "POST",
 		postData: {'filterBy':null},
-		colNames:['','','','Танк','Ур.','Шт.'],
+		colNames:['','','','','Танк','Ур.','Шт.'],
 		colModel :[
-		    {name:'wotidt', index:'wotidt', width:40, align:"center",key:true,hidden:true},	
-			{name:'cls', index:'cls', width:-1, align:"left",hidden:true},
-			{name:'img', index:'img', width:40, align:"center"},
-			{name:'col2', index:'col2', width:50, align:"center"},
-			{name:'level', index:'level', width:20, align:"center",hidden:true},
-			{name:'col3', index:'col3', width:20, align:"center"},
-		],
+		    {name:'wotidt', index:'wotidt', width:40,sortable:false, align:"center",key:true,hidden:true},	
+			{name:'cls', index:'cls', width:-1,sortable:false, align:"left",hidden:true},
+			{name:'nation', index:'nation',sortable:false, width:30, align:"center"},
+			{name:'img', index:'img', width:50,sortable:false, align:"center"},
+			{name:'col2', index:'col2', width:50,sortable:false, align:"center"},
+			{name:'level', index:'level', width:20,sortable:false, align:"center",hidden:true},
+			{name:'col3', index:'col3', width:20,sortable:false, align:"center"},
+			
+												
+			],
 		pager: '#techCHMpager',
 		sortname: 'class',
 		viewrecords: true,
@@ -279,9 +304,27 @@ $(function() {
 		rownumbers: false,
 		rownumWidth: 40,
 		grouping: false,
+		
 		toolbar: false,
+		//scroll: true,
 		subGrid : true,
+		// subGridUrl : 'techsubgrid.php?idc='+idc,
+		// subGridModel : [ 
+			// {
+				// name  : ['№', 'Имя', 'Боёв', '%%'],
+				// width : [55, 200, 80, 80, 80],
+				// align : ['left','left','right','right','right'],
+				// params:['wotidt'],
+			// }
+		// ],
 		subGridRowExpanded: function(subgrid_id, row_id) { 
+			// we pass two parameters 
+			// subgrid_id is a id of the div tag created whitin a table data 
+			// the id of this elemenet is a combination of the "sg_" + id of the row 
+			// the row_id is the id of the row 
+			// If we wan to pass additinal parameters to the url we can use 
+			// a method getRowData(row_id) - which returns associative array in type name-value 
+			// here we can easy construct the flowing 
 			var subgrid_table_id; 
 			subgrid_table_id = subgrid_id+"_t"; 
 			$("#"+subgrid_id).html("<table id='"+subgrid_table_id+"' class='scroll'></table>"); 
@@ -301,6 +344,12 @@ $(function() {
 				height: '100%' 
 			});
 		}, 
+		subGridRowColapsed: function(subgrid_id, row_id) { 
+			// this function is called before removing the data 
+			//var subgrid_table_id; 
+			//subgrid_table_id = subgrid_id+"_t"; 
+			//jQuery("#"+subgrid_table_id).remove(); 
+		},
 		afterInsertRow: function(row_id, row_data){
 			if (row_data.cls == 'SPG'){
 				$('#techCHM').jqGrid('setCell',row_id,'img','',{'background-color':'#ffdab9'});
@@ -308,6 +357,8 @@ $(function() {
 				$('#techCHM').jqGrid('setCell',row_id,'col2','',{'background-color':'#ffdab9'});
 				$('#techCHM').jqGrid('setCell',row_id,'level','',{'background-color':'#ffdab9'});
 				$('#techCHM').jqGrid('setCell',row_id,'col3','',{'background-color':'#ffdab9'});
+				$('#techCHM').jqGrid('setCell',row_id,'nation','',{'background-color':'#ffdab9'});
+				$('#techCHM').jqGrid('setCell',row_id,'subgrid','',{'background-color':'#ffdab9'});
 			}	
 			if (row_data.cls == 'AT-SPG'){
 			$('#techCHM').jqGrid('setCell',row_id,'img','',{'background-color':'#c6efef'});
@@ -315,6 +366,8 @@ $(function() {
 				$('#techCHM').jqGrid('setCell',row_id,'col2','',{'background-color':'#c6efef'});
 				$('#techCHM').jqGrid('setCell',row_id,'level','',{'background-color':'#c6efef'});
 				$('#techCHM').jqGrid('setCell',row_id,'col3','',{'background-color':'#c6efef'});
+				$('#techCHM').jqGrid('setCell',row_id,'nation','',{'background-color':'#c6efef'});
+				$('#techCHM').jqGrid('setCell',row_id,'subgrid','',{'background-color':'#c6efef'});
 			}	
 			if (row_data.cls == 'mediumTank'){
 			   $('#techCHM').jqGrid('setCell',row_id,'img','',{'background-color':'#d0f0c0'});
@@ -322,6 +375,8 @@ $(function() {
 				$('#techCHM').jqGrid('setCell',row_id,'col2','',{'background-color':'#d0f0c0'});
 				$('#techCHM').jqGrid('setCell',row_id,'level','',{'background-color':'#d0f0c0'});
 				$('#techCHM').jqGrid('setCell',row_id,'col3','',{'background-color':'#d0f0c0'});
+				$('#techCHM').jqGrid('setCell',row_id,'nation','',{'background-color':'#d0f0c0'});
+				$('#techCHM').jqGrid('setCell',row_id,'subgrid','',{'background-color':'#d0f0c0'});
 			}
 			if (row_data.cls == 'heavyTank'){
 		    	$('#techCHM').jqGrid('setCell',row_id,'img','',{'background-color':'#98ff98'});
@@ -329,11 +384,14 @@ $(function() {
 				$('#techCHM').jqGrid('setCell',row_id,'col2','',{'background-color':'#98ff98'});
 				$('#techCHM').jqGrid('setCell',row_id,'level','',{'background-color':'#98ff98'});
 				$('#techCHM').jqGrid('setCell',row_id,'col3','',{'background-color':'#98ff98'});
+				$('#techCHM').jqGrid('setCell',row_id,'nation','',{'background-color':'#98ff98'});
+				$('#techCHM').jqGrid('setCell',row_id,'subgrid','',{'background-color':'#98ff98'});
 				
 			}
 		}
 		
 	});
+	
 	var twm1 = $('#wmProvinces').jqGrid({
 		sortable: false,
 		altRows: false,

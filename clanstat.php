@@ -23,13 +23,18 @@ if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n
 $clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC);
 echo $clanrow['tag'];
 $user=@$_COOKIE['user'];
+$user1=0;
 $pl = mysql_query("select name,idc from player  where idp='$user' order by `date` desc",$connect);
 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-$user=mysql_fetch_array($pl,MYSQL_ASSOC);
+$ip = mysql_query("select ip from access_log where idp='$user' order by `date` desc",$connect);
+	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+	$ip=mysql_fetch_array($ip,MYSQL_ASSOC);
+	if ($ip['ip']<>$_SERVER['REMOTE_ADDR']) {$user1=0;}
+$pl=mysql_fetch_array($pl,MYSQL_ASSOC);
 $validclan=0;
 foreach ($clan_array as $clan_i) {
 	$idc_temp = $clan_i["clan_id"];
-	if ($user['idc'] == $idc_temp) {
+	if ($pl['idc'] == $idc_temp) {
 		$validclan=1;
 	}
 }
@@ -74,7 +79,7 @@ html, body {
 </head>
 <body>
 <?php
-if (isset($_COOKIE['user'])) {
+if (isset($_COOKIE['user'])and($validclan==1)) {
  echo '<a href="exit.php">Выход</a>';
 }	
 ?>

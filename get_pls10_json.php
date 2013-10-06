@@ -12,7 +12,7 @@ $result = mysql_query("SELECT count(*) as cnt FROM `cat_tanks` where level=10");
 $row = mysql_fetch_array($result,MYSQL_ASSOC); 
 $count_t = $row['cnt']; 
 //$message="<table  border='1' width='900px'>";
-$sql="SELECT * FROM `cat_tanks` where level=8  ORDER BY level desc,class,nation";
+$sql="SELECT * FROM `cat_tanks` where level=8  ORDER BY class,nation desc";
 $result = mysql_query( $sql,$connect ) or die("Couldn t execute query.".mysql_error()); 
 
 	$data->page       = 1;
@@ -21,7 +21,16 @@ $result = mysql_query( $sql,$connect ) or die("Couldn t execute query.".mysql_er
 	$i = 0;
 
 while($row = mysql_fetch_assoc($result)) {
-	$idt=$row['wotidt'];$br=0;	
+	$idt=$row['wotidt'];
+	$tnation=$row['nation'];
+			if ($tnation=='ussr') $n='<img src="images/stickers/ussr.png" style="width: 30px; height:30px;" align="absmiddle"/>'; else
+			if ($tnation=='germany') $n='<img src="images/stickers/germany.png" style="width: 30px; height:30px;" align="absmiddle"/>'; else
+			if ($tnation=='usa') $n='<img src="images/stickers/usa.png" style="width: 30px; height:30px;" align="absmiddle"/>'; else
+			if ($tnation=='france') $n='<img src="images/stickers/france.png" style="width: 30px; height:30px;" align="absmiddle"/>'; else
+			if ($tnation=='uk') $n='<img src="images/stickers/uk.png" style="width: 30px; height:30px;" align="absmiddle"/>'; else
+			if ($tnation=='china') $n='<img src="images/stickers/china.png" style="width: 30px; height:30px;" align="absmiddle"/>'; else
+			$n=" ";
+	$br=0;	
 	$sql2="SELECT pl.name,pb.idt as wotidt, pb.idp,max(pb.battle_count) as battle_count ,max(pb.win_count) as win_count FROM `player_btl` pb, `player` pl,`clan` cl WHERE pl.idp=pb.idp and pb.idt=$idt and cl.idp=pl.idp and cl.idc=$idc group by idp order by battle_count desc";
 	$result2 = mysql_query( $sql2,$connect ) or die("<br>Couldn t execute query.".mysql_error()); 
 	$cnt=0;
@@ -42,7 +51,7 @@ while($row = mysql_fetch_assoc($result)) {
 	$col4=$player;
 	$wotidt=$row['wotidt'];
 	if ($cnt>0) {
-		$data->rows[$i]['cell'] = array($wotidt,$row['class'],$col1,$col2,$row['level'],$col3,$col4);
+		$data->rows[$i]['cell'] = array($wotidt,$row['class'],$n,$col1,$col2,$row['level'],$col3,$col4);
 		$i++;
 	}
 }

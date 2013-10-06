@@ -818,14 +818,15 @@ $(function() {
 		datatype: 'json',
 		mtype: "POST",
 		postData: {'filterBy':null},
-		colNames:['','','','Танк','Ур.','Шт.'],
+		colNames:['','','','','Танк','Ур.','Шт.'],
 		colModel :[
-		    {name:'wotidt', index:'wotidt', width:40, align:"center",key:true,hidden:true},	
-			{name:'cls', index:'cls', width:-1, align:"left",hidden:true},
-			{name:'img', index:'img', width:40, align:"center"},
-			{name:'col2', index:'col2', width:50, align:"center"},
-			{name:'level', index:'level', width:20, align:"center",hidden:true},
-			{name:'col3', index:'col3', width:20, align:"center"},
+		    {name:'wotidt', index:'wotidt', width:40, align:"center",sortable:false,key:true,hidden:true},	
+			{name:'cls', index:'cls', width:-1, align:"left",sortable:false,hidden:true},
+			{name:'nation', index:'nation', width:30,sortable:false, align:"center"},
+			{name:'img', index:'img', width:50,sortable:false, align:"center"},
+			{name:'col2', index:'col2', width:50,sortable:false, align:"center"},
+			{name:'level', index:'level', width:20,sortable:false, align:"center",hidden:true},
+			{name:'col3', index:'col3', width:20,sortable:false, align:"center"},
 			
 												
 			],
@@ -884,6 +885,8 @@ $(function() {
 				$('#techABS').jqGrid('setCell',row_id,'col2','',{'background-color':'#ffdab9'});
 				$('#techABS').jqGrid('setCell',row_id,'level','',{'background-color':'#ffdab9'});
 				$('#techABS').jqGrid('setCell',row_id,'col3','',{'background-color':'#ffdab9'});
+				$('#techABS').jqGrid('setCell',row_id,'nation','',{'background-color':'#ffdab9'});
+				$('#techABS').jqGrid('setCell',row_id,'subgrid','',{'background-color':'#ffdab9'});
 			}	
 			if (row_data.cls == 'AT-SPG'){
 			$('#techABS').jqGrid('setCell',row_id,'img','',{'background-color':'#c6efef'});
@@ -891,6 +894,8 @@ $(function() {
 				$('#techABS').jqGrid('setCell',row_id,'col2','',{'background-color':'#c6efef'});
 				$('#techABS').jqGrid('setCell',row_id,'level','',{'background-color':'#c6efef'});
 				$('#techABS').jqGrid('setCell',row_id,'col3','',{'background-color':'#c6efef'});
+				$('#techABS').jqGrid('setCell',row_id,'nation','',{'background-color':'#c6efef'});
+				$('#techABS').jqGrid('setCell',row_id,'subgrid','',{'background-color':'#c6efef'});
 			}	
 			if (row_data.cls == 'mediumTank'){
 			   $('#techABS').jqGrid('setCell',row_id,'img','',{'background-color':'#d0f0c0'});
@@ -898,6 +903,8 @@ $(function() {
 				$('#techABS').jqGrid('setCell',row_id,'col2','',{'background-color':'#d0f0c0'});
 				$('#techABS').jqGrid('setCell',row_id,'level','',{'background-color':'#d0f0c0'});
 				$('#techABS').jqGrid('setCell',row_id,'col3','',{'background-color':'#d0f0c0'});
+				$('#techABS').jqGrid('setCell',row_id,'nation','',{'background-color':'#d0f0c0'});
+				$('#techABS').jqGrid('setCell',row_id,'subgrid','',{'background-color':'#d0f0c0'});
 			}
 			if (row_data.cls == 'heavyTank'){
 		    	$('#techABS').jqGrid('setCell',row_id,'img','',{'background-color':'#98ff98'});
@@ -905,7 +912,8 @@ $(function() {
 				$('#techABS').jqGrid('setCell',row_id,'col2','',{'background-color':'#98ff98'});
 				$('#techABS').jqGrid('setCell',row_id,'level','',{'background-color':'#98ff98'});
 				$('#techABS').jqGrid('setCell',row_id,'col3','',{'background-color':'#98ff98'});
-				
+				$('#techABS').jqGrid('setCell',row_id,'nation','',{'background-color':'#98ff98'});
+				$('#techABS').jqGrid('setCell',row_id,'subgrid','',{'background-color':'#98ff98'});
 			}
 		}
 		
@@ -918,14 +926,15 @@ $(function() {
 		datatype: 'json',
 		mtype: "POST",
 		postData: {'filterBy':null},
-		colNames:['','','','Танк','Ур.','Шт.'],
+		colNames:['','','','','Танк','Ур.','Шт.'],
 		colModel :[
-		    {name:'wotidt', index:'wotidt', width:40, align:"center",key:true,hidden:true},	
-			{name:'cls', index:'cls', width:-1, align:"left",hidden:true},
-			{name:'img', index:'img', width:40, align:"center"},
-			{name:'col2', index:'col2', width:50, align:"center"},
-			{name:'level', index:'level', width:20, align:"center",hidden:true},
-			{name:'col3', index:'col3', width:20, align:"center"},
+		    {name:'wotidt', index:'wotidt', width:40,sortable:false, align:"center",key:true,hidden:true},	
+			{name:'cls', index:'cls', width:-1,sortable:false, align:"left",hidden:true},
+			{name:'nation', index:'nation',sortable:false, width:30, align:"center"},
+			{name:'img', index:'img', width:50,sortable:false, align:"center"},
+			{name:'col2', index:'col2', width:50,sortable:false, align:"center"},
+			{name:'level', index:'level', width:20,sortable:false, align:"center",hidden:true},
+			{name:'col3', index:'col3', width:20,sortable:false, align:"center"},
 			
 												
 			],
@@ -993,6 +1002,8 @@ $(function() {
 				$('#techCHM').jqGrid('setCell',row_id,'col2','',{'background-color':'#ffdab9'});
 				$('#techCHM').jqGrid('setCell',row_id,'level','',{'background-color':'#ffdab9'});
 				$('#techCHM').jqGrid('setCell',row_id,'col3','',{'background-color':'#ffdab9'});
+				$('#techCHM').jqGrid('setCell',row_id,'nation','',{'background-color':'#ffdab9'});
+				$('#techCHM').jqGrid('setCell',row_id,'subgrid','',{'background-color':'#ffdab9'});
 			}	
 			if (row_data.cls == 'AT-SPG'){
 			$('#techCHM').jqGrid('setCell',row_id,'img','',{'background-color':'#c6efef'});
@@ -1000,6 +1011,8 @@ $(function() {
 				$('#techCHM').jqGrid('setCell',row_id,'col2','',{'background-color':'#c6efef'});
 				$('#techCHM').jqGrid('setCell',row_id,'level','',{'background-color':'#c6efef'});
 				$('#techCHM').jqGrid('setCell',row_id,'col3','',{'background-color':'#c6efef'});
+				$('#techCHM').jqGrid('setCell',row_id,'nation','',{'background-color':'#c6efef'});
+				$('#techCHM').jqGrid('setCell',row_id,'subgrid','',{'background-color':'#c6efef'});
 			}	
 			if (row_data.cls == 'mediumTank'){
 			   $('#techCHM').jqGrid('setCell',row_id,'img','',{'background-color':'#d0f0c0'});
@@ -1007,6 +1020,8 @@ $(function() {
 				$('#techCHM').jqGrid('setCell',row_id,'col2','',{'background-color':'#d0f0c0'});
 				$('#techCHM').jqGrid('setCell',row_id,'level','',{'background-color':'#d0f0c0'});
 				$('#techCHM').jqGrid('setCell',row_id,'col3','',{'background-color':'#d0f0c0'});
+				$('#techCHM').jqGrid('setCell',row_id,'nation','',{'background-color':'#d0f0c0'});
+				$('#techCHM').jqGrid('setCell',row_id,'subgrid','',{'background-color':'#d0f0c0'});
 			}
 			if (row_data.cls == 'heavyTank'){
 		    	$('#techCHM').jqGrid('setCell',row_id,'img','',{'background-color':'#98ff98'});
@@ -1014,6 +1029,8 @@ $(function() {
 				$('#techCHM').jqGrid('setCell',row_id,'col2','',{'background-color':'#98ff98'});
 				$('#techCHM').jqGrid('setCell',row_id,'level','',{'background-color':'#98ff98'});
 				$('#techCHM').jqGrid('setCell',row_id,'col3','',{'background-color':'#98ff98'});
+				$('#techCHM').jqGrid('setCell',row_id,'nation','',{'background-color':'#98ff98'});
+				$('#techCHM').jqGrid('setCell',row_id,'subgrid','',{'background-color':'#98ff98'});
 				
 			}
 		}

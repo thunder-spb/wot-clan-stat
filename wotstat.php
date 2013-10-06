@@ -28,12 +28,16 @@ $clanlist = mysql_query("select cl.tag as tag, cl.name as name, rate, firepower,
 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC);
 $validclan=0;
-$user=0;
+$user1=1;
 if (isset($_COOKIE['user'])){
 	$user=$_COOKIE['user'];
 	$pl = mysql_query("select name,idc from player  where idp='$user' order by `date` desc",$connect);
 	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 	$userd=mysql_fetch_array($pl,MYSQL_ASSOC);
+	$ip = mysql_query("select ip,token from access_log where idp='$user' order by `date` desc",$connect);
+	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+	$ip=mysql_fetch_array($ip,MYSQL_ASSOC);
+	if (($ip['ip']<>$_SERVER['REMOTE_ADDR']) or (@$_COOKIE['atoken']<> $ip['token'])or (!isset($_COOKIE['atoken']))){$user1=0;}
 	foreach ($clan_array as $clan_i) {
 		$idc_temp = $clan_i["clan_id"];
 		if ($userd['idc'] == $idc_temp) {
@@ -80,7 +84,7 @@ body {
 </script>
 </head>
 <body>
-<?php if (!isset($_COOKIE['user'])or ($user==0)) {
+<?php if (!isset($_COOKIE['user'])or ($user1==0)) {
 ?>
 <div id="login">
  <a href="login.php">Вход</a>
