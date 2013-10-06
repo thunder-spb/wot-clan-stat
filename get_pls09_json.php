@@ -42,7 +42,7 @@ while($row = mysql_fetch_assoc($result)) {
 	$col4=$player;
 	$wotidt=$row['wotidt'];
 	if ($cnt>0) {
-		$data->rows[$i]['cell'] = array($row['class'],$wotidt,$col1,$col2,$row['level'],$col3,$col4);
+		$data->rows[$i]['cell'] = array($wotidt,$row['class'],$col1,$col2,$row['level'],$col3,$col4);
 		$i++;
 	}
 }
