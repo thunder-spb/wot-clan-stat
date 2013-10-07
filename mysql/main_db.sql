@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `access_log` (
   `idp` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
-  `date` int(11) NOT NULL
+  `date` int(11) NOT NULL,
   `ip` varchar(15) NOT NULL,
   `token` varchar(50) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
