@@ -47,7 +47,7 @@ for($i=0;$i<$count;$i++) {
 		$st=+1;
 	}
 	if($row['type']==1) {
-		$img='<img src="images/'.$row['img'].$a_co.'.png" style="width: 70px; height:70px;" title="с"/>'; 
+		$img='<img src="images/'.$row['img'].$a_co.'.png" style="width: 70px; height:70px;" title=""/>'; 
 		$value=$a_co." степень";
 	}
 	else {
