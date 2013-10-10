@@ -35,6 +35,7 @@ $q2 = mysql_query($sql,$connect);
 if (mysql_errno() <> 0) echo "MySQL Error 1 ".mysql_errno().": ".mysql_error()."\n";
 $row = mysql_fetch_array($q2);
 $cntplayer = $row['cntpl'];
+$max_player_request=min($cntplayer/2,$max_player_request);
 $clan_list = mysql_query("select idp from clan order by idp LIMIT $start,$max_player_request",$connect); // получение списка игроков клана из бд
 $offs=$start+$max_player_request;
 if (($offs)>=$cntplayer){
@@ -298,6 +299,15 @@ foreach ($ida as $id) {
 						
 						// опись медалей и достижений, обрабатывается только для основного состава альянса.
 						if ($allians==1){
+							// $achcnt=count($data2['data'][$id]['achievements']);
+							// echo "Медалек -".$achcnt.$myeol;
+							// $achdata=$data2['data'][$id]['achievements'];
+							// //print_r ($achdata);
+							// for($i2=0;$i2<$achcnt;$i2++) { 
+								// $achel=each($achdata);
+								// print_r ($achel);
+								// echo "Медаль ".$i2." -".$achel['key'].$myeol;
+							// }
 							$sql = "select count(*) as cnt from cat_achiev";
 							$q2 = mysql_query($sql,$connect);
 							if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";

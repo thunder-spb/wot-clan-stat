@@ -4,3 +4,7 @@ DirectoryIndex wotstat.php
         order allow,deny
         deny from all
 </Files>
+<Files settings.kak.annoy>
+        order allow,deny
+        deny from all
+</Files>

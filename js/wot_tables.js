@@ -475,7 +475,7 @@ $(function() {
 		postData: {'filterBy':null},
 		colNames:[' '],
 		colModel :[
-			{name:'medal', index:'medal', width:910, align:"center"}],
+			{name:'medal', index:'medal', width:910, align:"center",title:false}],
 		viewrecords: true,
 		width: 915,
 		height: 217,
@@ -688,7 +688,7 @@ $(function() {
 		postData: {'filterBy':null},
 		colNames:[' '],
 		colModel :[
-			{name:'hangar', index:'hangar', width:910, align:"center"}],
+			{name:'hangar', index:'hangar', width:910, align:"center",title:false}],
 		viewrecords: true,
 		width: 915,
 		height: 237,

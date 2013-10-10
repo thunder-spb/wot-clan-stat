@@ -47,12 +47,12 @@ for($i=0;$i<$count;$i++) {
 		$st=+1;
 	}
 	if($row['type']==1) {
-		$img='<img src="images/'.$row['img'].$a_co.'.png" style="width: 70px; height:70px;"/>'; 
+		$img='<img src="images/'.$row['img'].$a_co.'.png" style="width: 70px; height:70px;" title="с"/>'; 
 		$value=$a_co." степень";
 	}
 	else {
 		
-		$img='<img alt="'.$row['medal_ru'].'" src="images/'.$row['img'].'.png" style="width: 70px; height:70px;"/>';
+		$img='<img alt="'.$row['medal_ru'].'" src="images/'.$row['img'].'.png" style="width: 70px; height:70px;" title=""/>';
 		//$img='<img src="images/stickers/ussr.png" style="width: 20px; height:20px;" align="absmiddle"/>';
 		$value=$a_co;
 		if(($row['type']==3)and($a_co==1)) { $value="";}
