@@ -35,7 +35,7 @@ $q2 = mysql_query($sql,$connect);
 if (mysql_errno() <> 0) echo "MySQL Error 1 ".mysql_errno().": ".mysql_error()."\n";
 $row = mysql_fetch_array($q2);
 $cntplayer = $row['cntpl'];
-$max_player_request=min($cntplayer/2,$max_player_request);
+$max_player_request=round(min($cntplayer/2,$max_player_request),0);
 $clan_list = mysql_query("select idp from clan order by idp LIMIT $start,$max_player_request",$connect); // получение списка игроков клана из бд
 $offs=$start+$max_player_request;
 if (($offs)>=$cntplayer){
