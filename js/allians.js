@@ -30,7 +30,7 @@ var tall = $("#all").jqGrid({
 		colNames:['ID','Тэг','Имя','Место','Сила','Скилл','Огн. мощь','Владения','Доход'],
 		colModel :[			
 			{name:'id', index:'id', width:20, align:"center",sortable:false},
-			{name:'tag', index:'tag', width:45, align:"left",sortable:false},
+			{name:'tag', index:'tag', width:45, align:"left"},
 			{name:'name', index:'name', width:100, align:"left",sortable:false},
 			{name:'position', index:'position', width:30, align:"center"},
 			{name:'rate', index:'rate', width:30, align:"center"},

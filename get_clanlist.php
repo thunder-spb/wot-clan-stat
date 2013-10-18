@@ -70,10 +70,26 @@ while ($clani=mysql_fetch_array($q1,MYSQL_ASSOC)) {
 		  $firepower=$dataiv["$iidc"]['firepower'];
 		  $skill=$dataiv["$iidc"]['skill'];
 		  $position=$dataiv["$iidc"]['position'];
-		  $alliansid=$dataiv["$iidc"]['allianceid'];
-		  $sql = "UPDATE `clan_info` SET `rate`='$totalrate', alliansid='$alliansid', firepower='$firepower', skill='$skill',  position='$position' WHERE `idc`='$iidc'";
+		  $alliansid1=$dataiv["$iidc"]['allianceid'];
+		  $sql = "UPDATE `clan_info` SET `rate`='$totalrate', alliansid='$alliansid1', firepower='$firepower', skill='$skill',  position='$position' WHERE `idc`='$iidc'";
 		  $q = mysql_query($sql, $connect);
 		  if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+		  unset($dataiv["$iidc"]);
+	}
+	
+}
+foreach ($dataiv as $ida){
+	if ($ida['allianceid']==$alliansid){
+		$totalrate=$ida['totalrate'];
+		$firepower=$ida['firepower'];
+		$skill=$ida['skill'];
+		$position=$ida['position'];
+		$idciv=$ida['clanid'];
+		$tag=$ida['clantag'];
+		$sql= "INSERT INTO `clan_info`(tag,idc,rate,allians,alliansid, firepower, skill,position)";
+		$sql.= " VALUES ('$tag','$idciv', '$totalrate',1, '$alliansid','$firepower','$skill','$position')";
+		$q = mysql_query($sql, $connect);
+		if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 	}
 }
 foreach ($dataivall as $ida){
@@ -119,7 +135,7 @@ foreach ($clancnt as $idc) {
 	echo "<br>";
 	echo "allians-".$allians;
 	echo "<br>";
-	$pageidc = "/2.0/clan/info/?application_id=".$appid."&clan_id=".$idc."&language=ru&fields=emblems.small,members";		
+	$pageidc = "/2.0/clan/info/?application_id=".$appid."&clan_id=".$idc."&language=ru&fields=emblems.small,members,clan_color,name";		
 	$pageidc = "api.".$wot_host.'/'.$pageidc;
 	$date = date("Y-m-d",strtotime($hosttime));
 	$time = date("H:i:s",strtotime($hosttime));
@@ -133,9 +149,14 @@ foreach ($clancnt as $idc) {
 		$data=$data['data'][$idc];
 		// тут добавить сбор инфы о клане //
 		$smallimg=$data['emblems']['small'];
-		$sql = "UPDATE `clan_info` SET `smallimg`='$smallimg' WHERE `idc`='$idc'";
+		$color=$data['clan_color'];
+		$name=addslashes( $data['name']);
+		$sql = 'UPDATE `clan_info` SET `smallimg`="'.$smallimg.'" ,`color`="'.$color.'",`name`="'.$name.'" WHERE `idc`='.$idc;
 		$q = mysql_query($sql, $connect);
-		if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+		if (mysql_errno() <> 0) {
+			echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+			print_r ($sql);
+		}
 		$sql = "select count(*) as cntpl from clan where idc='$idc'";
 		$q = mysql_query($sql, $connect);
 		if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";

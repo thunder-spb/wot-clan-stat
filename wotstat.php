@@ -5,7 +5,7 @@ require_once('settings.kak');
 if (array_key_exists("idc",$_GET)) {
 	$idc = filter_input(INPUT_GET, "idc", FILTER_VALIDATE_INT);
 } else  {
-	$idc = $clan_array[0]['clan_id'];
+    	$idc = $clan_array[0]['clan_id'];
 }
 
 ?>
@@ -24,10 +24,7 @@ if (array_key_exists("idc",$_GET)) {
 $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Ошибка подключения к БД");
 $setnames = mysql_query( 'SET NAMES utf8' );
-$clanlist = mysql_query("select cl.tag as tag, cl.name as name, rate, firepower, skill, position,smallimg,alliances.name as aname from clan_info as cl left join alliances on cl.alliansid=alliances.ida  where idc='$idc'",$connect);
-if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-$clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC);
-echo $clanrow["tag"];
+
 $validclan=0;
 $user1=1;
 if (isset ($alliansid)){
@@ -55,9 +52,18 @@ if (isset($_COOKIE['user'])){
 		$al = mysql_query("select allians from  clan_info where idc='$idc_temp'",$connect);
 		if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 		$al=mysql_fetch_array($al,MYSQL_ASSOC);
-		if ($al['allians']==1){$validclan=1;}
+		if ($al['allians']==1){
+			$validclan=1;
+			if (!(array_key_exists("idc",$_GET))){
+				$idc=$_COOKIE['idc'];
+			}
+		}
 	}
 }
+$clanlist = mysql_query("select cl.tag as tag, cl.name as name, rate, firepower, skill, position,smallimg,alliances.name as aname from clan_info as cl left join alliances on cl.alliansid=alliances.ida  where idc='$idc'",$connect);
+if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+$clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC);
+echo $clanrow["tag"];
 ?>
 </title>
 <?php
@@ -71,7 +77,7 @@ echo '<link rel="icon" type="image/png" href="'.$clanrow['smallimg'].'" />';
 html, body {
 	margin: 0;
 	padding: 0;
-	font-size: 80%;
+	font-size: 85%;
 }
 body {
 
