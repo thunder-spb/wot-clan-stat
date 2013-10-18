@@ -63,6 +63,9 @@ html, body {
 	padding: 0;
 	font-size: 80%;
 }
+body {
+	overflow: scroll;
+}
 
 </style>
 

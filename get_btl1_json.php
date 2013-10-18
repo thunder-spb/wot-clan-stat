@@ -66,9 +66,9 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 				$stra="| сила-".$rowclan['rate'] ." | шанс-".$chans."% |";
 			}
 			if ($t<$actclane){
-			$clann=	"<a href='clanstat.php?idc=$clansa#tab-6' target='_blank'>$clanname</a>";
+			$clann=	"<a href='clanstat.php?idc=$clansa#tab-6' >$clanname</a>";
 			if ($rowclan['allians']==1){
-				$clann="<a href='wotstat.php?idc=$clansa#tab-6' target='_blank'>$clanname</a>";
+				$clann="<a href='wotstat.php?idc=$clansa#tab-6' >$clanname</a>";
 			}}
 			$timema="";
 			if ($row['started']==1){
@@ -132,9 +132,9 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 				$stra="| сила-".$rowclan['rate'] ." | шанс-".$chans."% |";
 			}
 			if ($t<$actclane){
-			$clann=	"<a href='clanstat.php?idc=$clansa#tab-6' target='_blank'>$clanname</a>";
+			$clann=	"<a href='clanstat.php?idc=$clansa#tab-6' >$clanname</a>";
 			if ($rowclan['allians']==1){
-				$clann="<a href='wotstat.php?idc=$clansa#tab-6' target='_blank'>$clanname</a>";
+				$clann="<a href='wotstat.php?idc=$clansa#tab-6' >$clanname</a>";
 			}}
 			//"<span style='color: blue;'><b>"; $sp6="</b></span> "
 			

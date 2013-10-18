@@ -77,10 +77,10 @@ echo '<link rel="icon" type="image/png" href="'.$clanrow['smallimg'].'" />';
 html, body {
 	margin: 0;
 	padding: 0;
-	font-size: 85%;
+	font-size: 80%;
 }
 body {
-
+	overflow: scroll;
 }
     </style>
 
