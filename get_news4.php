@@ -55,7 +55,7 @@ for($i=0;$i<$count;$i++) {
 		if ($typepr=="gold"){$sp5="<span style='color: blue;'><b>"; $sp6="</b></span> ";}
 	}
 	if ($atype==2){$typea=" Передана союзником ";$sp5="<span style='color: green;'><b>"; $sp6="</b></span> ";}
-	if ($atype==3){$typea=" Отдана союзнику  ";}
+	if ($atype==3){$typea=" Отдана союзнику ";}
 	if ($atype==4){
 		$typea=" Возник мятеж в провинции ";
 		$sp5="<span style='color: red;'><b>";

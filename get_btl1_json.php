@@ -27,7 +27,7 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 	$idpr=$row['id_prov'];
 	$pr = $row["prov"];
 	$arena=$row["arena"];
-	$pr = "<a href='http://worldoftanks.ru/uc/clanwars/maps/?province=$idpr' target='_blank'>$pr</a>";
+	$pr = "<a href='http://cw.worldoftanks.ru/clanwars/maps/?province=$idpr' target='_blank'>$pr</a>";
 	if ($row['type']=="landing"){$provm="Высадка";}
 		$SQL2 = "select * from possession where idpr='$idpr'and idc='$idc'";
 		$result22 = mysql_query( $SQL2,$connect );

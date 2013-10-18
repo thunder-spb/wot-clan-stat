@@ -11,6 +11,8 @@ $wot_host = "worldoftanks.ru"; // leave it unchanged if you plan use it on Russi
 $clan_array = array (
 	array("clan_id" => "1", "clan_tag" => "[SMPLC]",  "clan_name" => "Sample clan"),
 );
+$alliansid=IvanerrAliansId ;
+
 $clanrange = array(
 	"leader" => "командир",
 	"private" => "солдат",

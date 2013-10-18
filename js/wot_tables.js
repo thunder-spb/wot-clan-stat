@@ -307,26 +307,26 @@ $(function() {
 		colModel :[			
 			{name:'idp', index:'idp', width:33, align:"center"},
 			{name:'name', index:'name', width:45, align:"center"},
-			{name:'battles_count', index:'battles_count', width:30, align:"center"},
+			{name:'battles_count', index:'battles_count', width:30, align:"center",sortable:false},
 			
-			{name:'proc', index:'proc', width:20, align:"center"},
-			{name:'win30', index:'win30', width:20, align:"center",hidden:true},
-            {name:'rating', index:'rating', width:25, align:"center",hidden:true},
-			{name:'rating30', index:'rating30', width:25, align:"center",hidden:true},
-			{name:'wn6', index:'wn6', width:25, align:"center",hidden:true},
-			{name:'wn630', index:'wn630', width:25, align:"center",hidden:true},
-			{name:'akillsm', index:'akillsm', width:30, align:"center"},
-			{name:'adamagem', index:'adamagem', width:25, align:"center"},
-			{name:'battle_avg_xp', index:'battle_avg_xp', width:30, align:"center"},
-			{name:'capture_p', index:'capture_p', width:25, align:"center"},
-			{name:'dropped_capture_p', index:'dropped_capture_p', width:25, align:"center"},
-			{name:'spotted_p', index:'spotted_p', width:25, align:"center"},
-			{name:'wins', index:'wins', width:30, align:"center"},
-			{name:'frags', index:'frags', width:30, align:"center"},
-			{name:'xp', index:'xp', width:40, align:"center"},
-			{name:'max_xp', index:'max_xp', width:30, align:"center",hidden:true},
+			{name:'proc', index:'proc', width:20, align:"center",sortable:false},
+			{name:'win30', index:'win30', width:20, align:"center",hidden:true,sortable:false},
+            {name:'rating', index:'rating', width:25, align:"center",hidden:true,sortable:false},
+			{name:'rating30', index:'rating30', width:25, align:"center",hidden:true,sortable:false},
+			{name:'wn6', index:'wn6', width:25, align:"center",hidden:true,sortable:false},
+			{name:'wn630', index:'wn630', width:25, align:"center",hidden:true,sortable:false},
+			{name:'akillsm', index:'akillsm', width:30, align:"center",sortable:false},
+			{name:'adamagem', index:'adamagem', width:25, align:"center",sortable:false},
+			{name:'battle_avg_xp', index:'battle_avg_xp', width:30, align:"center",sortable:false},
+			{name:'capture_p', index:'capture_p', width:25, align:"center",sortable:false},
+			{name:'dropped_capture_p', index:'dropped_capture_p', width:25, align:"center",sortable:false},
+			{name:'spotted_p', index:'spotted_p', width:25, align:"center",sortable:false},
+			{name:'wins', index:'wins', width:30, align:"center",sortable:false},
+			{name:'frags', index:'frags', width:30, align:"center",sortable:false},
+			{name:'xp', index:'xp', width:40, align:"center",sortable:false},
+			{name:'max_xp', index:'max_xp', width:30, align:"center",hidden:true,sortable:false},
 			
-			{name:'damage_dealt', index:'damage_dealt', width:30, align:"center"}
+			{name:'damage_dealt', index:'damage_dealt', width:30, align:"center",sortable:false}
                 ],
 		rowNum:100,
 		scroll: false,
@@ -860,6 +860,7 @@ $(function() {
 				url:"techsubgrid.php?idc="+idc+"&wotidt="+row_id, 
 				datatype: "json", 
 				colNames: ['No','Имя','Боёв','%%'], 
+				altRows: true,
 				colModel: [ 
 					{name:"id",index:"id",width:55,key:true,sortable:false}, 
 					{name:"name",index:"name",width:200}, 
@@ -869,8 +870,9 @@ $(function() {
 				rowNum:100, 
 				sortname: 'name', 
 				sortorder: "asc", 
-				height: '100%' 
-			});
+				height: 'auto',
+				
+		});
 		}, 
 		subGridRowColapsed: function(subgrid_id, row_id) { 
 			// this function is called before removing the data 
@@ -976,6 +978,7 @@ $(function() {
 			jQuery("#"+subgrid_table_id).jqGrid({ 
 				url:"techsubgrid.php?idc="+idc+"&wotidt="+row_id, 
 				datatype: "json", 
+				altRows: true,
 				colNames: ['No','Имя','Боёв','%%'], 
 				colModel: [ 
 					{name:"id",index:"id",width:55,key:true,sortable:false}, 
@@ -986,7 +989,7 @@ $(function() {
 				rowNum:100, 
 				sortname: 'name', 
 				sortorder: "asc", 
-				height: '100%' 
+				height: 'auto',
 			});
 		}, 
 		subGridRowColapsed: function(subgrid_id, row_id) { 

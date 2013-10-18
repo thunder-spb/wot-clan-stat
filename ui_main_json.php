@@ -20,7 +20,7 @@ $setnames = mysql_query( 'SET NAMES utf8' );
 $result = mysql_query("SELECT COUNT(*) AS count FROM clan WHERE idc = '$idc'"); 
 $row = mysql_fetch_array($result,MYSQL_ASSOC); 
 $count = $row['count']; 
-$a11=$timetolife+1;
+$a11=31;
 $date1=date("Y-m-d",strtotime(' -'.$a11.' day '.$hosttime));	
 //$SQL="SELECT idp,name,battles_count,wins,ROUND((wins*100/battles_count),2) as proc,frags,ROUND((frags/battles_count),2) as akillm,battle_avg_xp,xp,max_xp,capture_points,dropped_capture_points,damage_dealt, ROUND((damage_dealt/battles_count),2) as adamagem  from player c where idp = c.idp and in_clan>0 and id_p in (select max(id_p) FROM `player` WHERE idp=c.idp) ORDER BY $sidx $sord ,name";
 if ($type==1){
@@ -178,7 +178,14 @@ for($i=0;$i<$count;$i++) {
 		
 		
 	}
-	$link='<a href="http://worldoftanks.ru/community/accounts/'.$row['idp'].'/" target="_blank">'.$row['name'].'</a>';
+	$a1='';
+	$a2='';
+	if ($row['idp']==$_COOKIE['user']){
+	 	$a1='<span style="color:maroon"><b>';
+		$a2="</b></span>";
+	}
+	//$link='<a href="http://worldoftanks.ru/community/accounts/'.$row['idp'].'/" target="_blank">'.$row['name'].'</a>';
+	$link=$a1.$row['name'].$a2;
 	$rating=$row['rating'];
 	$rating30=$row['rating30'];
 	$wn6=$row['wn6'];
@@ -228,7 +235,7 @@ for($i=0;$i<$count;$i++) {
 	$procmessage=$sp1.$proc.$sp6;
 	$s=$i+1;
 	$responce->rows[$i]['idp']=$s;
-	$responce->rows[$i]['cell']=array($s,$link,$bc,$procmessage,$win30mess,$ratingmessage,$rating30message,$wn6mess,$wn630mess,$fragsb,$damageb,$avgxp,$cpt,$dcpt,$spottedb,$winsb,$frags,$xp,$row['max_xp'],$damage_dealt); 
+	$responce->rows[$i]['cell']=array($a1.$s.$a2,$link,$a1.$bc.$a2,$procmessage,$win30mess,$ratingmessage,$rating30message,$wn6mess,$wn630mess,$a1.$fragsb.$a2,$a1.$damageb.$a2,$a1.$avgxp.$a2,$a1.$cpt.$a2,$a1.$dcpt.$a2,$a1.$spottedb.$a2,$a1.$winsb.$a2,$a1.$frags.$a2,$a1.$xp.$a2,$a1.$row['max_xp'].$a2,$a1.$damage_dealt.$a2); 
 } 
 
 header("Content-type: text/script;charset=utf-8");

@@ -29,10 +29,11 @@ if ($_REQUEST['status']=="ok"){
 	
 	$idc=$userd['idc'];
 	if ($idc<>NULL){
+		setcookie("idc",$idc);
 		foreach ($clan_array as $clan_i) {
 			$idc_temp = $clan_i["clan_id"];
 			if ($idc == $idc_temp) {
-				setcookie("idc",$idc);
+				
 				// print_r ($_REQUEST);
 				// print_r ($_SERVER);
 				// exit;

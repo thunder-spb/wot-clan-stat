@@ -15,20 +15,26 @@ if (array_key_exists("idc",$_GET)) {
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>
 <?php  
-foreach ($clan_array as $clan_i) {
-	$idc_temp = $clan_i["clan_id"];
-	if ($idc == $idc_temp) {
-		echo $clan_i["clan_tag"];
-	}
-}
+// foreach ($clan_array as $clan_i) {
+	// $idc_temp = $clan_i["clan_id"];
+	// if ($idc == $idc_temp) {
+		// echo $clan_i["clan_tag"];
+	// }
+// }
 $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Ошибка подключения к БД");
 $setnames = mysql_query( 'SET NAMES utf8' );
 $clanlist = mysql_query("select cl.tag as tag, cl.name as name, rate, firepower, skill, position,smallimg,alliances.name as aname from clan_info as cl left join alliances on cl.alliansid=alliances.ida  where idc='$idc'",$connect);
 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC);
+echo $clanrow["tag"];
 $validclan=0;
 $user1=1;
+if (isset ($alliansid)){
+	$al = mysql_query("select tag from alliances  where ida='$alliansid'",$connect);
+	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+	$ida=mysql_fetch_array($al,MYSQL_ASSOC);
+}
 if (isset($_COOKIE['user'])){
 	$user=$_COOKIE['user'];
 	$pl = mysql_query("select name,idc from player  where idp='$user' order by `date` desc",$connect);
@@ -38,11 +44,18 @@ if (isset($_COOKIE['user'])){
     if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
     $ip=mysql_fetch_array($ip,MYSQL_ASSOC);
 	if ((@$_COOKIE['atoken']<> $ip['token'])or (!isset($_COOKIE['atoken']))){$user1=0;}
-	foreach ($clan_array as $clan_i) {
-		$idc_temp = $clan_i["clan_id"];
-		if ($userd['idc'] == $idc_temp) {
-			$validclan=1;
-		}
+	// foreach ($clan_array as $clan_i) {
+		// $idc_temp = $clan_i["clan_id"];
+		// if ($userd['idc'] == $idc_temp) {
+			// $validclan=1;
+		// }
+	// }
+	if (isset ($alliansid)){
+		$idc_temp=$_COOKIE['idc'];
+		$al = mysql_query("select allians from  clan_info where idc='$idc_temp'",$connect);
+		if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+		$al=mysql_fetch_array($al,MYSQL_ASSOC);
+		if ($al['allians']==1){$validclan=1;}
 	}
 }
 ?>
@@ -103,6 +116,16 @@ body {
 ?>
 <header>
 	<h1><?php 
+	if (($validclan==0)or($user1==0)){
+		echo "Вы не авторизованны ";
+		if (!isset($_COOKIE['user'])or ($user==0)) {
+		//echo '<div id="login">';
+		//print_r($_SERVER);
+		echo '<a href="login.php'.'?backcall='.$_SERVER['REQUEST_URI'].'">ВХОД</a>';
+		//echo '</div>';			
+		}
+		exit();
+	}
 	if ($clanrow<>NULL){
 		echo '<img src="'.$clanrow['smallimg'].'" style="width: 24px; height:24px;" align="absmiddle"/> ';
 		echo "<b>".$clanrow["name"]."</b> [".$clanrow["tag"]."] <b>'".$clanrow["aname"]."'</b>";
@@ -123,9 +146,13 @@ body {
 <nav> 
     <ul>
 <?php
+if (isset ($alliansid)){
+			echo "<li><a href=\"allians.php\">[".$ida["tag"]."]</a></li>";
+		}
            foreach ($clan_array as $clan_i) {
 			echo "<li><a href=\"wotstat.php?idc=".$clan_i["clan_id"]."\">".$clan_i["clan_tag"]."</a></li>";
 		}
+		
 ?>	
     </ul>
 </nav>

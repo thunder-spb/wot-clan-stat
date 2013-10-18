@@ -32,12 +32,19 @@ $ip=mysql_fetch_array($ip,MYSQL_ASSOC);
 $validclan=0;
 $user1=1;
 if ((@$_COOKIE['atoken']<> $ip['token'])or (!isset($_COOKIE['atoken']))){$user1=0;}
-foreach ($clan_array as $clan_i) {
-	$idc_temp = $clan_i["clan_id"];
-	if ($pl['idc'] == $idc_temp) {
-		$validclan=1;
+// foreach ($clan_array as $clan_i) {
+	// $idc_temp = $clan_i["clan_id"];
+	// if ($pl['idc'] == $idc_temp) {
+		// $validclan=1;
+	// }
+// }
+if (isset ($alliansid)){
+		$idc_temp=$_COOKIE['idc'];
+		$al = mysql_query("select allians from  clan_info where idc='$idc_temp'",$connect);
+		if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+		$al=mysql_fetch_array($al,MYSQL_ASSOC);
+		if ($al['allians']==1){$validclan=1;}
 	}
-}
 
 //echo $idc;
 //}
@@ -78,10 +85,22 @@ html, body {
 </script>
 </head>
 <body>
+<?php if (!isset($_COOKIE['user'])or ($user1==0)) {
+?>
+<div id="login">
+ <a href="login.php">Вход</a>
+</div>
+<?php 
+}else{
+  echo "Добро пожаловать, ".$pl['name'].". ";
+
+		if ($validclan==0){
+			echo " Сожалеем, но вы не являетесь бойцом из нашего альянса. " ; 
+		}
+?>
+<a href="exit.php">Выход</a>
 <?php
-if (isset($_COOKIE['user'])and($validclan==1)) {
- echo '<a href="exit.php">Выход</a>';
-}	
+	}
 ?>
 <header>
 	<h1><?php  

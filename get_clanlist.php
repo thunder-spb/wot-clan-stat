@@ -16,8 +16,18 @@ if ($actwmdate['lasthourwm']<>NULL){
 		//die ();
 	}
 }
+if (!(isset($alliansid))){
+	$alliansid=9999999999;
+}
+mysql_query("update clan_info set allians='0' where alliansid<>'$alliansid'",$connect);
+mysql_query("update clan_info set allians='1' where alliansid='$alliansid'",$connect);
+foreach ($clan_array as $clan_i) {
+	$idc=$clan_i["clan_id"];
+	$clancnt[]=$clan_i["clan_id"];
+	mysql_query("update clan_info set allians='1' where idc='$idc'",$connect);
+}
 $t = time()-604800;
-$clanlist = mysql_query("select idc from clan_info where actdate>'$t'",$connect);
+$clanlist = mysql_query("select idc from clan_info where actdate>'$t' or alliansid='$alliansid'",$connect);
 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $clancnt=array();
 foreach ($clan_array as $clan_i) {
@@ -109,7 +119,7 @@ foreach ($clancnt as $idc) {
 	echo "<br>";
 	echo "allians-".$allians;
 	echo "<br>";
-	$pageidc = "/2.0/clan/info/?application_id=".$appid."&clan_id=".$idc;		
+	$pageidc = "/2.0/clan/info/?application_id=".$appid."&clan_id=".$idc."&language=ru&fields=emblems.small,members";		
 	$pageidc = "api.".$wot_host.'/'.$pageidc;
 	$date = date("Y-m-d",strtotime($hosttime));
 	$time = date("H:i:s",strtotime($hosttime));
@@ -132,14 +142,57 @@ foreach ($clancnt as $idc) {
 		$cntpl = mysql_fetch_array($q);
 		$cntpl=$cntpl['cntpl'];
 		echo "Бойцов в клане - ".$cntpl.PHP_EOL."<br>";
+		$sql = "select clan.idp as idp, player.name as name from clan   join player on clan.idp=player.idp where  clan.idc='$idc' group by clan.idp";
+		$q = mysql_query($sql, $connect);
+		if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+		
+		while  ($idpl = mysql_fetch_array($q)){
+			$n=$idpl['idp'];
+			$account_name=$idpl['name'];
+			if (!(array_key_exists($n,$data['members']))){ 
+				echo "удаляем ".$n."\n";
+				$sql12 = "delete from `clan` where idp='$n'"; 
+				$qq2 = mysql_query($sql12,$connect);
+				if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
+				$sql12 = "delete from `event_clan` where idp='$n' and type<>2 and type<>1"; 
+				$qq2 = mysql_query($sql12,$connect);
+				if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
+				$sql12 = "delete from `event_tank` where idp='$n'"; 
+				$qq2 = mysql_query($sql12,$connect);
+				if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
+				$sql12 = "delete from `player` where idp='$n'"; 
+				$qq2 = mysql_query($sql12,$connect);
+				if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
+				$sql12 = "delete from `player_clan` where idp='$n'"; 
+				$qq2 = mysql_query($sql12,$connect);
+				if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
+				$sql12 = "delete from `player_company` where idp='$n'"; 
+				$qq2 = mysql_query($sql12,$connect);
+				if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
+				$sql12 = "delete from `player_ach` where idp='$n'"; 
+				$qq2 = mysql_query($sql12,$connect);
+				if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
+				$sql12 = "delete from `player_btl` where idp='$n'"; 
+				$qq2 = mysql_query($sql12,$connect);
+				if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
+				$account_name='<a href="http://worldoftanks.ru/community/accounts/'.$n.'/" target="_blank">'.$account_name.'</a>';
+				$message="Покинул клан ".$clantag." боец ".$account_name;
+				$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
+				$sql.= " VALUES (1,'$n', '$idc', '$message', NULL, '$date', '$time')";
+				$qqq = mysql_query($sql, $connect);
+				if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+			}
+			
+		}
 		foreach($data['members'] as $datapl){
 			//проверка на "нового игрока в клане"
 			$t=date("Y-m-d",($datapl['created_at']));
 			$idp=$datapl['account_id'];
-			$sql = "select id_c from clan where idp='$idp' and idc='$idc'";
+			$sql = "select id_c,role_localised from clan where idp='$idp' and idc='$idc'";
 			$q = mysql_query($sql, $connect);
 			if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 			$qqt = mysql_fetch_array($q);
+			$newtankist=0;
 			if($qqt['id_c']==NULL){ // игрока нет в данном клане	
 				//проверка, что игрок был в другом клане альянса
 				$sql = "select id_c from clan where idp='$idp'";
@@ -160,6 +213,7 @@ foreach ($clancnt as $idc) {
 			
 				} else {
 					if ($cntpl<>0) {
+						$newtankist=1;
 						$message="Приветствуем ".$datapl['account_name'].' в '.$clantag;
 						$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
 						$sql.= " VALUES (2,'$idp', '$idc', '$message', NULL, '$date', '$time')";
@@ -176,6 +230,24 @@ foreach ($clancnt as $idc) {
 					mysql_query($sql, $connect);
 					if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 				}
+			}
+			$dolgnDB=$qqt['role_localised'];
+			//echo "Должность из БД $dolgnDB \n";
+			$role_lo=$datapl['role'];
+			//echo "Должность из Вг $role_lo \n";
+			if ($dolgnDB<>$role_lo) {
+				if ($newtankist==0) {
+					$role1=$clanrange[$dolgnDB];
+					$role2=$clanrange[$role_lo];
+					$message="Изменение должности ".$account_name." c ".$role1." на ".$role2;
+					$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
+					$sql.= " VALUES (4,'$idp, '$idc', '$message', NULL, '$date', '$time')";
+					$q = mysql_query($sql, $connect);
+					if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+				};
+				$sql="UPDATE clan SET `role_localised`='$role_lo' WHERE `idp`='$idp'";
+				mysql_query($sql, $connect);
+				if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
 			}
 		}
 	}
@@ -195,4 +267,6 @@ function get_page($url) {
 }
 mysql_close($connect);
 echo "Done"
+?>
+Done"
 ?>

@@ -1,6 +1,7 @@
 <?php
 // выборка данных игрока. анализ, внесение изменений, запись в лог-таблицу
 include('settings.kak');
+
 $starttime=time();
 $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Ошибка подключения к БД");
@@ -11,7 +12,9 @@ $myeol=PHP_EOL;
 if (!(isset($appid))){
  $appid="demo";
 }
-
+if (!(isset($alliansid))){
+	$alliansid=9999999999;
+}
 if (array_key_exists("SERVER_NAME", $_SERVER)){
 	$myeol="<br>";
 }
@@ -59,7 +62,7 @@ $row = mysql_fetch_array($q2);
 $cntT = $row['cntt'];
 $t = time()-604800;
 
-$clanlist = mysql_query("select idc from clan_info where actdate>'$t'",$connect);
+$clanlist = mysql_query("select idc from clan_info where actdate>'$t' or alliansid='$alliansid'",$connect);
 $clancnt=array();
 foreach ($clan_array as $clan_i) {
 	//$idc1=$clan_i["clan_id"];
@@ -70,16 +73,19 @@ while ($clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC)) {
 }
 $clancnt=array_unique($clancnt);
 $idlist="";
+$i=0;
 foreach ($ida as $id) {
 	$sql = "select * from clan where idp=$id and freq>=target";
 	$c1 = mysql_query($sql,$connect);
 	$c1 = mysql_fetch_array($c1);
-	if ($c1<>NULL){
+	if (($c1<>NULL)and ($i<=99)){
 		$idlist=$idlist.$id.",";
+		$i+=1;
+		
 	}
 }
 print_r ($idlist);
-$pageidp = "2.0/account/info/?application_id=".$appid."&account_id=".$idlist;		
+$pageidp = "2.0/account/info/?application_id=".$appid."&account_id=".$idlist."&language=ru&fields=nickname,created_at,statistics,achievements";		
 $pageidp = "api.".$wot_host.'/'.$pageidp;
 $data2 = get_page($pageidp);
 $data2 = json_decode($data2, true);
@@ -144,7 +150,7 @@ foreach ($ida as $id) {
 								//echo "тест \n";
 				$account_name=$data2['data'][$id]['nickname'];
 				//print_r($account_name);
-				if (( $data2['data'][$id]['clan'] == null) or ($inclan==0) ) { // игрок уже не в клане или клан не в альянсе			
+				if ($inclan==0) { //  клан не в списке			
 										 echo "<b>NOT in clan $id ".$myeol;
 										 echo " deleting </b>".$account_name.$myeol;
 					$sql12 = "delete from `clan` where idp='$id'"; 
@@ -171,49 +177,9 @@ foreach ($ida as $id) {
 					$sql12 = "delete from `player_btl` where idp='$id'"; 
 					$qq2 = mysql_query($sql12,$connect);
 					if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-					if ($inclan != 0){ 
-					$account_name='<a href="http://worldoftanks.ru/community/accounts/'.$id.'/" target="_blank">'.$account_name.'</a>';
-					$message="Покинул клан ".$clantag1." боец ".$account_name;
-					$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
-					$sql.= " VALUES (1,'$id', '$idc', '$message', NULL, '$date', '$time')";
-					$q = mysql_query($sql, $connect);
-					if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";}
-					
 				}
 				else {
-					if ( $data2['data'][$id]['clan']['clan_id'] != $idc) { // игрок уже вступил в другой клан
-						$sql12 = "delete from `clan` where idp='$id'"; 
-						$qq2 = mysql_query($sql12,$connect);
-						if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-						$sql12 = "delete from `event_clan` where idp='$id' and type<>2 and type<>1"; 
-						$qq2 = mysql_query($sql12,$connect);
-						if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-						$sql12 = "delete from `event_tank` where idp='$id'"; 
-						$qq2 = mysql_query($sql12,$connect);
-						if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-						$sql12 = "delete from `player` where idp='$id'"; 
-						$qq2 = mysql_query($sql12,$connect);
-						if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-						$sql12 = "delete from `player_clan` where idp='$id'"; 
-						$qq2 = mysql_query($sql12,$connect);
-						if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-						$sql12 = "delete from `player_company` where idp='$id'"; 
-						$qq2 = mysql_query($sql12,$connect);
-						if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-						$sql12 = "delete from `player_ach` where idp='$id'"; 
-						$qq2 = mysql_query($sql12,$connect);
-						if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-						$sql12 = "delete from `player_btl` where idp='$id'"; 
-						$qq2 = mysql_query($sql12,$connect);
-						if (mysql_errno() <> 0) echo $sql12."\nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-						$account_name='<a href="http://worldoftanks.ru/community/accounts/'.$id.'/" target="_blank">'.$account_name.'</a>';
-						$message="Покинул клан ".$clantag1." боец ".$account_name;
-						$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
-						$sql.= " VALUES (1,'$id', '$idc','$message', NULL, '$date', '$time')";
-						$q = mysql_query($sql, $connect);
-						if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-						}
-					else {  												// игрок в клане
+					// игрок в клане
 						$newtankist=0;
 						//$sql = "select max(battles_count) as mbattles, max(date) as mdate, name from player where idp='$id' group by idp" ;
 						$sql = "select max(pl.battles_count) as mbattles, max(pl.date) as mdate, pl.name,max(plc.battles_count_clan) as maxbcclan,max(plr.battles_count_company) as maxbccompany  from player pl  left join  player_clan plc on plc.idp=pl.idp  left join player_company plr on plr.idp=pl.idp where pl.idp='$id' group by pl.idp";
@@ -225,22 +191,22 @@ foreach ($ida as $id) {
 								$a11=$timetolife+1;
 								$date1=date("Y-m-d",strtotime(' -'.$a11.' day '.$hosttime));	//Для корректного отображения  статистики записи новых бойцов делаются задним числом
 						}
-						$dolgnDB=$qqt['role_localised'];
-						$role_lo=$data2['data'][$id]['clan']['role'];
-						$role1=$clanrange[$dolgnDB];
-						$role2=$clanrange[$role_lo];
-						if ($dolgnDB<>$role_lo) {
-							if ($newtankist==0) {
-								$message="Изменение должности ".$account_name." c ".$role1." на ".$role2;
-								$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
-								$sql.= " VALUES (4,'$id', '$idc', '$message', NULL, '$date', '$time')";
-								$q = mysql_query($sql, $connect);
-								if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-							};
-							$sql="UPDATE clan SET `role_localised`='$role_lo' WHERE `idp`='$id'";
-							mysql_query($sql, $connect);
-							if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-						}
+						// $dolgnDB=$qqt['role_localised'];
+						// $role_lo=$data2['data'][$id]['clan']['role'];
+						// $role1=$clanrange[$dolgnDB];
+						// $role2=$clanrange[$role_lo];
+						// if ($dolgnDB<>$role_lo) {
+							// if ($newtankist==0) {
+								// $message="Изменение должности ".$account_name." c ".$role1." на ".$role2;
+								// $sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
+								// $sql.= " VALUES (4,'$id', '$idc', '$message', NULL, '$date', '$time')";
+								// $q = mysql_query($sql, $connect);
+								// if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+							// };
+							// $sql="UPDATE clan SET `role_localised`='$role_lo' WHERE `idp`='$id'";
+							// mysql_query($sql, $connect);
+							// if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
+						// }
 					 	$pname=$data2['data'][$id]['nickname'];
 						$pnameDB=$rGPL['name'];
 						//Смена ника
@@ -296,18 +262,8 @@ foreach ($ida as $id) {
 						$wn6=0;
 						$rating=0;
 						echo " targetcf:  $target".$myeol;
-						
 						// опись медалей и достижений, обрабатывается только для основного состава альянса.
 						if ($allians==1){
-							// $achcnt=count($data2['data'][$id]['achievements']);
-							// echo "Медалек -".$achcnt.$myeol;
-							// $achdata=$data2['data'][$id]['achievements'];
-							// //print_r ($achdata);
-							// for($i2=0;$i2<$achcnt;$i2++) { 
-								// $achel=each($achdata);
-								// print_r ($achel);
-								// echo "Медаль ".$i2." -".$achel['key'].$myeol;
-							// }
 							$sql = "select count(*) as cnt from cat_achiev";
 							$q2 = mysql_query($sql,$connect);
 							if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
@@ -358,7 +314,7 @@ foreach ($ida as $id) {
 // работа со списком техники
 						if 	(($rGPL['mbattles']<>$battles_count) or ($rGPL['mbattles'] == NULL) or ($newtankist==1)) {
 							$count1=$count1+1;
-							$pageidp = "2.0/account/tanks/?application_id=".$appid."&account_id=".$id;		
+							$pageidp = "2.0/account/tanks/?application_id=".$appid."&account_id=".$id."&language=ru&fields=tank_id,mark_of_mastery,statistics.all.wins,statistics.all.battles";		
 							$pageidp = "api.".$wot_host.'/'.$pageidp;
 							$data2pt = get_page($pageidp);
 							$data2pt = json_decode($data2pt, true);
@@ -378,7 +334,7 @@ foreach ($ida as $id) {
 									$newtankexist=0;
 									if($qqtt['id_t']==NULL){
 										
-										$pageidp = "2.0/encyclopedia/tankinfo/?application_id=".$appid."&tank_id=".$wotidt;		
+										$pageidp = "2.0/encyclopedia/tankinfo/?application_id=".$appid."&tank_id=".$wotidt."&language=ru&fields=name,level,nation,type,name_i18n,image";		
 										$pageidp = "api.".$wot_host.'/'.$pageidp;
 										$data2tank = get_page($pageidp);
 										$data2tank = json_decode($data2tank, true);
@@ -388,7 +344,7 @@ foreach ($ida as $id) {
 											$level=$data2tank['data'][$wotidt]['level'];
 											$nation=$data2tank['data'][$wotidt]['nation'];
 											$class=$data2tank['data'][$wotidt]['type'];
-											$localized_name=$data2tank['data'][$wotidt]['localized_name'];
+											$localized_name=$data2tank['data'][$wotidt]['name_i18n'];
 											$image_url=$data2tank['data'][$wotidt]['image'];
 											$sqltn = "select * from cat_tanks where `name`='$tname'";
 											$qtn = mysql_query($sqltn, $connect);
@@ -419,14 +375,14 @@ foreach ($ida as $id) {
 										// $win_count=$data['data']['vehicles'][$i]['win_count'];
 									}
 									$markm=$pltank['mark_of_mastery']; 
-									$garage=$pltank['in_garage']; 
+									$garage=0;//$pltank['in_garage']; 
 									$battle_count=$pltank['statistics']['all']['battles'];
 									$win_count=$pltank['statistics']['all']['wins'];
 									$level_avg_all += $battle_count*$level;
-									$fragst=$pltank['statistics']['all']['frags'];
-									$spottedt=$pltank['statistics']['all']['spotted'];
-									$survivedBattles=$pltank['statistics']['all']['survived_battles'];
-									$damageDealt=$pltank['statistics']['all']['damage_dealt'];
+									$fragst=0;
+									$spottedt=0;
+									$survivedBattles=0;
+									$damageDealt=0;
 									
 									// $sqlt = "select id_t from cat_tanks where `wotidt`='$wotidt'";
 									// $qt = mysql_query($sqlt, $connect);
@@ -584,13 +540,13 @@ foreach ($ida as $id) {
 									//echo "<br>\n\nNew data!!!\n--------------------";
 									if (($rGPL['mbattles']<>$battles_count) and ($rGPL['mbattles'] != NULL) and ($newtankist!=1)){
 										if ( $allians==1) {
-											$target=max(1,(int)($target/max(2,($req_freq/8))));
-										}else{
 											$target=max(2,(int)($target/2));
+										}else{
+											$target=max(3,(int)($target/2));
 										}
 									}
 									if ($newtankist==1){
-										$target+=2;
+										$target+=round($req_freq/4,0);
 									}
 									echo "New Target : $target".$myeol;
 									if ($rGPL['mdate']<>$date) {
@@ -699,9 +655,9 @@ foreach ($ida as $id) {
 								$target=$req_freq;
 							}
 						}
-					}
+					
 				}
-			}
+			}else {print_r($data2);}
 		}
 		
 	$freq=$freq+1;
@@ -731,7 +687,7 @@ if (($force<>1)and ($offs<>0)){
 	$diffdate=$maxdate-$mindate;
 	$a=round($sumall/$cntlog,2);
 	echo "коэфициент наполнения - ".$a.$myeol."с последнего сброса прошло - ".$diffdate." секунд".$myeol;
-	if (($diffdate>28800)or(($cntlog>10)and(($atimer>25)or($a<0.7)))){
+	if (($diffdate>28800)or(($cntlog>10)and(($atimer>25)or($a<0.79)))){
 		
 		if ($a<0.9){
 			echo "Слишком мало".$myeol;

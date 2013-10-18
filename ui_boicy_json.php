@@ -26,10 +26,16 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 	$clandays = round(abs(strtotime(date("Y-m-d",strtotime($hosttime))) - strtotime($row['cldate']))/86400);
 	$las_onl=min($clandays,$las_onl);
 	$responce->rows[$i]['idp']=$row['idp']; 
+	$a1="";
+	$a2="";
+	if ($_COOKIE['user']==$row['idp']){
+	  $a1='<b><span style="color:maroon">';
+	  $a2="</span></b>";
+	}
 	$s=$i+1;
 	$a=$row['role_localised'];
 	$role1=$clanrange[$a];
-	$responce->rows[$i]['cell']=array($row['idp'],$s, $link, $role1, $clandays, $las_onl); 
+	$responce->rows[$i]['cell']=array($row['idp'],$a1.$s.$a2, $a1.$link.$a2,$a1.$role1.$a2, $a1.$clandays.$a2, $a1.$las_onl.$a2); 
 	$i++; 
 } 	
 header("Content-type: text/script;charset=utf-8");
