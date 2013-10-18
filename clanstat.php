@@ -32,12 +32,12 @@ $ip=mysql_fetch_array($ip,MYSQL_ASSOC);
 $validclan=0;
 $user1=1;
 if ((@$_COOKIE['atoken']<> $ip['token'])or (!isset($_COOKIE['atoken']))){$user1=0;}
-// foreach ($clan_array as $clan_i) {
-	// $idc_temp = $clan_i["clan_id"];
-	// if ($pl['idc'] == $idc_temp) {
-		// $validclan=1;
-	// }
-// }
+ foreach ($clan_array as $clan_i) {
+	 $idc_temp = $clan_i["clan_id"];
+	 if ($pl['idc'] == $idc_temp) {
+		 $validclan=1;
+	 }
+ }
 if (isset ($alliansid)){
 		$idc_temp=$_COOKIE['idc'];
 		$al = mysql_query("select allians from  clan_info where idc='$idc_temp'",$connect);
