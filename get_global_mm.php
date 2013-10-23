@@ -51,6 +51,7 @@ $ida = array();
 $force=0;
 if (isset($_REQUEST['idp'])) {
 	$ida[]=(int)($_REQUEST['idp']);
+	$appid="demo";
 	$force=1;
 }else{
 	while ($members = mysql_fetch_array($clan_list)) {	$ida[]=$members['idp'];	}
@@ -108,6 +109,7 @@ foreach ($ida as $id) {
 			$inclan=0;//проверка на изменения списка альянса
 			$clantag1="";
 			reset($clancnt);
+			$inclanlist=0;
 			foreach ($clancnt as $idct) {
 				// $idct = $clan_i["clan_id"];
 				if ( $idct == $idc){
@@ -118,16 +120,16 @@ foreach ($ida as $id) {
 					if ($clnt['tag']<>NULL){
 						$clantag1=$clnt['tag'];
 						$allians=$clnt['allians'];
-					}else{
-						foreach ($clan_array as $clan_i) {
-							$idct = $clan_i["clan_id"];
-							if ( $idct == $idc){
-								$inclan=1;//клан в альянсе-всё в порядке
-								$clantag1 = $clan_i["clan_tag"];
-								$allians=1;
-								break;
-							}	
-						}
+					}
+					foreach ($clan_array as $clan_i) {
+						$idct = $clan_i["clan_id"];
+						if ( $idct == $idc){
+							$inclan=1;//клан в альянсе-всё в порядке
+							$clantag1 = $clan_i["clan_tag"];
+							$allians=1;
+							$inclanlist=1;
+							break;
+						}	
 					}
 					break;
 				}
@@ -138,15 +140,7 @@ foreach ($ida as $id) {
 			$date1=$date;
 			$date30=date("Y-m-d",strtotime(' -30 day '.$hosttime));
 			$time = date("H:i:s",strtotime($hosttime));
-			// $data = get_page($pageidp);
-			// $data = json_decode($data, true);
-			// $pageidp = "2.0/account/info/?application_id=".$appid."&account_id=".$id;		
-			// $pageidp = "api.".$wot_host.'/'.$pageidp;
-			// $data2 = get_page($pageidp);
-			// $data2 = json_decode($data2, true);
-			//print_r($data2);
-			
-			if ($data2['status'] == 'ok') {   // основной блок обработки инфы
+			if (($data2['status'] == 'ok')and (array_key_exists($id,$data2['data']))) {   // основной блок обработки инфы
 								//echo "тест \n";
 				$account_name=$data2['data'][$id]['nickname'];
 				//print_r($account_name);
@@ -375,7 +369,7 @@ foreach ($ida as $id) {
 										// $win_count=$data['data']['vehicles'][$i]['win_count'];
 									}
 									$markm=$pltank['mark_of_mastery']; 
-									$garage=0;//$pltank['in_garage']; 
+									 
 									$battle_count=$pltank['statistics']['all']['battles'];
 									$win_count=$pltank['statistics']['all']['wins'];
 									$level_avg_all += $battle_count*$level;
@@ -383,12 +377,6 @@ foreach ($ida as $id) {
 									$spottedt=0;
 									$survivedBattles=0;
 									$damageDealt=0;
-									
-									// $sqlt = "select id_t from cat_tanks where `wotidt`='$wotidt'";
-									// $qt = mysql_query($sqlt, $connect);
-									// if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-									// $qqtt = mysql_fetch_array($qt);
-									// $idt=$qqtt['id_t'];
 									//проверка на изменение ангара у игрока + исключение повторной записи в лог танков
 									if ($newtankexist!=1){
 										$sqlt2 = "select count(*) as cnt2 from player_btl where idt='$wotidt' and idp='$id'";
@@ -425,18 +413,19 @@ foreach ($ida as $id) {
 									if ($wi_co<>$battle_count){ 
 										$x1=$battle_count-$wi_co;
 										echo "     $localized_name  +$x1 ".$myeol;
+										
 										if ($dateb==$date){
-											$sqlt = "UPDATE player_btl SET `master`='$markm',`garage`='$garage',`time`='$time', `battle_count`='$battle_count', `win_count`='$win_count',`frags`='$fragst', `spotted`='$spottedt', `survivedBattles`='$survivedBattles', `damageDealt`='$damageDealt' WHERE `idp`='$id' and `idt`='$wotidt' and`date`='$date' ";
+											$sqlt = "UPDATE player_btl SET `master`='$markm',`time`='$time', `battle_count`='$battle_count', `win_count`='$win_count',`frags`='$fragst', `spotted`='$spottedt', `survivedBattles`='$survivedBattles', `damageDealt`='$damageDealt' WHERE `idp`='$id' and `idt`='$wotidt' and`date`='$date' ";
 										}
 										else{
-											$sqlt = "INSERT INTO player_btl (idp, idt, date, time, battle_count, win_count, frags, spotted, survivedBattles, damageDealt,master,garage)";
-											$sqlt.= " VALUES ('$id', '$wotidt', '$date1', '$time', '$battle_count', '$win_count', '$fragst', '$spottedt', '$survivedBattles', '$damageDealt','$markm','$garage')";
+											$sqlt = "INSERT INTO player_btl (idp, idt, date, time, battle_count, win_count, frags, spotted, survivedBattles, damageDealt,master)";
+											$sqlt.= " VALUES ('$id', '$wotidt', '$date1', '$time', '$battle_count', '$win_count', '$fragst', '$spottedt', '$survivedBattles', '$damageDealt','$markm')";
 										}	
 									}
-									else{ 
-										 // //привет варгеймингу, из-за сбоев в отдаче статистики приходится добавлять этот костыль
-										 $sqlt = "UPDATE player_btl SET `time`='$time',`master`='$markm',`garage`='$garage', `battle_count`='$battle_count', `win_count`='$win_count',`frags`='$fragst', `spotted`='$spottedt', `survivedBattles`='$survivedBattles', `damageDealt`='$damageDealt' WHERE `idp`='$id' and `idt`='$wotidt' and`date`='$dateb' ";
-									}
+									// else{ 
+										 // // //привет варгеймингу, из-за сбоев в отдаче статистики приходится добавлять этот костыль
+										 // $sqlt = "UPDATE player_btl SET `time`='$time',`master`='$markm',`garage`='$garage', `battle_count`='$battle_count', `win_count`='$win_count',`frags`='$fragst', `spotted`='$spottedt', `survivedBattles`='$survivedBattles', `damageDealt`='$damageDealt' WHERE `idp`='$id' and `idt`='$wotidt' and`date`='$dateb' ";
+									// }
 									$qt = mysql_query($sqlt, $connect);
 									if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 									//удаляем старые выборки
@@ -541,6 +530,9 @@ foreach ($ida as $id) {
 									if (($rGPL['mbattles']<>$battles_count) and ($rGPL['mbattles'] != NULL) and ($newtankist!=1)){
 										if ( $allians==1) {
 											$target=max(2,(int)($target/2));
+											if ($inclanlist==1){
+												$target=1;
+											}
 										}else{
 											$target=max(3,(int)($target/2));
 										}
@@ -687,9 +679,9 @@ if (($force<>1)and ($offs<>0)){
 	$diffdate=$maxdate-$mindate;
 	$a=round($sumall/$cntlog,2);
 	echo "коэфициент наполнения - ".$a.$myeol."с последнего сброса прошло - ".$diffdate." секунд".$myeol;
-	if (($diffdate>28800)or(($cntlog>10)and(($atimer>25)or($a<0.79)))){
+	if (($diffdate>14400)or(($cntlog>10)and(($atimer>25)or($a<0.79)))){
 		
-		if ($a<0.9){
+		if ($a<0.95){
 			echo "Слишком мало".$myeol;
 				if ($atimer<20){
 					$cntmaxpl+=1;

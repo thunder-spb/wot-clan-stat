@@ -258,7 +258,7 @@ foreach ($clancnt as $idc) {
 			//echo "Должность из Вг $role_lo \n";
 			if ($dolgnDB<>$role_lo) {
 				if ($newtankist==0) {
-					$role1=$clanrange[$dolgnDB];
+					$role1=@$clanrange[$dolgnDB];
 					$role2=$clanrange[$role_lo];
 					$message="Изменение должности ".$account_name." c ".$role1." на ".$role2;
 					$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";

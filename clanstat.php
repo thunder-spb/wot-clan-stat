@@ -23,15 +23,16 @@ if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n
 $clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC);
 echo $clanrow['tag'];
 $user=@$_COOKIE['user'];
-$pl = mysql_query("select name,idc from player  where idp='$user' order by `date` desc",$connect);
+$pl = mysql_query("select player.idp,player.name as name,player.idc as idc, clan.role_localised as role,player.date from player  join clan on player.idp=clan.idp  where player.idp='$user' order by player.date desc ");
 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $pl=mysql_fetch_array($pl,MYSQL_ASSOC);
-$ip = mysql_query("select token from access_log where idp='$user' order by `date` desc",$connect);
+$token=@$_COOKIE['atoken'];
+$ip = mysql_query("select * from access_log where idp='$user' and token='$token'",$connect);
 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $ip=mysql_fetch_array($ip,MYSQL_ASSOC);
 $validclan=0;
 $user1=1;
-if ((@$_COOKIE['atoken']<> $ip['token'])or (!isset($_COOKIE['atoken']))){$user1=0;}
+if (($ip['token']==NULL)or (!isset($_COOKIE['atoken']))){$user1=0;}
  foreach ($clan_array as $clan_i) {
 	 $idc_temp = $clan_i["clan_id"];
 	 if ($pl['idc'] == $idc_temp) {
@@ -39,11 +40,16 @@ if ((@$_COOKIE['atoken']<> $ip['token'])or (!isset($_COOKIE['atoken']))){$user1=
 	 }
  }
 if (isset ($alliansid)){
-		$idc_temp=$_COOKIE['idc'];
-		$al = mysql_query("select allians from  clan_info where idc='$idc_temp'",$connect);
+	if (isset ($alliansid)){
+		$al = mysql_query("select tag from alliances  where ida='$alliansid'",$connect);
 		if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-		$al=mysql_fetch_array($al,MYSQL_ASSOC);
-		if ($al['allians']==1){$validclan=1;}
+		$ida=mysql_fetch_array($al,MYSQL_ASSOC);
+	}	
+	$idc_temp=$_COOKIE['idc'];
+	$al = mysql_query("select allians from  clan_info where idc='$idc_temp'",$connect);
+	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+	$al=mysql_fetch_array($al,MYSQL_ASSOC);
+	if ($al['allians']==1){$validclan=1;}
 	}
 
 //echo $idc;
@@ -71,6 +77,8 @@ body {
 
 <script type="text/javascript">
 	var current_clan_id = <?php echo $idc ?>;
+	var role = "<?php echo $pl['role'] ?>";
+	var useridc = <?php echo $pl['idc'] ?>;
 </script>
 
 <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
@@ -130,6 +138,19 @@ body {
 //echo $clan_i['tag'];
 ?></h1>
 </header>
+<nav> 
+    <ul>
+<?php
+if (isset ($alliansid)){
+			echo "<li><a href=\"allians.php\">[".$ida["tag"]."]</a></li>";
+		}
+           foreach ($clan_array as $clan_i) {
+			echo "<li><a href=\"wotstat.php?idc=".$clan_i["clan_id"]."\">".$clan_i["clan_tag"]."</a></li>";
+		}
+		
+?>	
+    </ul>
+</nav>
 <table align="center"><tr><td valign="top">
 <div class="tables">
 <div id="tabs">

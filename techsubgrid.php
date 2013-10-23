@@ -18,12 +18,14 @@ $sord=$_REQUEST["sord"];
 $idt=$wotidt;
 $sql2="SELECT pl.idp,pl.name,max(pb.battle_count) as battle_count ,round((max(pb.win_count)*100/max(pb.battle_count)),2) as proc FROM `player_btl` pb, `player` pl,`clan` cl WHERE pl.idp=pb.idp and pb.idt=$idt and cl.idp=pl.idp and cl.idc=$idc group by idp order by $sidx $sord";
 $result2 = mysql_query( $sql2,$connect ) or die("<br>Couldn t execute query.".mysql_error()); 
+
 $i=0;
  while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) { 
 	$proc=$row['proc'];
 	$sp1=""; $sp2="";
 	$a1="";
 	$a2="";
+	$idp=$row['idp'];
 	if ($_COOKIE['user']==$row['idp']){
 	  $a1="<span style='color: maroon;'><b>";
 	  $a2="</b></span>";
@@ -32,8 +34,17 @@ $i=0;
 	if($proc>52) {$sp1="<span style='color: green;'>"; $sp2="</span>";}
 	if($proc>55) {$sp1="<span style='color: blue;'>"; $sp2="</span>";}
 	$pmessage=$sp1.$proc."%".$sp2;
+	$sql3="select date from player_btl where  idt=$idt and idp=$idp order by id_pb desc limit 1";
+    $result3 = mysql_query( $sql3,$connect ) or die("<br>Couldn t execute query.".mysql_error()); 
+	$rowc=mysql_fetch_array($result3,MYSQL_ASSOC);
+	$date=$rowc['date'];
+	$a11=min($timetolife+30,60);
+	$date1=date("Y-m-d",strtotime(' -'.$a11.' day '.$hosttime));
+	if (($date1>$date)){
+		$check='<img src="images/icons/delete.png" style="width: 16px; height:16px;"/>';
+	} else{$check='<img src="images/icons/check.png" style="width: 16px; height:16px;"/>';}
 	$responce->rows[$i]['id']=$idt; 
-	$responce->rows[$i]['cell']=array($a1.($i+1).$a2,$a1.$row['name'].$a2,$a1.$row['battle_count'].$a2,$pmessage);
+	$responce->rows[$i]['cell']=array($a1.($i+1).$a2,$wotidt,$idp,$a1.$row['name'].$a2,$a1.$row['battle_count'].$a2,$pmessage,$check);
 	$i++; 
 }
  echo json_encode($responce);

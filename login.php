@@ -16,8 +16,8 @@ if (!isset($_REQUEST['status'])){
 if ($_REQUEST['status']=="ok"){
 	$user=$_REQUEST['account_id'];
 	$token=$_REQUEST['access_token'];
-	setcookie("user",$user);
-	setcookie("atoken",$token);
+	setcookie("user",$user,time()+604800);
+	setcookie("atoken",$token,time()+604800);
 	$pl = mysql_query("select name, idc from player  where idp='$user' order by `date` desc",$connect);
 	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 	$userd=mysql_fetch_array($pl,MYSQL_ASSOC);
@@ -29,7 +29,7 @@ if ($_REQUEST['status']=="ok"){
 	
 	$idc=$userd['idc'];
 	if ($idc<>NULL){
-		setcookie("idc",$idc);
+		setcookie("idc",$idc,time()+604800);
 		foreach ($clan_array as $clan_i) {
 			$idc_temp = $clan_i["clan_id"];
 			if ($idc == $idc_temp) {

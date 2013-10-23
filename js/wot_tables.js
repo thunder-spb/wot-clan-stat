@@ -810,11 +810,11 @@ $(function() {
 			}
 		}
 	});	
-	
+	var lastsel2;
 	tmstat9 = $('#techABS').jqGrid({
 		sortable: false,
 		altRows: false,
-		url:'get_pls09_json.php?idc='+idc,
+		url:'get_pls09_json.php?idc='+idc+'&level=10',
 		datatype: 'json',
 		mtype: "POST",
 		postData: {'filterBy':null},
@@ -857,22 +857,40 @@ $(function() {
 			subgrid_table_id = subgrid_id+"_t"; 
 			$("#"+subgrid_id).html("<table id='"+subgrid_table_id+"' class='scroll'></table>"); 
 			jQuery("#"+subgrid_table_id).jqGrid({ 
-				url:"techsubgrid.php?idc="+idc+"&wotidt="+row_id, 
+				url:"techsubgrid.php?idc="+idc+"&wotidt="+row_id+"&role="+role, 
 				datatype: "json", 
-				colNames: ['No','Имя','Боёв','%%'], 
+				colNames: ['No','','','Имя','Боёв','%%','Активен'], 
 				altRows: true,
 				colModel: [ 
 					{name:"id",index:"id",width:55,key:true,sortable:false}, 
+					{name:"wotidt",index:"wotidt",hidden:true,editable: true}, 
+					{name:"idp",index:"idp",hidden:true,editable: true}, 
 					{name:"name",index:"name",width:200}, 
 					{name:"battle_count",index:"battle_count",width:80,align:"right"}, 
 					{name:"proc",index:"proc",width:80,align:"right"}, 
+					{name:"garage",index:"garage",width:80,align:"center",sortable:false},
 				], 
 				rowNum:100, 
 				sortname: 'name', 
 				sortorder: "asc", 
 				height: 'auto',
 				
-		});
+				// onSelectRow: function(name){ 
+				    // if((role==='vice_leader' || role==='diplomat' || role==='recruiter'|| role==='cammander')&&(useridc===idc)){
+						 // if(name && name!==lastsel2){ 
+							// jQuery("#"+subgrid_table_id).jqGrid('saveRow',lastsel2,false);
+							// jQuery("#"+subgrid_table_id).jqGrid('editRow',name,true);
+							// lastsel2=name; 
+						// }
+					// }
+				// },
+				
+				
+				
+			});
+			if((role==='recruit')||((useridc!==idc)&&(role!=='vice_leader' && role!=='diplomat' && role!=='cammander'))){
+				jQuery("#"+subgrid_table_id).hideCol("garage").trigger("reloadGrid");
+			}
 		}, 
 		subGridRowColapsed: function(subgrid_id, row_id) { 
 			// this function is called before removing the data 
@@ -880,6 +898,7 @@ $(function() {
 			//subgrid_table_id = subgrid_id+"_t"; 
 			//jQuery("#"+subgrid_table_id).remove(); 
 		},
+		
 		afterInsertRow: function(row_id, row_data){
 			if (row_data.cls == 'SPG'){
 				$('#techABS').jqGrid('setCell',row_id,'img','',{'background-color':'#ffdab9'});
@@ -919,12 +938,83 @@ $(function() {
 			}
 		}
 		
-	});
+	}
+	);
 	
+	
+/*	
+	$(function(){
+             $('#table').jqGrid({
+             url:'../assets/templates/site/jqgrid/grid.php',
+             sortable: true,
+             datatype: 'json',
+             mtype: 'GET',
+             colNames:['ID','Турист','Статус','Договор','Дата заявки', 'Дата поездки','Тип тура','Название тура','Страна','Подробно','Туристов','Форма оплаты','Сумма, у.е'],
+             colModel :[
+                {name:'id', index:'id', width:50, align:'center',editable:false,editoptions:{readonly:true,size:10}},
+                {name:'id_tourist', index:'id_tourist', width:200,editrules:{edithidden:true},editable:true,editoptions:{size:50}},
+              {name:'status', index:'status', width:100,editrules:{edithidden:true},editable:true,hidden:true,formatter:'select',edittype: 'select', editoptions:{value:{0:'Новая',1:'В работе',2:'Оплачено',3:'Бронирование',4:'Подтвержден',5:'Отказ',10:'-----------------------------'}} },
+                {name:'status_dogovor', index:'status_dogovor', width:100,editrules:{edithidden:true},editable:true,hidden:true,formatter:'select',edittype: 'select', editoptions:{value:{0:'Не подписан',1:'Подписан',10:'-----------------------------'}}},
+              {name:'date_', index:'date_', width:100,formatter: 'date',formatoptions:{srcformat:'Y-m-d',newformat:'d-m-Y'}},
+                {name:'date_tour', index:'date_tour',formatter: 'date',formatoptions:{srcformat:'Y-m-d',newformat:'d-m-Y'},width:100,editrules:{edithidden:true},editable:true,editoptions:{dataInit: function(element){ $(element).datepicker({dateFormat:"dd-mm-yy"});}}},
+                {name:'type_tour', index:'type_tour', width:100,editrules:{edithidden:true},editable:true,edittype: 'select',formatter:'select', editoptions:{value:{0:'Тур за рубеж',1:'Автобусный за рубеж',2:'Морской круиз',3:'Тур по России',4:'Речной круиз',10:'-----------------------------'}}},
+              {name:'name_tour', index:'name_tour', width:100,editrules:{edithidden:true},editable:true,editoptions:{size:50}},
+              {name:'country_tour', index:'country_tour', width:100,editrules:{edithidden:true},editable:true,editoptions:{size:50}},
+              {name:'description_tour', index:'description_tour', width:100,editrules:{edithidden:true},editable:true,hidden:true,edittype: 'textarea',editoptions:{rows:"5",cols:"100"}},
+                {name:'num_tourist', index:'num_tourist', width:100,editrules:{edithidden:true},editable:true,editoptions:{size:25}},
+              {name:'method_pay', index:'method_pay', width:100,editrules:{edithidden:true},editable:true,hidden:true,formatter:'select',edittype: 'select', editoptions:{value:{0:'Наличные',1:'Банк.перевод',2:'VISA/Mastercard',3:'QIWI',10:'-----------------------------'}}},
+              {name:'val_ue', index:'val_ue', width:100,editrules:{edithidden:true},editable:true,editoptions:{size:25}}],
+             pager: $('#tablePager'),
+             toolbar: [true,"top"],
+             rowNum:50,
+             rowList:[10,20,30,100,500,1000],
+             sortname: 'id',
+             caption: 'Менеджер туристических заявок',
+            sortorder: 'asc',
+             autowidth: true,
+             height:700,
+            subGrid: true,
+             subGridRowExpanded: function(subgrid_id, row_id) {
+                 var subgrid_table_id;
+                 subgrid_table_id = subgrid_id+'_t';
+                 $('#'+subgrid_id).html('<table id="'+subgrid_table_id+'"></table><div id="'+subgrid_table_id+'_pager"></div>');
+                 $('#'+subgrid_table_id).jqGrid({
+                    url: '../assets/templates/site/jqgrid/grid.php?oper2=sub',
+                    datatype: 'json',
+                    mtype: 'POST',
+                    postData: {'oper':'subgrid', 'id':row_id},
+                    colNames: ['ФИО'],
+                    colModel: [
+                         {name: 'fullname', index: 'fullname', width:130,editrules:{edithidden:true},editable:true,editoptions:{size:50}}
+                    ],
+                    height: 'auto',
+                    caption: 'Туристы',
+                  sortname: 'id',
+                    autowidth: true,
+                    rownumbers: true,
+                    rownumWidth: 40,
+                    rowNum: 10,
+                  editurl: '../assets/templates/site/jqgrid/grid.php?oper2=sub',
+                    sortorder: 'asc',
+                    pager: $('#'+subgrid_table_id+'_pager'),
+                    rowNum:10,
+                    rowList:[10,20,50,100]
+               }).jqGrid('navGrid', '#'+subgrid_table_id+'_pager',{search: false},{width:500,height:400,reloadAfterSubmit:true,closeOnEscape:true},     
+              {width:500,height:400,reloadAfterSubmit:true,closeOnEscape:true});
+         },
+           editurl: '../assets/templates/site/jqgrid/grid.php'
+      }).jqGrid('navGrid', '#tablePager',{search: false},{width:700,height:550,reloadAfterSubmit:true,closeOnEscape:true},{width:700,height:550,reloadAfterSubmit:true,closeOnEscape:true});
+        $('#table').jqGrid('navSeparatorAdd','#tablePager');
+      $("#t_table").append('<input id="c_chooser1" type="button" value="Показать, скрыть колонки">');
+        $("#c_chooser1").click(function(){
+        $('#table').jqGrid('setColumns',{ colnameview:false,updateAfterCheck: true });
+     });  
+    });
+	*/
 	tmstat10 = $('#techCHM').jqGrid({
 		sortable: false,
 		altRows: false,
-		url:'get_pls10_json.php?idc='+idc,
+		url:'get_pls09_json.php?idc='+idc+'&level=8',
 		datatype: 'json',
 		mtype: "POST",
 		postData: {'filterBy':null},
@@ -978,19 +1068,38 @@ $(function() {
 			jQuery("#"+subgrid_table_id).jqGrid({ 
 				url:"techsubgrid.php?idc="+idc+"&wotidt="+row_id, 
 				datatype: "json", 
+				colNames: ['No','','','Имя','Боёв','%%','Активен'], 
 				altRows: true,
-				colNames: ['No','Имя','Боёв','%%'], 
 				colModel: [ 
 					{name:"id",index:"id",width:55,key:true,sortable:false}, 
+					{name:"wotidt",index:"wotidt",hidden:true,editable: true}, 
+					{name:"idp",index:"idp",hidden:true,editable: true}, 
 					{name:"name",index:"name",width:200}, 
 					{name:"battle_count",index:"battle_count",width:80,align:"right"}, 
 					{name:"proc",index:"proc",width:80,align:"right"}, 
+					{name:"garage",index:"garage",width:80,align:"center",sortable:false},
 				], 
 				rowNum:100, 
 				sortname: 'name', 
 				sortorder: "asc", 
 				height: 'auto',
+				
+				// onSelectRow: function(name){ 
+				    // if((role==='vice_leader' || role==='diplomat' || role==='recruiter'|| role==='cammander')&&(useridc===idc)){
+						 // if(name && name!==lastsel2){ 
+							// jQuery("#"+subgrid_table_id).jqGrid('saveRow',lastsel2,false);
+							// jQuery("#"+subgrid_table_id).jqGrid('editRow',name,true);
+							// lastsel2=name; 
+						// }
+					// }
+				// },
+				
+				
+				
 			});
+			if((role==='recruit')||((useridc!==idc)&&(role!=='vice_leader' && role!=='diplomat' && role!=='cammander'))){
+				jQuery("#"+subgrid_table_id).hideCol("garage").trigger("reloadGrid");
+			}
 		}, 
 		subGridRowColapsed: function(subgrid_id, row_id) { 
 			// this function is called before removing the data 
@@ -1039,6 +1148,10 @@ $(function() {
 		}
 		
 	});
+	if((role==='recruit')||((useridc!==idc)&&(role!=='vice_leader' && role!=='diplomat' && role!=='cammander'))){
+				jQuery('#techABS').hideCol("col3").trigger("reloadGrid");
+				jQuery('#techCHM').hideCol("col3").trigger("reloadGrid");
+	};
 	
 	var twm1 = $('#wmProvinces').jqGrid({
 		sortable: false,

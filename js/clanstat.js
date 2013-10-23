@@ -169,7 +169,7 @@ $(function() {
 	tmstat9 = $('#techABS').jqGrid({
 		sortable: false,
 		altRows: false,
-		url:'get_pls09_json.php?idc='+idc,
+		url:'get_pls09_json.php?idc='+idc+'&level=10',
 		datatype: 'json',
 		mtype: "POST",
 		postData: {'filterBy':null},
@@ -212,20 +212,40 @@ $(function() {
 			subgrid_table_id = subgrid_id+"_t"; 
 			$("#"+subgrid_id).html("<table id='"+subgrid_table_id+"' class='scroll'></table>"); 
 			jQuery("#"+subgrid_table_id).jqGrid({ 
-				url:"techsubgrid.php?idc="+idc+"&wotidt="+row_id, 
+				url:"techsubgrid.php?idc="+idc+"&wotidt="+row_id+"&role="+role, 
 				datatype: "json", 
-				colNames: ['No','Имя','Боёв','%%'], 
+				colNames: ['No','','','Имя','Боёв','%%','Активен'], 
+				altRows: true,
 				colModel: [ 
 					{name:"id",index:"id",width:55,key:true,sortable:false}, 
+					{name:"wotidt",index:"wotidt",hidden:true,editable: true}, 
+					{name:"idp",index:"idp",hidden:true,editable: true}, 
 					{name:"name",index:"name",width:200}, 
 					{name:"battle_count",index:"battle_count",width:80,align:"right"}, 
 					{name:"proc",index:"proc",width:80,align:"right"}, 
+					{name:"garage",index:"garage",width:80,align:"center",sortable:false},
 				], 
 				rowNum:100, 
 				sortname: 'name', 
 				sortorder: "asc", 
-				height: '100%' 
+				height: 'auto',
+				
+				// onSelectRow: function(name){ 
+				    // if((role==='vice_leader' || role==='diplomat' || role==='recruiter'|| role==='cammander')&&(useridc===idc)){
+						 // if(name && name!==lastsel2){ 
+							// jQuery("#"+subgrid_table_id).jqGrid('saveRow',lastsel2,false);
+							// jQuery("#"+subgrid_table_id).jqGrid('editRow',name,true);
+							// lastsel2=name; 
+						// }
+					// }
+				// },
+				
+				
+				
 			});
+			if((role==='recruit')){
+				jQuery("#"+subgrid_table_id).hideCol("garage").trigger("reloadGrid");
+			}
 		}, 
 		subGridRowColapsed: function(subgrid_id, row_id) { 
 			// this function is called before removing the data 
@@ -233,6 +253,7 @@ $(function() {
 			//subgrid_table_id = subgrid_id+"_t"; 
 			//jQuery("#"+subgrid_table_id).remove(); 
 		},
+		
 		afterInsertRow: function(row_id, row_data){
 			if (row_data.cls == 'SPG'){
 				$('#techABS').jqGrid('setCell',row_id,'img','',{'background-color':'#ffdab9'});
@@ -272,12 +293,14 @@ $(function() {
 			}
 		}
 		
-	});
+	}
+	);
 	
+
 	tmstat10 = $('#techCHM').jqGrid({
 		sortable: false,
 		altRows: false,
-		url:'get_pls10_json.php?idc='+idc,
+		url:'get_pls09_json.php?idc='+idc+'&level=8',
 		datatype: 'json',
 		mtype: "POST",
 		postData: {'filterBy':null},
@@ -331,18 +354,26 @@ $(function() {
 			jQuery("#"+subgrid_table_id).jqGrid({ 
 				url:"techsubgrid.php?idc="+idc+"&wotidt="+row_id, 
 				datatype: "json", 
-				colNames: ['No','Имя','Боёв','%%'], 
+				colNames: ['No','','','Имя','Боёв','%%','Активен'], 
+				altRows: true,
 				colModel: [ 
 					{name:"id",index:"id",width:55,key:true,sortable:false}, 
+					{name:"wotidt",index:"wotidt",hidden:true,editable: true}, 
+					{name:"idp",index:"idp",hidden:true,editable: true}, 
 					{name:"name",index:"name",width:200}, 
 					{name:"battle_count",index:"battle_count",width:80,align:"right"}, 
 					{name:"proc",index:"proc",width:80,align:"right"}, 
+					{name:"garage",index:"garage",width:80,align:"center",sortable:false},
 				], 
 				rowNum:100, 
 				sortname: 'name', 
 				sortorder: "asc", 
-				height: '100%' 
+				height: 'auto',
+								
 			});
+			if((role==='recruit')){
+				jQuery("#"+subgrid_table_id).hideCol("garage").trigger("reloadGrid");
+			}
 		}, 
 		subGridRowColapsed: function(subgrid_id, row_id) { 
 			// this function is called before removing the data 
