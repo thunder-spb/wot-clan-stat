@@ -1,11 +1,11 @@
 <?php
-/////Ñïèñîê òîï-òåõíèêè.json. 8-level
+/////Ð¡Ð¿Ð¸ÑÐ¾Ðº Ñ‚Ð¾Ð¿-Ñ‚ÐµÑ…Ð½Ð¸ÐºÐ¸.json. 8-level
 include error_reporting(0);
 include('settings.kak');
 $sidx = $_REQUEST["sidx"];
 $sord = $_REQUEST["sord"];
 $connect = mysql_connect($host, $account, $password);
-$db = mysql_select_db($dbname, $connect) or die("Îøèáêà ïîäêëþ÷åíèÿ ê ÁÄ");
+$db = mysql_select_db($dbname, $connect) or die("ÐžÑˆÐ¸Ð±ÐºÐ° Ð¿Ð¾Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð¸Ñ Ðº Ð‘Ð”");
 $setnames = mysql_query( 'SET NAMES utf8' );
 header('Content-Type: text/html; charset=UTF-8');
 
@@ -13,11 +13,11 @@ $result = mysql_query("SELECT count(*) as cnt FROM `clan_info` where alliansid=$
 $row = mysql_fetch_array($result,MYSQL_ASSOC); 
 $count_t = $row['cnt']; 
 //$message="<table  border='1' width='900px'>";
-$sql="SELECT clan_info.idc as id1,tag,clan_info.name as clname,smallimg,position,rate,skill,firepower,ps1.cnt as cnt, rev.revenue as revenue FROM `clan_info` 
+$sql="SELECT clan_info.idc as id1,tag,clan_info.name as clname,smallimg,position,rate,skill,firepower,cw,ps1.cnt as cnt, rev.revenue as revenue FROM `clan_info` 
 left join 
 	(SELECT idc,count(*) as cnt FROM possession group by idc) as ps1 on clan_info.idc=ps1.idc
 left join 
-	(SELECT ps.idc as idc1 ,sum(pr.revenue) as revenue FROM possession ps, province pr where ps.idpr=pr.id group by ps.idc)as rev on clan_info.idc=rev.idc1 
+	(SELECT ps.idc as idc1 ,sum(pr.revenue) as revenue FROM possession ps, province pr where ps.idpr=pr.id AND ps.cw = pr.cw group by ps.idc )as rev on clan_info.idc=rev.idc1 
 	where `alliansid`='$alliansid'  ORDER BY $sidx $sord";
 $result = mysql_query( $sql,$connect ) or die("Couldn t execute query.".mysql_error()); 
 
@@ -33,7 +33,12 @@ while($row = mysql_fetch_assoc($result)) {
 	$tagimg='<img src="'.$row['smallimg'].'" style="width: 20px; height:20px;" align="absmiddle"/> <b>['.$row['tag'].']</b>';
 	$idc=$row['id1'];
 	$name='<b><a href="wotstat.php?idc='.$idc.'" >'.$row['clname'].'</a></b>';
-	$data->rows[$i]['cell'] = array($a1.($i+1).$a2,$a1.$tagimg.$a2,$a1.$name.$a2,$a1.$row['position'].$a2,$a1.$row['rate'].$a2,$a1.$row['skill'].$a2,$a1.$row['firepower'].$a2,$a1.$row['cnt'].$a2,$a1.$row['revenue'].$a2);
+	$loc="Ð“Ð». ÐšÐ°Ñ€Ñ‚Ð°";
+	
+	if ($row['cw']==2) {
+		$loc="2-Ñ ÐšÐ¾Ð¼Ð¿Ð°Ð½Ð¸Ñ";
+	}
+	$data->rows[$i]['cell'] = array($a1.($i+1).$a2,$a1.$tagimg.$a2,$a1.$name.$a2,$a1.$row['position'].$a2,$a1.$row['rate'].$a2,$a1.$row['skill'].$a2,$a1.$row['firepower'].$a2,$a1.$loc.$a2,$a1.$row['cnt'].$a2,$a1.$row['revenue'].$a2);
 	$i++;
 
 }

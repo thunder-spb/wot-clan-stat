@@ -21,23 +21,40 @@ $count = $row['count'];
 if( $count >0 ) { $total_pages = ceil($count/$limit); } else { $total_pages = 0; }
 //$SQL="SELECT id_et,type, message, date FROM event_tank WHERE idc = $idc and type>0 ORDER BY $sidx DESC LIMIT $start , $limit";
 //$SQL="SELECT distinct (a.id_et),a.type,b.class as classt, c.mutiny as mutiny, b.localized_name,b.level,b.nation,  a.date, d.name FROM event_tank a,cat_tanks b,player d  WHERE a.idc = $idc and b.id_t=a.idt  and a.type>0 and d.idp=a.idp  ORDER BY $sidx DESC LIMIT $start , $limit";
-$SQL="SELECT  a.id_e,a.type as type,a.idpr as idpr,a.time,b.id,b.name as name,b.type as typepr, c.mutiny as mutiny FROM wm_event a, province b
-LEFT OUTER JOIN possession c ON b.id = c.idpr WHERE a.idc = $idc and a.idpr=b.id ORDER BY $sidx DESC LIMIT $start , $limit";
+$SQL="SELECT  a.id_e,a.type as type,a.idpr as idpr,a.time as time,b.id,b.name as name,b.type as typepr, c.mutiny as mutiny,a.cw as cwq FROM wm_event a, province b
+LEFT OUTER JOIN possession c ON b.id = c.idpr and b.cw =c.cw  WHERE a.idc = $idc and a.idpr=b.id and a.cw=b.cw ORDER BY $sidx DESC LIMIT $start , $limit";
 //echo $SQL;
 $result = mysql_query( $SQL,$connect ) or die("Couldn t execute query.".mysql_error()); 
 $responce=new stdclass;
 $responce->page = $page; 
 $responce->total = $total_pages; 
 $responce->records = $count; 
-
-for($i=0;$i<$count;$i++) { 
+$q=0;
+for($i=0;$i<min($count,101);$i++) { 
 	$row = mysql_fetch_array($result,MYSQL_ASSOC);
 	$amessage=$messagetype=$typea="";
+	$region = geoip_record_by_name($_SERVER['REMOTE_ADDR']);
+	if (($region['region']<>NULL) and ($region['country_code']<>NULL)){
+		$remtz=new DateTimeZone(geoip_time_zone_by_country_and_region($region['country_code'],$region['region']));
+	} else{
+		$remtz=new DateTimeZone('Europe/Moscow');
+	}
+	$a=$row['time'];
 	
-	$date=date("Y-m-d",$row["time"]);
-	
+	$remtime = new DateTime('@'.$a);
+	$remtime->setTimezone($remtz);
+	$date=$remtime->format('Y-m-d H:i');
 	$typepr=$row['typepr'];
 	$mutiny=$row['mutiny'];
+	if (($q<>$row['cwq']) and($q<>0)){
+		$loc="'Глобальная Карта'";
+		if ($row['cwq']==1) {
+			$loc="'Вторая Компания'";
+		}
+		$responce->rows[$i]['cell']=array("","","<b>Клан сменил локацию на ".$loc."</b>"); 
+		$i+=1;
+	}
+	$q=$row['cwq'];
 	if ($typepr=="start"){ 
 		$messagetype='<img src="images/province_type_start.png" style="width: 16px; height:16px;" align="absmiddle"/>';$amessage=" высадка ";
 		if ($mutiny<>0){
@@ -66,7 +83,7 @@ for($i=0;$i<$count;$i++) {
 	}
 	$name=$row['name'];
 	$idpr=$row['idpr'];
-	$name = "<a href='http://worldoftanks.ru/uc/clanwars/maps/?province=$idpr' target='_blank'>$name</a>";
+	$name = "<a href='http://cw".$q.".worldoftanks.ru/clanwars/maps/?province=$idpr' target='_blank'>$name</a>";
 	$amessage=$messagetype.$typea.$amessage.$name;
 	$amessage=$sp5.$amessage.$sp6;
 	if ($row==NULL){

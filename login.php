@@ -24,7 +24,8 @@ if ($_REQUEST['status']=="ok"){
 	$username=$userd['name'];
 	$date=time();
 	$ip=$_SERVER['REMOTE_ADDR'];
-	$pl1 = mysql_query("insert into access_log (idp,name, date,ip,token) values ('$user','$username','$date','$ip','$token')",$connect);
+	$cntr=geoip_country_code_by_name ( $ip );
+	$pl1 = mysql_query("insert into access_log (idp,name, country, date,ip,token) values ('$user','$username','$cntr','$date','$ip','$token')",$connect);
 	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 	
 	$idc=$userd['idc'];

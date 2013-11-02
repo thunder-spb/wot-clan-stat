@@ -1,5 +1,5 @@
 ﻿<?php 
-
+// phpinfo();die();
 require_once('settings.kak');  
 
 if (array_key_exists("idc",$_GET)) {
@@ -18,7 +18,7 @@ if (array_key_exists("idc",$_GET)) {
 $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Ошибка подключения к БД");
 $setnames = mysql_query( 'SET NAMES utf8' );
-$clanlist = mysql_query("select cl.tag as tag, cl.name as name, rate, firepower, skill, position,smallimg,alliances.name as aname from clan_info as cl left join alliances on cl.alliansid=alliances.ida  where idc='$idc'",$connect);
+$clanlist = mysql_query("select cl.tag as tag, cl.name as name, rate,cw, firepower, skill, position,smallimg,alliances.name as aname from clan_info as cl left join alliances on cl.alliansid=alliances.ida  where idc='$idc'",$connect);
 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC);
 echo $clanrow['tag'];
@@ -129,8 +129,14 @@ body {
 		if ($clanrow["aname"]<>NULL){
 			$aname="'".$clanrow["aname"]."'";
 		}
+		$loc="Гл. Карта";
+		if ($clanrow['cw']==2) {
+			$loc="2-я Компания";
+		}
+		
 		echo '<img src="'.$clanrow['smallimg'].'" style="width: 24px; height:24px;" align="absmiddle"/> ';
 		echo "<b>".$clanrow["name"]."</b> [".$clanrow["tag"]."] <b>".$aname."</b>";
+		echo " | Локация: <b>".$loc."</b> ";
 		//
 		echo " | место № ". $clanrow["position"]." | сила - ".$clanrow["rate"]. " | огн. мощь - ".$clanrow["firepower"]." | скилл - ".$clanrow["skill"];
 	
@@ -211,5 +217,6 @@ if (isset ($alliansid)){
 </tr>
 
 </table>
+
 </body>
 </html>

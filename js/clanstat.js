@@ -95,7 +95,7 @@ $(function() {
 		colNames:['Id','Дата','Сообщение'],
 		colModel :[
 			{name:'id_e', index:'id_e', width:-2, align:"center",hidden:true,sortable:false},
-			{name:'date', index:'date', width:60, align:"center",sortable:false},
+			{name:'date', index:'date', width:90, align:"center",sortable:false},
 			{name:'message', index:'message', width:355, align:"left",sortable:false},
 			],
 		rowTotal: 10,

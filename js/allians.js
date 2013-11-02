@@ -27,7 +27,7 @@ var tall = $("#all").jqGrid({
 		url:'allians_json.php',
 		datatype: 'json',
 		mtype: "POST",
-		colNames:['ID','Тэг','Имя','Место','Сила','Скилл','Огн. мощь','Владения','Доход'],
+		colNames:['ID','Тэг','Имя','Место','Сила','Скилл','Огн. мощь','Локация','Владения','Доход'],
 		colModel :[			
 			{name:'id', index:'id', width:20, align:"center",sortable:false},
 			{name:'tag', index:'tag', width:45, align:"left"},
@@ -36,6 +36,7 @@ var tall = $("#all").jqGrid({
 			{name:'rate', index:'rate', width:30, align:"center"},
 			{name:'skill', index:'skill', width:30, align:"center"},
 			{name:'firepower', index:'firepower', width:30, align:"center"},
+			{name:'cw', index:'cw', width:30, align:"center"},
 			{name:'cnt', index:'cnt', width:30, align:"center"},
 			{name:'revenue', index:'revenue', width:30, align:"center"},
                ],
@@ -44,7 +45,7 @@ var tall = $("#all").jqGrid({
 		sortname: 'rate',
 		viewrecords: true,
 		sortorder: 'desc',
-		width: 820,
+		width: 900,
 		height: 'auto',
 		caption: 'Состав альянса ( по ivanerr.ru )',
 				

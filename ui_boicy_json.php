@@ -13,7 +13,10 @@ $result = mysql_query("SELECT COUNT(*) AS count FROM clan WHERE idc = '$idc'");
 $row = mysql_fetch_array($result,MYSQL_ASSOC); 
 $count = $row['count']; 
 //$SQL="SELECT c.idp,c.name, a.role_localised, a.date as cldate, as ldate from player c, clan a where c.in_clan>0 and c.idp=a.idp and id_p in (select max(id_p) FROM `player` WHERE idp=c.idp) ORDER BY $sidx $sord ,name";
-$SQL="SELECT pl.idp,pl.name,cl.role_localised,cl.date AS cldate, pl.date AS ldate FROM player pl,clan cl,(SELECT max(id_p) AS maxid, name FROM player where idc='$idc' GROUP BY name) lastresults WHERE pl.id_p=lastresults.maxid AND  pl.idc = '$idc' AND pl.in_clan > 0 AND cl.idp=pl.idp ORDER BY $sidx $sord ,name";
+$SQL="SELECT pl.idp,pl.name,cl.role_localised,cl.date AS cldate, CASE
+WHEN pl.date >= cl.date  THEN pl.date
+ELSE  cl.date
+END  AS ldate FROM player pl,clan cl,(SELECT max(id_p) AS maxid, name FROM player where idc='$idc' GROUP BY name) lastresults WHERE pl.id_p=lastresults.maxid AND  pl.idc = '$idc' AND pl.in_clan > 0 AND cl.idp=pl.idp ORDER BY $sidx $sord ,name";
 $result2 = mysql_query( $SQL,$connect ) or die("Couldn t execute query.".mysql_error()); 
 $responce=new stdclass;
 $responce->page = $page; 

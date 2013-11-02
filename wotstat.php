@@ -63,7 +63,7 @@ if (isset($_COOKIE['user'])){
 		}
 	}
 }
-$clanlist = mysql_query("select cl.tag as tag, cl.name as name, rate, firepower, skill, position,smallimg,alliances.name as aname from clan_info as cl left join alliances on cl.alliansid=alliances.ida  where idc='$idc'",$connect);
+$clanlist = mysql_query("select cl.tag as tag, cl.name as name, rate, firepower, skill,cw, position,smallimg,alliances.name as aname from clan_info as cl left join alliances on cl.alliansid=alliances.ida  where idc='$idc'",$connect);
 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $clanrow=mysql_fetch_array($clanlist,MYSQL_ASSOC);
 echo $clanrow["tag"];
@@ -140,7 +140,11 @@ body {
 	if ($clanrow<>NULL){
 		echo '<img src="'.$clanrow['smallimg'].'" style="width: 24px; height:24px;" align="absmiddle"/> ';
 		echo "<b>".$clanrow["name"]."</b> [".$clanrow["tag"]."] <b>'".$clanrow["aname"]."'</b>";
-		//
+		$loc="Гл. Карта";
+		if ($clanrow['cw']==2) {
+			$loc="2-я Компания";
+		}
+		echo " | Локация: <b>".$loc."</b> ";
 		echo " | место № ". $clanrow["position"]." | сила - ".$clanrow["rate"]. " | огн. мощь - ".$clanrow["firepower"]." | скилл - ".$clanrow["skill"];
 	}else{
 		foreach ($clan_array as $clan_i) {

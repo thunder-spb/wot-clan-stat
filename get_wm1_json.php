@@ -17,11 +17,12 @@ $responce->total = 1;
 $responce->records = $count;
 $i=0;
 
-$SQL = "select idpr, attacked, occupancy_time, capital , mutiny from possession where idc='$idc'";
+$SQL = "select idpr,cw, attacked, occupancy_time, capital , mutiny from possession where idc='$idc'";
 $result2 = mysql_query( $SQL,$connect );
 while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) { 
 	$status="";
 	$idpr = $row["idpr"];
+	$q=$row["cw"];
 	$sql2 = "select a.prime_time, a.name as name,  b.name as arena_name, a.revenue, a.type from province a,arenas b where a.id='$idpr'and a.arena_id=b.id ";
 	$q2 = mysql_query($sql2,$connect);
 	$row2 = mysql_fetch_array($q2,MYSQL_ASSOC);
@@ -42,14 +43,26 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 	}
 	$bank='<img src="images/icons/gold.png"  align="absmiddle"/> '.$row2["revenue"];
 	$name = $row2["name"];
-	$name = "<a href='http://cw.worldoftanks.ru/clanwars/maps/?province=$idpr' target='_blank'>$name</a> ";
+	$name = "<a href='http://cw".$q.".worldoftanks.ru/clanwars/maps/?province=$idpr' target='_blank'>$name</a> ";
 	if (($row["capital"]==1)and($capital==1)){
 		$name='<img src="images/icons/capital.png" style="width: 16px; height:16px;" align="absmiddle"/>'." ".$name;
 	}
 	if ($row["mutiny"]==1){
 		$status='<img src="images/icons/mutiny.png" style="width: 16px; height:16px;" align="absmiddle"/>'." ".$status;
 	}
-	$responce->rows[$i]['cell']=array($type,$status,$name, $row2["arena_name"],date("H:i",$row2["prime_time"]),$bank,$row["occupancy_time"]); //$clandays,$las_onl); 
+	$region = geoip_record_by_name($_SERVER['REMOTE_ADDR']);
+	//print_r($region);
+	if (($region['region']<>NULL) and ($region['country_code']<>NULL)){
+		$remtz=new DateTimeZone(geoip_time_zone_by_country_and_region($region['country_code'],$region['region']));
+	} else{
+		$remtz=new DateTimeZone('Europe/Moscow');
+	}
+	$a=$row2['prime_time'];
+	$remtime = new DateTime("@$a");
+	$remtime->setTimezone($remtz);
+	$offset=$remtime->format('H:i');
+	// $remdate(DATE_W3C, $row['prime_time'])
+	$responce->rows[$i]['cell']=array($type,$status,$name, $row2["arena_name"],$offset,$bank,$row["occupancy_time"]); //$clandays,$las_onl); 
 	$i++; 
 } 
 //header("Content-type: text/script;charset=utf-8");

@@ -2,6 +2,18 @@
 // выборка списка клана. анализ, внесение изменений, запись в лог-таблицу
 
 include('settings.kak');
+// $region = geoip_record_by_name('178.165.42.37');
+// print_r(date("Y:m:d H:i",'1383347770'));
+// if (($region['region']<>NULL) and ($region['country_code']<>NULL)){
+	// $remtz=new DateTimeZone(geoip_time_zone_by_country_and_region($region['country_code'],$region['region']));
+	// print_r(geoip_time_zone_by_country_and_region($region['country_code'],$region['region']));
+// } else{
+	// $remtz=new DateTimeZone('Europe/Moscow');
+// }
+// $remtime = new DateTime('@1383347770');
+// $remtime->setTimezone($remtz);
+// $offset=$remtime->format('H:i');
+// print_r($offset);die();
 $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Ошибка подключения к БД");
 $setnames = mysql_query( 'SET NAMES utf8' );
@@ -16,6 +28,7 @@ if ($actwmdate['lasthourwm']<>NULL){
 		//die ();
 	}
 }
+
 if (!(isset($alliansid))){
 	$alliansid=9999999999;
 }
@@ -47,68 +60,70 @@ $dataiv=array();
 $dataivall=array();
 if ($iv<$t){
 	$pageidc = "http://ivanerr.ru/lt/export.php?byclanid";		
-	//$pageidc = $wot_host.'/'.$pageidc;
 	$dataiv1 = get_page($pageidc);
-	$dataiv = json_decode($dataiv1, true);
+	$dataiv = json_decode($dataiv1,true);
 	$pageidc = "http://ivanerr.ru/lt/export.php?alliances";		
-	//$pageidc = $wot_host.'/'.$pageidc;
 	$dataiv1 = get_page($pageidc);
 	$dataivall = json_decode($dataiv1, true);
+	$a=json_last_error();
+	
 }
-//print_r ($dataiv);
+
 $sql = "select `idc` from clan_info where 1";
 $q1 = mysql_query($sql, $connect);
 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 $cnt=0;
-while ($clani=mysql_fetch_array($q1,MYSQL_ASSOC)) {
-	$iidc=$clani['idc'];
-	//echo $iidc." Клан для иванерра".PHP_EOL;
-	if (array_key_exists($iidc, $dataiv)) {
-		  //echo PHP_EOL.$dataiv["$iidc"]['totalrate']." Rating ".PHP_EOL;
-		  $cnt+=1;
-		  $totalrate=$dataiv["$iidc"]['totalrate'];
-		  $firepower=$dataiv["$iidc"]['firepower'];
-		  $skill=$dataiv["$iidc"]['skill'];
-		  $position=$dataiv["$iidc"]['position'];
-		  $alliansid1=$dataiv["$iidc"]['allianceid'];
-		  $sql = "UPDATE `clan_info` SET `rate`='$totalrate', alliansid='$alliansid1', firepower='$firepower', skill='$skill',  position='$position' WHERE `idc`='$iidc'";
-		  $q = mysql_query($sql, $connect);
-		  if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-		  unset($dataiv["$iidc"]);
+if ($dataiv<>NULL){
+	while ($clani=mysql_fetch_array($q1,MYSQL_ASSOC)) {
+		$iidc=$clani['idc'];
+		//echo $iidc." Клан для иванерра".PHP_EOL;
+		if (array_key_exists($iidc, $dataiv)) {
+			  //echo PHP_EOL.$dataiv["$iidc"]['totalrate']." Rating ".PHP_EOL;
+			  $cnt+=1;
+			  $totalrate=$dataiv["$iidc"]['totalrate'];
+			  $firepower=$dataiv["$iidc"]['firepower'];
+			  $skill=$dataiv["$iidc"]['skill'];
+			  $position=$dataiv["$iidc"]['position'];
+			  $alliansid1=$dataiv["$iidc"]['allianceid'];
+			  $sql = "UPDATE `clan_info` SET `rate`='$totalrate', alliansid='$alliansid1', firepower='$firepower', skill='$skill',  position='$position' WHERE `idc`='$iidc'";
+			  $q = mysql_query($sql, $connect);
+			  if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+			  unset($dataiv["$iidc"]);
+		}
+		
 	}
-	
-}
-foreach ($dataiv as $ida){
-	if ($ida['allianceid']==$alliansid){
-		$totalrate=$ida['totalrate'];
-		$firepower=$ida['firepower'];
-		$skill=$ida['skill'];
-		$position=$ida['position'];
-		$idciv=$ida['clanid'];
-		$tag=$ida['clantag'];
-		$sql= "INSERT INTO `clan_info`(tag,idc,rate,allians,alliansid, firepower, skill,position)";
-		$sql.= " VALUES ('$tag','$idciv', '$totalrate',1, '$alliansid','$firepower','$skill','$position')";
+	foreach ($dataiv as $ida){
+		if ($ida['allianceid']==$alliansid){
+			$totalrate=$ida['totalrate'];
+			$firepower=$ida['firepower'];
+			$skill=$ida['skill'];
+			$position=$ida['position'];
+			$idciv=$ida['clanid'];
+			$tag=$ida['clantag'];
+			$sql= "INSERT INTO `clan_info`(tag,idc,rate,allians,alliansid, firepower, skill,position)";
+			$sql.= " VALUES ('$tag','$idciv', '$totalrate',1, '$alliansid','$firepower','$skill','$position')";
+			$q = mysql_query($sql, $connect);
+			if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
+		}
+	}
+	foreach ($dataivall as $ida){
+		$id=$ida['id'];
+		$name=$ida['name'];
+		$tag=$ida['tag'];;
+		$color=$ida['color'];
+		$sql = "select `ida` from alliances where ida='$id'";
+		$q1 = mysql_query($sql, $connect);
+		if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n"; 
+		$row=mysql_fetch_array($q1,MYSQL_ASSOC);
+		if ($row['ida']<>NULL){
+			  $sql = "UPDATE `alliances` SET `name`='$name', tag='$tag', color='$color' WHERE `ida`='$id'";
+		}else{
+			$sql= "INSERT INTO alliances (ida,name, tag, color)";
+			$sql.= " VALUES ('$id', '$name', '$tag','$color')";
+		}
 		$q = mysql_query($sql, $connect);
 		if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 	}
-}
-foreach ($dataivall as $ida){
-	$id=$ida['id'];
-	$name=$ida['name'];
-	$tag=$ida['tag'];;
-	$color=$ida['color'];
-	$sql = "select `ida` from alliances where ida='$id'";
-	$q1 = mysql_query($sql, $connect);
-	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n"; 
-	$row=mysql_fetch_array($q1,MYSQL_ASSOC);
-	if ($row['ida']<>NULL){
-		  $sql = "UPDATE `alliances` SET `name`='$name', tag='$tag', color='$color' WHERE `ida`='$id'";
-	}else{
-		$sql= "INSERT INTO alliances (ida,name, tag, color)";
-		$sql.= " VALUES ('$id', '$name', '$tag','$color')";
-	}
-	$q = mysql_query($sql, $connect);
-	if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 }
 if ($cnt<>0){
 	$t1=time();
@@ -262,7 +277,8 @@ foreach ($clancnt as $idc) {
 					$role2=$clanrange[$role_lo];
 					$message="Изменение должности ".$account_name." c ".$role1." на ".$role2;
 					$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
-					$sql.= " VALUES (4,'$idp, '$idc', '$message', NULL, '$date', '$time')";
+					$sql.= " VALUES (4,'$idp', '$idc', '$message', NULL, '$date', '$time')";
+				//print_r ($sql);
 					$q = mysql_query($sql, $connect);
 					if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 				};
@@ -289,5 +305,4 @@ function get_page($url) {
 mysql_close($connect);
 echo "Done"
 ?>
-Done"
-?>
+

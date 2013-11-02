@@ -679,7 +679,7 @@ if (($force<>1)and ($offs<>0)){
 	$diffdate=$maxdate-$mindate;
 	$a=round($sumall/$cntlog,2);
 	echo "коэфициент наполнения - ".$a.$myeol."с последнего сброса прошло - ".$diffdate." секунд".$myeol;
-	if (($diffdate>14400)or(($cntlog>10)and(($atimer>25)or($a<0.79)))){
+	if (($diffdate>14400)or(($cntlog>10)and(($atimer>30)or($a<0.79)))){
 		
 		if ($a<0.95){
 			echo "Слишком мало".$myeol;

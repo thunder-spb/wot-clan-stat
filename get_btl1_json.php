@@ -17,7 +17,7 @@ $i=0;
 $SQL2 = "select skill  from clan_info where idc='$idc'";
 $claneresult1 = mysql_query( $SQL2,$connect );
 $rowclan1=mysql_fetch_array($claneresult1,MYSQL_ASSOC);
-$SQL = "select id_b, idb, type,time, id_prov, prov,  started, arena  from btl where idc='$idc' group by idb order by time";
+$SQL = "select id_b,cw, idb, type,time, id_prov, prov,  started, arena  from btl where idc='$idc' group by idb order by time";
 $result2 = mysql_query( $SQL,$connect );
 while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) { 
 	$provm=$row['type'];
@@ -27,7 +27,8 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 	$idpr=$row['id_prov'];
 	$pr = $row["prov"];
 	$arena=$row["arena"];
-	$pr = "<a href='http://cw.worldoftanks.ru/clanwars/maps/?province=$idpr' target='_blank'>$pr</a>";
+	$q=$row["cw"];
+	$pr = "<a href='http://cw".$q.".worldoftanks.ru/clanwars/maps/?province=$idpr' target='_blank'>$pr</a>";
 	if ($row['type']=="landing"){$provm="Высадка";}
 		$SQL2 = "select * from possession where idpr='$idpr'and idc='$idc'";
 		$result22 = mysql_query( $SQL2,$connect );
@@ -79,10 +80,20 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 			//$clane=$clane."f,hf";
 		}
 	}
+	$region = geoip_record_by_name($_SERVER['REMOTE_ADDR']);
+	if (($region['region']<>NULL) and ($region['country_code']<>NULL)){
+		$remtz=new DateTimeZone(geoip_time_zone_by_country_and_region($region['country_code'],$region['region']));
+	} else{
+		$remtz=new DateTimeZone('Europe/Moscow');
+	}
+	$a=$row['time'];
+	$remtime = new DateTime("@$a");
+	$remtime->setTimezone($remtz);
+	$offset=$remtime->format('H:i');
 	if ($row['started']==1){
-		$timem="<b>".date("H:i",$row['time'])."</b>";
+		$timem="<b>".$offset."</b>";
 	}else{
-		$timem=date("H:i",$row['time'])." +";
+		$timem="<b>".$offset." +"."</b>";
 	}
 	if ($row['time']==0){ $timem="--:--";}
 	$SQL2 = "select type, periphery from province where id='$idpr'";
