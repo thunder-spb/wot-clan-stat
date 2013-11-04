@@ -11,8 +11,6 @@ $wot_host = "worldoftanks.ru"; // leave it unchanged if you plan use it on Russi
 $clan_array = array (
 	array("clan_id" => "1", "clan_tag" => "[SMPLC]",  "clan_name" => "Sample clan"),
 );
-$alliansid=IvanerrAliansId ;
-
 $clanrange = array(
 	"leader" => "командир",
 	"private" => "солдат",
@@ -24,11 +22,11 @@ $clanrange = array(
 	"treasurer" =>"казначей"
 );
 $hosttime = " +0 hour";		// timezone shift
-
+$tz="Europe/Moscow";    // Временная зона по умолчанию
 $timetolife = 30;  // time to life stat for each tank
 
-// два appid одно для сбора статистики(желательно серверный)
-// второе для логина (на данный момент обязательно автономный) 
+// два appid одно для сбора статистики(желательно серверное)
+// второе для логина (на данный момент обязательно автономное) 
 $appid="demo";
 $appidlogin="demo";
 ?>

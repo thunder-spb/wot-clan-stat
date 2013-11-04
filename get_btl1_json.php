@@ -80,12 +80,18 @@ while($row = mysql_fetch_array($result2,MYSQL_ASSOC)) {
 			//$clane=$clane."f,hf";
 		}
 	}
-	$region = geoip_record_by_name($_SERVER['REMOTE_ADDR']);
-	if (($region['region']<>NULL) and ($region['country_code']<>NULL)){
-		$remtz=new DateTimeZone(geoip_time_zone_by_country_and_region($region['country_code'],$region['region']));
-	} else{
-		$remtz=new DateTimeZone('Europe/Moscow');
-	}
+	if (function_exists("geoip_record_by_name")){
+		$region = geoip_record_by_name($_SERVER['REMOTE_ADDR']);
+		if (($region['region']<>NULL) and ($region['country_code']<>NULL)){
+			$remtz=new DateTimeZone(geoip_time_zone_by_country_and_region($region['country_code'],$region['region']));
+		} else{
+			if  ($region['country_code']=="UA"){
+				$remtz=new DateTimeZone('Europe/Kiev');
+			}else{
+				$remtz=new DateTimeZone($tz);
+			}
+		}
+	}else{	$remtz=new DateTimeZone($tz);}
 	$a=$row['time'];
 	$remtime = new DateTime("@$a");
 	$remtime->setTimezone($remtz);

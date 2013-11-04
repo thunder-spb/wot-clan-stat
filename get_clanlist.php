@@ -2,18 +2,24 @@
 // выборка списка клана. анализ, внесение изменений, запись в лог-таблицу
 
 include('settings.kak');
-// $region = geoip_record_by_name('178.165.42.37');
-// print_r(date("Y:m:d H:i",'1383347770'));
-// if (($region['region']<>NULL) and ($region['country_code']<>NULL)){
-	// $remtz=new DateTimeZone(geoip_time_zone_by_country_and_region($region['country_code'],$region['region']));
-	// print_r(geoip_time_zone_by_country_and_region($region['country_code'],$region['region']));
-// } else{
-	// $remtz=new DateTimeZone('Europe/Moscow');
-// }
-// $remtime = new DateTime('@1383347770');
-// $remtime->setTimezone($remtz);
-// $offset=$remtime->format('H:i');
-// print_r($offset);die();
+// $region = geoip_record_by_name('37.115.218.104');
+// print_r($region);
+// // if (($region['country_code']<>NULL)){
+	// // print_r(geoip_time_zone_by_country_and_region($region['country_code']));
+	// // // $remtz=new DateTimeZone(geoip_time_zone_by_country_and_region($region['country_code'],$region['region']));
+	 // // print_r(geoip_time_zone_by_country_and_region($region['country_code']));
+ // // } else{	
+	// // if  ($region['country_code']=="UA"){
+		// // $remtz=new DateTimeZone('Europe/Kiev');
+	// // }else{
+		// // $remtz=new DateTimeZone('Europe/Moscow');
+	 // // }
+ // // }
+ // // $remtime = new DateTime('@1383347770');
+ // // $remtime->setTimezone($remtz);
+ // // $offset=$remtime->format('H:i');
+ // // print_r($offset);
+ // die();
 $connect = mysql_connect($host, $account, $password);
 $db = mysql_select_db($dbname, $connect) or die("Ошибка подключения к БД");
 $setnames = mysql_query( 'SET NAMES utf8' );
@@ -68,7 +74,7 @@ if ($iv<$t){
 	$a=json_last_error();
 	
 }
-
+//print_r($dataiv);
 $sql = "select `idc` from clan_info where 1";
 $q1 = mysql_query($sql, $connect);
 if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
@@ -76,7 +82,7 @@ $cnt=0;
 if ($dataiv<>NULL){
 	while ($clani=mysql_fetch_array($q1,MYSQL_ASSOC)) {
 		$iidc=$clani['idc'];
-		//echo $iidc." Клан для иванерра".PHP_EOL;
+		
 		if (array_key_exists($iidc, $dataiv)) {
 			  //echo PHP_EOL.$dataiv["$iidc"]['totalrate']." Rating ".PHP_EOL;
 			  $cnt+=1;
@@ -224,18 +230,19 @@ foreach ($clancnt as $idc) {
 			//проверка на "нового игрока в клане"
 			$t=date("Y-m-d",($datapl['created_at']));
 			$idp=$datapl['account_id'];
-			$sql = "select id_c,role_localised from clan where idp='$idp' and idc='$idc'";
+			$sql = "select id_c,role_localised,player.name as name from clan left join player on player.idp=clan.idp where clan.idp='$idp' and clan.idc='$idc' ORDER BY player.id_p DESC LIMIT 0 , 1";
 			$q = mysql_query($sql, $connect);
 			if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
 			$qqt = mysql_fetch_array($q);
 			$newtankist=0;
+			
 			if($qqt['id_c']==NULL){ // игрока нет в данном клане	
 				//проверка, что игрок был в другом клане альянса
 				$sql = "select id_c from clan where idp='$idp'";
 				$q = mysql_query($sql, $connect);
 				if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-				$qqt = mysql_fetch_array($q);
-				if($qqt['id_c'] != NULL) {
+				$qqt1 = mysql_fetch_array($q);
+				if($qqt1['id_c'] != NULL) {
 					if ($allians==1){
 						$message=$datapl['account_name']." перешел в ".$clantag;
 						$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
@@ -275,7 +282,7 @@ foreach ($clancnt as $idc) {
 				if ($newtankist==0) {
 					$role1=@$clanrange[$dolgnDB];
 					$role2=$clanrange[$role_lo];
-					$message="Изменение должности ".$account_name." c ".$role1." на ".$role2;
+					$message="Изменение должности ".$datapl['account_name']." c ".$role1." на ".$role2;
 					$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
 					$sql.= " VALUES (4,'$idp', '$idc', '$message', NULL, '$date', '$time')";
 				//print_r ($sql);
@@ -285,6 +292,21 @@ foreach ($clancnt as $idc) {
 				$sql="UPDATE clan SET `role_localised`='$role_lo' WHERE `idp`='$idp'";
 				mysql_query($sql, $connect);
 				if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
+			}
+			$pname=$datapl['account_name'];
+			$pnameDB=$qqt['name'];
+			//Смена ника
+			if (($newtankist==0) and ($pname<>$pnameDB)and ($pnameDB<>NULL)){
+				$message="Боец ".$pnameDB." cменил ник на ".$pname;
+				echo $idp.$message.PHP_EOL;print_r ($qqt);			
+				$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
+				$sql.= " VALUES (10,'$idp', '$idc', '$message', NULL, '$date', '$time')";
+				$q = mysql_query($sql, $connect);
+				if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";	
+				$sqlpl="UPDATE player SET `name`='$pname' WHERE `idp`='$idp'";
+				mysql_query($sqlpl, $connect);
+				if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
+				
 			}
 		}
 	}

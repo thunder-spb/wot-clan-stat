@@ -185,33 +185,8 @@ foreach ($ida as $id) {
 								$a11=$timetolife+1;
 								$date1=date("Y-m-d",strtotime(' -'.$a11.' day '.$hosttime));	//Для корректного отображения  статистики записи новых бойцов делаются задним числом
 						}
-						// $dolgnDB=$qqt['role_localised'];
-						// $role_lo=$data2['data'][$id]['clan']['role'];
-						// $role1=$clanrange[$dolgnDB];
-						// $role2=$clanrange[$role_lo];
-						// if ($dolgnDB<>$role_lo) {
-							// if ($newtankist==0) {
-								// $message="Изменение должности ".$account_name." c ".$role1." на ".$role2;
-								// $sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
-								// $sql.= " VALUES (4,'$id', '$idc', '$message', NULL, '$date', '$time')";
-								// $q = mysql_query($sql, $connect);
-								// if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";
-							// };
-							// $sql="UPDATE clan SET `role_localised`='$role_lo' WHERE `idp`='$id'";
-							// mysql_query($sql, $connect);
-							// if (mysql_errno() <> 0) echo "\n$sql \nMySQL Error ".mysql_errno().": ".mysql_error()."\n";
-						// }
-					 	$pname=$data2['data'][$id]['nickname'];
-						$pnameDB=$rGPL['name'];
-						//Смена ника
-						if (($newtankist==0) and ($pname<>$pnameDB)){
-							$message="Боец ".$pnameDB." cменил ник на ".$pname;
-							$sql = "INSERT INTO event_clan (type,idp, idc, message, reason, date, time)";
-							$sql.= " VALUES (10,'$id', '$idc', '$message', NULL, '$date', '$time')";
-							$q = mysql_query($sql, $connect);
-							if (mysql_errno() <> 0) echo "MySQL Error ".mysql_errno().": ".mysql_error()."\n";					
-						}
-						echo "___Name:   $pname".$myeol;
+						 $pname=$data2['data'][$id]['nickname'];
+												echo "___Name:   $pname".$myeol;
 						//all
 						$created_at=date("Y-m-d",$data2['data'][$id]['created_at']);
 						$spotted=$data2['data'][$id]['statistics']['all']['spotted'];
