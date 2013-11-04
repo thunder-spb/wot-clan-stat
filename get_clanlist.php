@@ -71,7 +71,7 @@ if ($iv<$t){
 	$pageidc = "http://ivanerr.ru/lt/export.php?alliances";		
 	$dataiv1 = get_page($pageidc);
 	$dataivall = json_decode($dataiv1, true);
-	$a=json_last_error();
+	//$a=json_last_error();
 	
 }
 //print_r($dataiv);

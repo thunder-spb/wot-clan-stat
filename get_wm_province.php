@@ -52,7 +52,7 @@ $t = time()-700000;
 $clanlist = mysql_query("select idc from clan_info where actdate<'$t' and allians=0 and alliansid<>'$alliansid'",$connect);
 while ($clandel=mysql_fetch_array($clanlist,MYSQL_ASSOC)) {
 	$idc=$clandel['idc'];
-	echo"Чистка данных".PHP_EOL;
+	echo"Чистка данных".$idc.PHP_EOL;
 	mysql_query("delete from btl where idc='$idc'",$connect);
 	mysql_query("delete from possession where idc='$idc'",$connect);
 	mysql_query("delete from wm_event where idc='$idc'",$connect);
@@ -141,6 +141,7 @@ foreach ($clancnt as $idc) {
 					while ($res = mysql_fetch_array($all,MYSQL_ASSOC)) {
 						if (($curr<>$res['id_r'])or ($curmap<>$i)){
 							$curr=$res['id_r'];
+							$curmap=$i;
 							if (!(array_key_exists($curr, $allgk[$i]))){
 								echo PHP_EOL."Подгружаем данные из ГК... регион-".$curr.PHP_EOL;
 								$pageidp = "http://cw".$i.".worldoftanks.ru".$res['url']."?ct=json";
