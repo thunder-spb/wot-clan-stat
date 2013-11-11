@@ -286,9 +286,9 @@ foreach ($clancnt as $idc) {
 				}
 				//для каждого боя делаем подробную выборку по участвующим проинциям из ГК
 				while ($res = mysql_fetch_array($all,MYSQL_ASSOC)) {
-					if ($curr<>$res['id_r']){
+					if (($curr<>$res['id_r'])or ($curmap<>$i)){
 						echo "Подгружаем данные из ГК...";
-						$curr=$res['id_r'];
+						$curr=$res['id_r'];$curmap=$i;
 						if (!(array_key_exists($curr, $allgk[$i]))){
 								echo PHP_EOL."Подгружаем данные из ГК... регион-".$curr.PHP_EOL;
 								$pageidp = "http://cw".$i.".worldoftanks.ru".$res['url']."?ct=json";
